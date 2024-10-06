@@ -2,7 +2,6 @@ _: {
   imports = [
     ./code
     ./desktop
-    ./dm
     ./laptop
     ./linux
     ./raspberry

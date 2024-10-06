@@ -4,8 +4,8 @@
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-24.05";
-    darwin.url = "github:lnl7/nix-darwin";
-    darwin.inputs.nixpkgs.follows = "nixpkgs";
+    nix-darwin.url = "github:lnl7/nix-darwin";
+    nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
   };
@@ -14,7 +14,7 @@
     nixpkgs,
     nixpkgs-stable,
     home-manager,
-    darwin,
+    nix-darwin,
     ...
   }: let
     settings = rec {
@@ -79,7 +79,7 @@
       systemFunc =
         if (nixpkgs.lib.hasSuffix "linux" system)
         then nixpkgs.lib.nixosSystem
-        else darwin.lib.darwinSystem;
+        else nix-darwin.lib.darwinSystem;
 
       hmModules =
         if (nixpkgs.lib.hasSuffix "linux" system)
@@ -122,14 +122,40 @@
     # rebuild commands should be
     # - sudo nixos-rebuild switch --flake "$HOME/.dotfiles"
     # - darwin-rebuild switch --flake "$HOME/.dotfiles"
-    nixosConfigurations = nixpkgs.lib.mkMerge [
-      (mkSystem "kain" "x86_64-linux")
-      (mkSystem "raziel" "x86_64-linux")
-      (mkSystem "vorador" "aarch64-linux")
-    ];
-    darwinConfigurations = nixpkgs.lib.mkMerge [
-      (mkSystem "tommysmbp" "aarch64-darwin")
-    ];
+    # nixosConfigurations = nixpkgs.lib.mkMerge [
+    #   (mkSystem "kain" "x86_64-linux")
+    #   (mkSystem "raziel" "x86_64-linux")
+    #   (mkSystem "vorador" "aarch64-linux")
+    # ];
+    # darwinConfigurations = nixpkgs.lib.mkMerge [
+    #   (mkSystem "tommysmbp" "aarch64-darwin")
+    # ];
+    darwinConfigurations."tommysmbp" = 
+    let
+      system = "aarch64-darwin";
+      pkgs = import nixpkgs { inherit system; config.allowUnfree = true; };
+      pkgs-stable = import nixpkgs-stable { inherit system; config.allowUnfree = true; };
+      specialArgs = { inherit settings pkgs-stable; };
+    in
+    nix-darwin.lib.darwinSystem {
+      system = "aarch64-darwin";
+      pkgs = import nixpkgs { system = "aarch64-darwin"; config.allowUnfree = true; };
+      specialArgs = { inherit settings pkgs-stable; };
+      modules = [ 
+         ./hosts/tommysmbp/configuration.nix
+         ./modules/system
+
+          home-manager.darwinModules.home-manager
+          {
+            home-manager = {
+              useGlobalPkgs = true;
+              useUserPackages = true;
+              extraSpecialArgs = { inherit settings pkgs-stable; };
+              users."${settings.userName}".imports = [./modules/hm ./hosts/tommysmbp/home.nix];
+            };
+          }
+      ];
+    };
 
     devShells = forAllSystems (pkgs: {
       default = pkgs.mkShell {
