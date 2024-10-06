@@ -130,32 +130,40 @@
     # darwinConfigurations = nixpkgs.lib.mkMerge [
     #   (mkSystem "tommysmbp" "aarch64-darwin")
     # ];
-    darwinConfigurations."tommysmbp" = 
-    let
+    darwinConfigurations."tommysmbp" = let
       system = "aarch64-darwin";
-      pkgs = import nixpkgs { inherit system; config.allowUnfree = true; };
-      pkgs-stable = import nixpkgs-stable { inherit system; config.allowUnfree = true; };
-      specialArgs = { inherit settings pkgs-stable; };
+      pkgs = import nixpkgs {
+        inherit system;
+        config.allowUnfree = true;
+      };
+      pkgs-stable = import nixpkgs-stable {
+        inherit system;
+        config.allowUnfree = true;
+      };
+      specialArgs = {inherit settings pkgs-stable;};
     in
-    nix-darwin.lib.darwinSystem {
-      system = "aarch64-darwin";
-      pkgs = import nixpkgs { system = "aarch64-darwin"; config.allowUnfree = true; };
-      specialArgs = { inherit settings pkgs-stable; };
-      modules = [ 
-         ./hosts/tommysmbp/configuration.nix
-         ./modules/system
+      nix-darwin.lib.darwinSystem {
+        system = "aarch64-darwin";
+        pkgs = import nixpkgs {
+          system = "aarch64-darwin";
+          config.allowUnfree = true;
+        };
+        specialArgs = {inherit settings pkgs-stable;};
+        modules = [
+          ./hosts/tommysmbp/configuration.nix
+          ./modules/system
 
           home-manager.darwinModules.home-manager
           {
             home-manager = {
               useGlobalPkgs = true;
               useUserPackages = true;
-              extraSpecialArgs = { inherit settings pkgs-stable; };
+              extraSpecialArgs = {inherit settings pkgs-stable;};
               users."${settings.userName}".imports = [./modules/hm ./hosts/tommysmbp/home.nix];
             };
           }
-      ];
-    };
+        ];
+      };
 
     devShells = forAllSystems (pkgs: {
       default = pkgs.mkShell {

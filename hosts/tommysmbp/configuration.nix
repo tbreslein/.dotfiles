@@ -1,5 +1,5 @@
 { pkgs, ... }: {
-  environement = {
+  environment = {
     shells = [ pkgs.bashInteractive pkgs.zsh ];
   };
   services.nix-daemon.enable = true;

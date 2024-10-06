@@ -1,5 +1,9 @@
-{ config, lib, pkgs, ...}: 
-let
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}: let
   cfg = config.homeConf.code;
   tmux_sessionizer =
     pkgs.writeShellScriptBin "tmux-sessionizer"
@@ -56,15 +60,33 @@ in {
       };
     };
 
+    editorconfig = {
+      enable = true;
+      settings = {
+        "*" = {
+          charset = "utf-8";
+          indent_size = 4;
+          indent_style = "space";
+          max_line_width = 80;
+          trim_trailing_whitespace = true;
+        };
+        "*.{json,js,jsx,ts,tsx,cjs,mjs,nix,cabal,hs,lua,yml,yaml,ml,mli,hl,md,mdx,html,astro}" = {
+          indent_size = 2;
+        };
+        "CMakeLists.txt" = {
+          indent_size = 2;
+        };
+        "{m,M}akefile" = {
+          indent_style = "tab";
+        };
+      };
+    };
+
     programs = {
       tmux = {
         enable = true;
         # baseIndex = 1;
         # clock24 = true;
-        # escapeTime = 0;
-        # historyLimit = 25000;
-        # keyMode = "vi";
-        # mouse = true;
         # prefix = "C-a";
         extraConfig =
           /*
@@ -72,9 +94,14 @@ in {
           */
           ''
             set -g default-terminal "alacritty"
-            set-option -sa terminal-overrides ",alacritty:RGB"
+            set -sa terminal-overrides ",alacritty:RGB"
 
             bind-key -r f run-shell "tmux new-window ${tmux_sessionizer}/bin/tmux-sessionizer"
+
+            set -s escape-time 0
+            set -g status-keys vi
+            set -g mouse on
+            set -g history-limit 25000
 
             # # >>> STYLE
             # set -g status-position top
