@@ -85,9 +85,6 @@ in {
     programs = {
       tmux = {
         enable = true;
-        # baseIndex = 1;
-        # clock24 = true;
-        # prefix = "C-a";
         extraConfig =
           /*
           tmux
@@ -102,47 +99,9 @@ in {
             set -g status-keys vi
             set -g mouse on
             set -g history-limit 25000
-
-            # # >>> STYLE
-            # set -g status-position top
-            # setw -g mode-style 'fg=colour3 bg=colour0 bold'
-
-            # # pane borders
-            # set -g pane-border-style 'fg=colour0'
-            # set -g pane-active-border-style 'fg=colour3'
-
-            # # statusbar
-            # set -g status-justify left
-            # set -g status-style 'fg=colour4 bg=colour0 bold'
-            # set -g status-left ""
-            # set -g status-right 'Session: #S '
-            # set -g status-right-length 50
-            # set -g status-left-length 10
-
-            # setw -g window-status-current-style 'fg=colour3 bg=colour0 bold'
-            # setw -g window-status-current-format ' #I #W #F '
-
-            # setw -g window-status-style 'fg=colour1 dim'
-            # setw -g window-status-format ' #I #[fg=colour7]#W #[fg=colour1]#F '
-
-            # setw -g window-status-bell-style 'fg=colour2 bg=colour1 bold'
-
-            # # messages
-            # set -g message-style 'fg=colour2 bg=colour0 bold'
-
-            # bind C-x split-window -v -c "#{pane_current_path}"
-            # bind C-v split-window -hb -c "#{pane_current_path}"
-            # bind h select-pane -L
-            # bind j select-pane -D
-            # bind k select-pane -U
-            # bind l select-pane -R
-            # bind -r M-h resize-pane -L 1
-            # bind -r M-j resize-pane -D 1
-            # bind -r M-k resize-pane -U 1
-            # bind -r M-l resize-pane -R 1
-            # bind C-r source-file ~/.config/tmux/tmux.conf
-            # bind -r C-n previous-window
-            # bind -r C-m next-window
+            set -g status-position top
+            set -g status-style "fg=colour3 bg=colour0 bold"
+            set -g status-right "Session: #S "
           '';
       };
     };

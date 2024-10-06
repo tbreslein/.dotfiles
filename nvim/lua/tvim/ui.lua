@@ -1,10 +1,13 @@
-vim.g.gruvbox_material_diagnostic_virtual_text = "colored"
-vim.g.gruvbox_material_dim_inactive_windows = 1
-vim.g.gruvbox_material_enable_bold = 1
-vim.g.gruvbox_material_transparent_background = 1
-vim.g.gruvbox_material_ui_contrast = "high"
-vim.g.gruvbox_material_better_performance = 1
-vim.cmd.colorscheme "gruvbox-material"
+-- vim.g.gruvbox_material_diagnostic_virtual_text = "colored"
+-- vim.g.gruvbox_material_dim_inactive_windows = 1
+-- vim.g.gruvbox_material_enable_bold = 1
+-- vim.g.gruvbox_material_transparent_background = 1
+-- vim.g.gruvbox_material_ui_contrast = "high"
+-- vim.g.gruvbox_material_better_performance = 1
+-- vim.cmd.colorscheme "gruvbox-material"
+
+require("vague").setup { transparent = true }
+vim.cmd.colorscheme "vague"
 
 map("n", "<leader>gg", ":Git<cr>4j", "Git")
 map("n", "<leader>gPP", ":Git push<cr>", "Git push")

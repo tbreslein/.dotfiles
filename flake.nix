@@ -17,8 +17,7 @@
     nix-darwin,
     ...
   }: let
-    settings = rec {
-      userName = "tommy";
+    settings = {
       sessionPath = [
         "$HOME/bin"
         "$HOME/.local/bin"
@@ -26,45 +25,7 @@
       sessionVariables = rec {
         EDITOR = "nvim";
         VISUAL = EDITOR;
-        BROWSER = "zen-browser";
-      };
-      colors = gruvbox-material;
-      gruvbox-material = {
-        primary = {
-          background = "1d2021";
-          foreground = "d4be98";
-          accent = "d8a657";
-        };
-        normal = {
-          black = "32302f";
-          red = "ea6962";
-          green = "a9b665";
-          yellow = "d8a657";
-          blue = "7daea3";
-          magenta = "d3869b";
-          cyan = "89b482";
-          white = "d4be98";
-        };
-        bright = {
-          black = "32302f";
-          red = "ea6962";
-          green = "a9b665";
-          yellow = "d8a657";
-          blue = "7daea3";
-          magenta = "d3869b";
-          cyan = "89b482";
-          white = "d4be98";
-        };
-        dim = {
-          black = "32302f";
-          red = "ea6962";
-          green = "a9b665";
-          yellow = "d8a657";
-          blue = "7daea3";
-          magenta = "d3869b";
-          cyan = "89b482";
-          white = "d4be98";
-        };
+        BROWSER = "brave";
       };
     };
 
@@ -74,49 +35,48 @@
         "aarch64-linux"
         "aarch64-darwin"
       ] (system: function nixpkgs.legacyPackages.${system});
-
-    mkSystem = hostname: system: let
-      systemFunc =
-        if (nixpkgs.lib.hasSuffix "linux" system)
-        then nixpkgs.lib.nixosSystem
-        else nix-darwin.lib.darwinSystem;
-
-      hmModules =
-        if (nixpkgs.lib.hasSuffix "linux" system)
-        then home-manager.nixosModules
-        else home-manager.darwinModules;
-
-      pkgs-stable = import nixpkgs-stable {
-        inherit system;
-        config.allowUnfree = true;
-      };
-      pkgs = import nixpkgs {
-        inherit system;
-        config.allowUnfree = true;
-      };
-
-      specialArgs = {inherit settings pkgs-stable;};
-    in {
-      "${hostname}" = systemFunc {
-        inherit system;
-        inherit pkgs;
-        inherit specialArgs;
-        modules = [
-          (./hosts/. + "/${hostname}/" + ./configuration.nix)
-          ./modules/system
-
-          hmModules.home-manager
-          {
-            home-manager = {
-              useGlobalPkgs = true;
-              useUserPackages = true;
-              extraSpecialArgs = specialArgs;
-              users."${settings.userName}".imports = [./modules/hm (./hosts/. + "${hostname}" + ./home.nix)];
-            };
-          }
-        ];
-      };
-    };
+    # mkSystem = hostname: system: let
+    #   systemFunc =
+    #     if (nixpkgs.lib.hasSuffix "linux" system)
+    #     then nixpkgs.lib.nixosSystem
+    #     else nix-darwin.lib.darwinSystem;
+    #
+    #   hmModules =
+    #     if (nixpkgs.lib.hasSuffix "linux" system)
+    #     then home-manager.nixosModules
+    #     else home-manager.darwinModules;
+    #
+    #   pkgs-stable = import nixpkgs-stable {
+    #     inherit system;
+    #     config.allowUnfree = true;
+    #   };
+    #   pkgs = import nixpkgs {
+    #     inherit system;
+    #     config.allowUnfree = true;
+    #   };
+    #
+    #   specialArgs = {inherit settings pkgs-stable;};
+    # in {
+    #   "${hostname}" = systemFunc {
+    #     inherit system;
+    #     inherit pkgs;
+    #     inherit specialArgs;
+    #     modules = [
+    #       (./hosts/. + "/${hostname}/" + ./configuration.nix)
+    #       ./modules/system
+    #
+    #       hmModules.home-manager
+    #       {
+    #         home-manager = {
+    #           useGlobalPkgs = true;
+    #           useUserPackages = true;
+    #           extraSpecialArgs = specialArgs;
+    #           users."${settings.userName}".imports = [./modules/hm (./hosts/. + "${hostname}" + ./home.nix)];
+    #         };
+    #       }
+    #     ];
+    #   };
+    # };
   in {
     # NOTE:
     # rebuild commands should be
@@ -159,7 +119,7 @@
               useGlobalPkgs = true;
               useUserPackages = true;
               extraSpecialArgs = {inherit settings pkgs-stable;};
-              users."${settings.userName}".imports = [./modules/hm ./hosts/tommysmbp/home.nix];
+              users."tommy".imports = [./modules/hm ./hosts/tommysmbp/home.nix];
             };
           }
         ];

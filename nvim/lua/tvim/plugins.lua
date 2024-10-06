@@ -9,6 +9,7 @@ local plugins = {
 
   -- ui
   "sainnhe/gruvbox-material",
+  "vague2k/vague.nvim",
   "folke/zen-mode.nvim",
   "tpope/vim-fugitive",
   { "nvim-treesitter/nvim-treesitter", build = ":TSUpdate" },
