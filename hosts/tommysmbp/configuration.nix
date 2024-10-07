@@ -1,24 +1,43 @@
 {pkgs, ...}: {
-  environment = {
-    shells = [pkgs.bashInteractive pkgs.zsh];
-  };
+  # homebrew = {
+  #   enable = true;
+  #   brews = [
+  #     "coreutils"
+  #     "syncthing"
+  #     "wget"
+  #     {
+  #       name = "syncthing";
+  #       restart_service = true;
+  #     }
+  #
+  #     # "bear"
+  #     # "clang-format"
+  #     # "cppcheck"
+  #     # "gcc"
+  #     # "make"
+  #     # "meson"
+  #     # "ninja"
+  #   ];
+  #   casks = [
+  #     "alacritty"
+  #     "amethyst"
+  #     "telegram-desktop"
+  #   ];
+  # };
+  environment.shells = [pkgs.bashInteractive pkgs.zsh];
   fonts.packages = with pkgs; [
     (nerdfonts.override
-      {fonts = ["Hack" "Gohu"];})
+      {fonts = ["Hack" "ProggyClean"];})
   ];
   nix = {
     package = pkgs.nix;
     settings."extra-experimental-features" = ["nix-command" "flakes"];
   };
-  programs = {
-    bash = {
-      enable = true;
-      enableCompletion = true;
-    };
+  programs.bash = {
+    enable = true;
+    enableCompletion = true;
   };
   services.nix-daemon.enable = true;
   system.stateVersion = 5;
-  users.users."tommy" = {
-    shell = pkgs.bashInteractive;
-  };
+  users.users."tommy".shell = pkgs.bashInteractive;
 }

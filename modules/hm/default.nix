@@ -1,5 +1,6 @@
 {
   config,
+  pkgs,
   settings,
   ...
 }: {
@@ -15,6 +16,7 @@
   home = {
     username = "tommy";
     stateVersion = "24.05";
+    packages = with pkgs; [rm-improved tree];
     shellAliases = {
       g = "git";
       gg = "git status -s";
@@ -75,6 +77,9 @@
               fi
               if echo "$status_uno" | grep -q "Your branch is ahead"; then
                 _git_prompt="''${_git_prompt}^"
+              fi
+              if echo "$status_uno" | grep -q "Your branch and '.*' have diverged"; then
+                _git_prompt="''${_git_prompt}v^"
               fi
               _git_prompt="''${_git_prompt} "
             fi

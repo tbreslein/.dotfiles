@@ -7,7 +7,10 @@
 
   homeConf = {
     code.enable = true;
-    desktop.enable = true;
+    desktop = {
+      enable = true;
+      # terminalFontSize = 22;
+    };
     dm.enable = true;
   };
 }

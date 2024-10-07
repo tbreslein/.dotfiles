@@ -90,6 +90,10 @@ in {
           tmux
           */
           ''
+            unbind C-b
+            set-option -g prefix C-a
+            bind-key C-a send-prefix
+
             set -g default-terminal "alacritty"
             set -sa terminal-overrides ",alacritty:RGB"
 
@@ -103,6 +107,18 @@ in {
             set -g status-style "fg=colour3 bg=colour0 bold"
             set -g status-left ""
             set -g status-right "Session: #S "
+
+            bind C-s split-window -v -c "#{pane_current_path}"
+            bind C-v split-window -hb -c "#{pane_current_path}"
+            bind h select-pane -L
+            bind j select-pane -D
+            bind k select-pane -U
+            bind l select-pane -R
+            bind -r M-h resize-pane -L 1
+            bind -r M-j resize-pane -D 1
+            bind -r M-k resize-pane -U 1
+            bind -r M-l resize-pane -R 1
+            bind C-r source-file ~/.config/tmux/tmux.conf
           '';
       };
     };

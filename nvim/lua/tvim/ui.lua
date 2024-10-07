@@ -49,7 +49,7 @@ end, "loclist toggle")
 require("zen-mode").setup {
   window = { width = 120 },
   plugins = {
-    alacritty = { enabled = true, font = "20" },
+    alacritty = { enabled = true, font = "28" },
     tmux = { enabled = true },
   },
 }
