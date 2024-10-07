@@ -64,7 +64,7 @@
             [ $_RET -gt 0 ] && _err_msg="''${_RET} "
             _git_prompt=""
             if git rev-parse > /dev/null 2>&1; then
-              _git_prompt=" [$(git rev-parse --abbrev-ref HEAD)"
+              _git_prompt=" [$(git rev-parse --abbrev-ref HEAD) "
               if [ $(git status --porcelain=v1 | wc -l) -gt 0 ]; then
                 _git_prompt="''${_git_prompt}!"
               fi
