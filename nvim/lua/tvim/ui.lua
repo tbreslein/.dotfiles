@@ -30,6 +30,7 @@ require("nvim-treesitter.configs").setup {
   autotag = { enable = true },
 }
 require("treesitter-context").setup { multiline_threshold = 2 }
+vim.cmd [[hi TreesitterContextBottom gui=underline]]
 
 local toggleterm = require "toggleterm"
 toggleterm.setup {}
