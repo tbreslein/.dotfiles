@@ -49,6 +49,16 @@
         bash
         */
         ''
+          _git_prompt() {
+            if ! git rev-parse > /dev/null 2>&1; then
+              return ""
+            fi
+            status=""
+            if [ $(git status --porcelain=v1 | wc -l) -eq 0 ]; then
+              status="''${status}!"
+            fi
+          }
+
           PS1="[\u@\h:\w]$ "
           toggle_moco() {
             if ! tmux has-session -t "moco" 2>/dev/null; then
