@@ -101,6 +101,7 @@ in {
             set -g history-limit 25000
             set -g status-position top
             set -g status-style "fg=colour3 bg=colour0 bold"
+            set -g status-left ""
             set -g status-right "Session: #S "
           '';
       };

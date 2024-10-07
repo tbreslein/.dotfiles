@@ -49,17 +49,31 @@
         bash
         */
         ''
-          _git_prompt() {
-            if ! git rev-parse > /dev/null 2>&1; then
-              return ""
-            fi
-            status=""
-            if [ $(git status --porcelain=v1 | wc -l) -eq 0 ]; then
-              status="''${status}!"
+          _err_msg=""
+          _git_prompt=""
+          _prompt_command() {
+            _RET=$?
+            _err_msg=""
+            [ $_RET -gt 0 ] && _err_msg="''${_RET} "
+            _git_prompt=""
+            if git rev-parse > /dev/null 2>&1; then
+              _git_prompt=" ["
+              if [ $(git status --porcelain=v1 | wc -l) -gt 0 ]; then
+                _git_prompt="''${_git_prompt}!"
+              fi
+              status_uno=$(git status -uno)
+              if echo "$status_uno" | grep -q "Your branch is behind"; then
+                _git_prompt="''${_git_prompt}v"
+              fi
+              if echo "$status_uno" | grep -q "Your branch is ahead"; then
+                _git_prompt="''${_git_prompt}^"
+              fi
+              _git_prompt="''${_git_prompt}]"
             fi
           }
+          PROMPT_COMMAND=_prompt_command
+          PS1="\n[\[\033[0;32m\]\u@\h\[\033[0m\] : \[\033[0;34m\]\W\[\033[0m\]\[\033[0;36m\]\''${_git_prompt}\[\033[0m\]]\n\[\033[1;31m\]\''${_err_msg}\[\033[0m\]$ "
 
-          PS1="[\u@\h:\w]$ "
           toggle_moco() {
             if ! tmux has-session -t "moco" 2>/dev/null; then
               tmux new-session -ds "moco" -c "$HOME/work/repos/mocotrackingclient/"

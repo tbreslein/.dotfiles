@@ -10,7 +10,7 @@ in {
     homeConf.desktop = {
       enable = lib.mkEnableOption "Enable hm-desktop role";
       terminalFontSize = lib.mkOption {
-        default = 20;
+        default = 18;
         type = lib.types.int;
       };
     };
@@ -29,7 +29,8 @@ in {
         };
         font = {
           size = cfg.terminalFontSize;
-          normal.family = "GohuFont 11 Nerd Font";
+          # normal.family = "GohuFont 11 Nerd Font";
+          normal.family = "Hack Nerd Font";
         };
       };
     };
