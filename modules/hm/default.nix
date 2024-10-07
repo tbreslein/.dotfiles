@@ -14,6 +14,7 @@
 
   home = {
     username = "tommy";
+    stateVersion = "24.05";
     shellAliases = {
       g = "git";
       gg = "git status -s";

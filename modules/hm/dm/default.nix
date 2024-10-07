@@ -198,70 +198,6 @@
       fi
       __main
     '';
-
-  dm-cache-path = ".cache/dm";
-  brewfile-path = dm-cache-path + "/Brewfile";
-
-  brew = import ./brew.nix;
-  arch = import ./arch.nix;
-
-  pacman-pkgs = lib.strings.concatStringsSep " " (lib.lists.unique (
-    arch.pacman.base-pkgs
-    ++ (
-      if config.myConf.coding.enable
-      then arch.pacman.coding-pkgs
-      else []
-    )
-    ++ (
-      if config.myConf.gaming.enable
-      then arch.pacman.gaming-pkgs
-      else []
-    )
-    ++ (
-      if config.myConf.desktop.enable
-      then arch.pacman.desktop-pkgs
-      else []
-    )
-    ++ (
-      if config.myConf.laptop.enable
-      then arch.pacman.laptop-pkgs
-      else []
-    )
-    ++ (
-      if config.myConf.wayland.enable
-      then arch.pacman.wayland-pkgs
-      else []
-    )
-  ));
-
-  aur-pkgs = lib.strings.concatStringsSep " " (lib.lists.unique (
-    arch.aur.base-pkgs
-    ++ (
-      if config.myConf.coding.enable
-      then arch.aur.coding-pkgs
-      else []
-    )
-    ++ (
-      if config.myConf.gaming.enable
-      then arch.aur.gaming-pkgs
-      else []
-    )
-    ++ (
-      if config.myConf.desktop.enable
-      then arch.aur.desktop-pkgs
-      else []
-    )
-    ++ (
-      if config.myConf.laptop.enable
-      then arch.aur.laptop-pkgs
-      else []
-    )
-    ++ (
-      if config.myConf.wayland.enable
-      then arch.aur.wayland-pkgs
-      else []
-    )
-  ));
 in {
   options = {
     homeConf.dm = {
@@ -275,13 +211,6 @@ in {
   };
 
   config = lib.mkIf cfg.enable {
-    home = {
-      packages = [dm-script];
-      file = {
-        "${brewfile-path}" = lib.mkIf (builtins.elem "brew" cfg.pkg-managers) {text = lib.strings.concatStringsSep "\n" brew.pkgs;};
-        "${dm-cache-path}/pacman_want" = lib.mkIf (builtins.elem "pacman" cfg.pkg-managers) {text = pacman-pkgs;};
-        "${dm-cache-path}/aur_want" = lib.mkIf (builtins.elem "aur" cfg.pkg-managers) {text = aur-pkgs;};
-      };
-    };
+    home.packages = [dm-script];
   };
 }
