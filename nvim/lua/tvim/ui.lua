@@ -31,6 +31,7 @@ require("nvim-treesitter.configs").setup {
 }
 require("treesitter-context").setup { multiline_threshold = 2 }
 vim.cmd [[hi TreesitterContextBottom gui=underline]]
+vim.cmd [[hi TreesitterContext guibg=#363738]]
 
 local toggleterm = require "toggleterm"
 toggleterm.setup {}
