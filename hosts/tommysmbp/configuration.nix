@@ -1,29 +1,32 @@
 {pkgs, ...}: {
-  # homebrew = {
-  #   enable = true;
-  #   brews = [
-  #     "coreutils"
-  #     "syncthing"
-  #     "wget"
-  #     {
-  #       name = "syncthing";
-  #       restart_service = true;
-  #     }
-  #
-  #     # "bear"
-  #     # "clang-format"
-  #     # "cppcheck"
-  #     # "gcc"
-  #     # "make"
-  #     # "meson"
-  #     # "ninja"
-  #   ];
-  #   casks = [
-  #     "alacritty"
-  #     "amethyst"
-  #     "telegram-desktop"
-  #   ];
-  # };
+  homebrew = {
+    enable = true;
+    brews = [
+      "wget"
+      # "coreutils"
+      {
+        name = "syncthing";
+        restart_service = true;
+      }
+
+      # "bear"
+      # "clang-format"
+      # "cppcheck"
+      # "gcc"
+      # "make"
+      # "meson"
+      # "ninja"
+    ];
+    casks = [
+      "alacritty"
+      "amethyst"
+    ];
+    onActivation = {
+      cleanup = "zap";
+      autoUpdate = true;
+      # upgrade = true;
+    };
+  };
   environment.shells = [pkgs.bashInteractive pkgs.zsh];
   fonts.packages = with pkgs; [
     (nerdfonts.override

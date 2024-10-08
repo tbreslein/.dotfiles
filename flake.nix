@@ -6,6 +6,7 @@
     nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-24.05";
     nix-darwin.url = "github:lnl7/nix-darwin";
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
+    nix-homebrew.url = "github:zhaofengli-wip/nix-homebrew";
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
   };
@@ -15,6 +16,7 @@
     nixpkgs-stable,
     home-manager,
     nix-darwin,
+    nix-homebrew,
     ...
   }: let
     settings = {
@@ -112,6 +114,15 @@
         modules = [
           ./hosts/tommysmbp/configuration.nix
           ./modules/system
+
+          nix-homebrew.darwinModules.nix-homebrew
+          {
+            nix-homebrew = {
+              enable = true;
+              enableRosetta = true;
+              user = "tommy";
+            };
+          }
 
           home-manager.darwinModules.home-manager
           {
