@@ -46,7 +46,7 @@ function components.diagnostic_status()
 end
 
 local statusline = {
-  "%t",
+  "%F",
   "%r",
   "%m",
   " %{FugitiveStatusline()}",
