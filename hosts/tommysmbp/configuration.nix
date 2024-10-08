@@ -20,6 +20,7 @@
     casks = [
       "alacritty"
       "amethyst"
+      "rectangle"
     ];
     onActivation = {
       cleanup = "zap";
