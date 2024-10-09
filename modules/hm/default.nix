@@ -168,6 +168,25 @@
     };
     git = {
       enable = true;
+      aliases = {
+        a = "add";
+        aa = "add .";
+        c = "commit";
+        ca = "commit -a";
+        cam = "commit --amend --no-edit";
+        co = "checkout";
+        cb = "checkout -b";
+        b = "branch";
+        s = "status";
+        w = "switch";
+        r = "rebase";
+        m = "merge";
+        p = "push";
+        pu = "push -u origin";
+        pf = "push --force-with-lease";
+        P = "pull";
+        f = "fetch";
+      };
       delta = {
         enable = true;
         options = {

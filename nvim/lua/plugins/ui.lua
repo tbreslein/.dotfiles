@@ -14,10 +14,10 @@ return {
     lazy = false, -- I need FugitiveStatusline for my statusline
     keys = {
       { "<leader>gg", ":Git<cr>4j", "Git" },
-      { "<leader>gPP", ":Git push<cr>", "Git push" },
-      { "<leader>gPU", ":Git push --set-upstream origin<cr>", "Git push -u" },
+      { "<leader>gpp", ":Git push<cr>", "Git push" },
+      { "<leader>gpu", ":Git push --set-upstream origin<cr>", "Git push -u" },
       {
-        "<leader>gPF",
+        "<leader>gpf",
         ":Git push --force-with-lease<cr>",
         "Git push --force-with-lease",
       },
