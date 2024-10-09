@@ -25,6 +25,9 @@
       cmd_code=$SUCCESS
       cmd_msg=""
       cmd_location=""
+
+      readonly DOTFILES="$HOME/.dotfiles"
+
       pushd() {
           command pushd "$@" >/dev/null
       }
@@ -90,12 +93,12 @@
 
       __handle_err() {
           case "$cmd_code" in
-          "$SUCCESS_SKIP") __success ;;
-          "$SUCCESS_WARN") __warn ;;
-          "$FAIL")
-              __fail
-              exit "$cmd_code"
-              ;;
+              "$SUCCESS_SKIP") __success ;;
+              "$SUCCESS_WARN") __warn ;;
+              "$FAIL")
+                  __fail
+                  exit "$cmd_code"
+                  ;;
           esac
 
           cmd_code=$SUCCESS
@@ -126,11 +129,11 @@
           name="hm"
           __info "$name" "starting"
 
-          pushd "$HOME/.dotfiles"
+          pushd "$DOTFILES"
           case $(uname -s) in
-            "Linux") nixos-rebuild switch --flake .;;
-            "Darwin") darwin-rebuild switch --flake .;;
-            *);;
+              "Linux") nixos-rebuild switch --flake .;;
+              "Darwin") darwin-rebuild switch --flake .;;
+              *);;
           esac
 
           __success "$name" "finished"
@@ -141,7 +144,7 @@
           name="nix"
           __info "$name" "starting"
 
-          pushd "$HOME/.dotfiles"
+          pushd "$DOTFILES"
           nix-store --gc
           nix-store --optimise
           nix flake update
@@ -180,7 +183,7 @@
       }
 
       __main() {
-          pushd ~/dots
+          pushd "$DOTFILES"
           git pull || true
           popd
           for c in "''${COMMANDS[@]}"; do
