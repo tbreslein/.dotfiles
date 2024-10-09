@@ -85,7 +85,7 @@
             fi
           }
           PROMPT_COMMAND=_prompt_command
-          PS1="\n[ \[\033[0;32m\]\u@\h\[\033[0m\] | \[\033[0;34m\]\w\[\033[0m\] | \[\033[0;36m\]\''${_git_prompt}\[\033[0m\]]\n\[\033[1;31m\]\''${_err_msg}\[\033[0m\]$ "
+          PS1="\n\[\033[1;32m\]\u@\h\[\033[0m\] | \[\033[1;34m\]\w\[\033[0m\] | \[\033[1;36m\]\''${_git_prompt}\[\033[0m\]\n\[\033[1;31m\]\''${_err_msg}\[\033[0m\]$ "
 
           toggle_moco() {
             if ! tmux has-session -t "moco" 2>/dev/null; then

@@ -1,13 +1,28 @@
 return {
   {
-    "vague2k/vague.nvim",
+    "sainnhe/gruvbox-material",
     lazy = false,
     priority = 1000,
     config = function()
-      require("vague").setup { transparent = true }
-      vim.cmd.colorscheme "vague"
+      vim.o.termguicolors = true
+      vim.g.gruvbox_material_enable_italic = true
+      vim.g.gruvbox_material_enable_bold = true
+      vim.g.gruvbox_material_better_performance = true
+      vim.g.gruvbox_material_ui_contrast = "high"
+      vim.g.gruvbox_material_diagnostic_virtual_text = "highlighted" -- or "colored"
+      vim.g.gruvbox_material_transparent_background = 2
+      vim.cmd.colorscheme "gruvbox-material"
     end,
   },
+  -- {
+  --   "vague2k/vague.nvim",
+  --   lazy = false,
+  --   priority = 1000,
+  --   config = function()
+  --     require("vague").setup { transparent = true }
+  --     vim.cmd.colorscheme "vague"
+  --   end,
+  -- },
 
   {
     "tpope/vim-fugitive",
