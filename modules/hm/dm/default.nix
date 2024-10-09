@@ -122,6 +122,21 @@
           __success "$name" "finished"
       }
 
+      dm_hm() {
+          name="hm"
+          __info "$name" "starting"
+
+          pushd "$HOME/.dotfiles"
+          case $(uname -s) in
+            "Linux") nixos-rebuild switch --flake .;;
+            "Darwin") darwin-rebuild switch --flake .;;
+            *);;
+          esac
+
+          __success "$name" "finished"
+          popd
+      }
+
       dm_nix() {
           name="nix"
           __info "$name" "starting"
@@ -130,11 +145,6 @@
           nix-store --gc
           nix-store --optimise
           nix flake update
-          case $(uname -s) in
-            "Linux") nixos-rebuild switch --flake .;;
-            "Darwin") darwin-rebuild switch --flake .;;
-            *);;
-          esac
 
           __success "$name" "finished"
           popd
@@ -190,7 +200,7 @@
       }
 
       COMMANDS=()
-      VALID_COMMANDS=" repos nix pkgs sync "
+      VALID_COMMANDS=" repos nix hm pkgs sync "
       if [ $# -gt 0 ]; then
           read -ra COMMANDS <<<"$@"
       else
