@@ -30,8 +30,8 @@ in {
           };
           font = {
             size = cfg.terminalFontSize;
-            # normal.family = "Hack Nerd Font";
-            normal.family = "ProggyClean Nerd Font";
+            normal.family = "Hack Nerd Font";
+            # normal.family = "ProggyClean Nerd Font";
           };
         };
       };
