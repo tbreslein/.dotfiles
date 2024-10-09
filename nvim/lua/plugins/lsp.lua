@@ -43,7 +43,11 @@ return {
         },
 
         trigger = { signature_help = { enabled = true } },
-        windows = { autocomplete = { draw = "reversed" } },
+        windows = {
+          autocomplete = { draw = "reversed", border = "rounded" },
+          documentation = { border = "rounded" },
+          signature_help = { border = "rounded" },
+        },
         highlight = { use_nvim_cmp_as_default = true },
 
         -- kind_icons = {
