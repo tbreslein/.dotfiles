@@ -10,7 +10,7 @@ in {
     homeConf.desktop = {
       enable = lib.mkEnableOption "Enable hm-desktop role";
       terminalFontSize = lib.mkOption {
-        default = 24;
+        default = 18;
         type = lib.types.int;
       };
     };
