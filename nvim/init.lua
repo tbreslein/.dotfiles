@@ -1,4 +1,3 @@
--- vim.loader.enable()
 function map(mode, keys, action, desc, opts)
   vim.keymap.set(
     mode,
@@ -12,14 +11,7 @@ function map(mode, keys, action, desc, opts)
   )
 end
 
-require("config.vimsettings")
-require("config.keymaps")
-require("config.lazy")
-require("config.statusline")
-
--- require("tvim.plugins").load_paq()
--- require "tvim.ui"
--- require "tvim.navigation"
--- require "tvim.lsp"
--- require "tvim.nonels"
--- require "tvim.dap"
+require "config.vimsettings"
+require "config.keymaps"
+require "config.lazy"
+require "config.statusline"
