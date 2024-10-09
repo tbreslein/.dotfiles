@@ -63,8 +63,9 @@ return {
     "nvim-telescope/telescope.nvim",
     event = "VeryLazy",
     dependencies = {
-      "nvim-tree/nvim-web-devicons",
       "nvim-telescope/telescope-fzy-native.nvim",
+      "nvim-telescope/telescope-live-grep-args.nvim",
+      "nvim-tree/nvim-web-devicons",
     },
     keys = {
       {
@@ -81,17 +82,23 @@ return {
       },
       {
         "<leader>fg",
-        require("telescope.builtin").git_files,
+        function()
+          require("telescope.builtin").git_files()
+        end,
         "telescope git files",
       },
       {
         "<leader>fs",
-        require("telescope.builtin").live_grep,
+        function()
+          require("telescope").extensions.live_grep_args.live_grep_args()
+        end,
         "telescope git live_grep",
       },
       {
         "<leader>gs",
-        require("telescope.builtin").git_branches,
+        function()
+          require("telescope.builtin").git_branches()
+        end,
         "telescope git branches",
       },
     },
@@ -102,9 +109,21 @@ return {
             override_generic_sorter = false,
             override_file_sorter = true,
           },
+          live_grep_args = {
+            auto_quoting = true,
+            mappings = { -- extend mappings
+              i = {
+                ["<C-k>"] = require("telescope-live-grep-args.actions").quote_prompt(),
+                ["<C-i>"] = require("telescope-live-grep-args.actions").quote_prompt {
+                  postfix = " --iglob ",
+                },
+              },
+            },
+          },
         },
       }
       require("telescope").load_extension "fzy_native"
+      require("telescope").load_extension "live_grep_args"
     end,
   },
 
