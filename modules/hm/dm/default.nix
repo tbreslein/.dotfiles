@@ -169,6 +169,15 @@
           __success "$name" "finished"
       }
 
+      dm_nvim() {
+        name="nvim"
+        __info "$name" "starting"
+        if command -v nvim &>/dev/null; then
+          nvim --headless "+Lazy! sync" "+TSUpdateSync" +qa
+        fi
+        __success "$name" "finished"
+      }
+
       dm_sync() {
           __info "sync" "starting"
 
@@ -203,7 +212,7 @@
       }
 
       COMMANDS=()
-      VALID_COMMANDS=" repos nix hm pkgs sync "
+      VALID_COMMANDS=" repos nix hm pkgs nvim sync "
       if [ $# -gt 0 ]; then
           read -ra COMMANDS <<<"$@"
       else
