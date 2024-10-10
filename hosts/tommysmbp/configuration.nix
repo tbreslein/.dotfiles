@@ -3,6 +3,7 @@
     enable = true;
     brews = [
       "wget"
+      "emacs"
       # "coreutils"
       {
         name = "syncthing";
