@@ -2,7 +2,7 @@ return {
   {
     "Saghen/blink.cmp",
     event = "VeryLazy",
-    version = "v0.*",
+    version = "v0.2.0",
     dependencies = {
       "neovim/nvim-lspconfig",
       "j-hui/fidget.nvim",
