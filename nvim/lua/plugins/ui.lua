@@ -65,7 +65,7 @@ return {
     "akinsho/toggleterm.nvim",
     event = "VeryLazy",
     keys = {
-      { "<leader>tt", ":Toggleterm size=20<cr>", "toggleterm split" },
+      { "<leader>tt", ":ToggleTerm size=20<cr>", "toggleterm split" },
       { "<leader>te", ":TermExec cmd='!!'<cr>", "toggleterm !!" },
     },
     opts = {},
