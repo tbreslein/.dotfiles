@@ -166,6 +166,14 @@
   ;; flex is fuzzy search, and basic is the regular built-in and it's used as a fallback
   (completion-styles '(flex basic)))
 
+(use-package exec-path-from-shell
+  :custom
+  (exec-path-from-shell-arguments '("-l"))
+  :config
+  (exec-path-from-shell-initialize))
+;;   ;; (when (memq window-system '(mac ns x))
+;;   ;;   (exec-path-from-shell-initialize)))
+
 (use-package projectile
   :init
   (setq

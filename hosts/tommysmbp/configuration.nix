@@ -37,7 +37,7 @@
   };
   fonts.packages = with pkgs; [
     (nerdfonts.override
-      {fonts = ["Hack" "ProggyClean"];})
+      {fonts = ["Hack"];})
   ];
   nix = {
     package = pkgs.nix;
@@ -48,7 +48,10 @@
     enableCompletion = true;
   };
   services = {
-    emacs.enable = true;
+    emacs = {
+      enable = true;
+      package = pkgs.emacs30;
+    };
     nix-daemon.enable = true;
   };
   system = {
