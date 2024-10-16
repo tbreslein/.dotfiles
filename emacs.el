@@ -1,8 +1,6 @@
 ;; TODO:
-;; - projectile: project switcher
 ;; - emacs-eat: terminal
 ;;   - open emacs in terminal / eshell
-;; - fuzzy file switcher
 ;; - is there something like harpoon?
 ;; - bookmarks
 ;; - magit
@@ -83,8 +81,8 @@
     (evil-global-set-key 'normal (kbd "N") (lambda () (interactive) (evil-search-previous) (recenter)))
     ;; (evil-global-set-key 'visual (kbd "J") (concat ":m '>+1" (kbd "RET") "gv=gv"))
     ;; (evil-global-set-key 'visual (kbd "K") (concat ":m '<-2" (kbd "RET") "gv=gv"))
-    (evil-global-set-key 'normal (kbd "J") (concat ":m +1" (kbd "RET") "=="))
-    (evil-global-set-key 'normal (kbd "K") (concat ":m -2" (kbd "RET") "=="))
+    ;; (evil-global-set-key 'normal (kbd "J") (concat ":m +1" (kbd "RET") "=="))
+    ;; (evil-global-set-key 'normal (kbd "K") (concat ":m -2" (kbd "RET") "=="))
     (evil-global-set-key 'motion (kbd "j") 'evil-next-visual-line)
     (evil-global-set-key 'motion (kbd "k") 'evil-previous-visual-line)
     (evil-mode 1))
@@ -166,14 +164,6 @@
   ;; flex is fuzzy search, and basic is the regular built-in and it's used as a fallback
   (completion-styles '(flex basic)))
 
-(use-package exec-path-from-shell
-  :custom
-  (exec-path-from-shell-arguments '("-l"))
-  :config
-  (exec-path-from-shell-initialize))
-;;   ;; (when (memq window-system '(mac ns x))
-;;   ;;   (exec-path-from-shell-initialize)))
-
 (use-package projectile
   :init
   (setq
@@ -185,7 +175,32 @@
   (evil-global-set-key 'normal (kbd "<leader>p") 'projectile-command-map)
   (projectile-mode +1))
 
+;; gonna try just using projectile with fd and ripgrep
+;; (use-package consult
+;;   :config
+;;   (evil-global-set-key 'normal (kbd "<leader>psr") 'consult-ripgrep))
+
 (use-package dired
   :ensure nil
   :config
-  (evil-define-key 'normal 'global (kbd "-") 'dired-jump))
+  (evil-global-set-key 'normal (kbd "-") 'dired-jump))
+
+(use-package magit
+  :config
+  (evil-global-set-key 'normal (kbd "<leader>gg") 'magit))
+
+(defun set-exec-path-from-shell-PATH ()
+  "Set up Emacs' `exec-path' and PATH environment variable to match
+that used by the user's shell.
+
+This is particularly useful under Mac OS X and macOS, where GUI
+apps are not started from a shell."
+  (interactive)
+  (let ((path-from-shell (replace-regexp-in-string
+			  "[ \t\n]*$" "" (shell-command-to-string
+					  "$SHELL --login -c 'echo $PATH'"
+						    ))))
+    (setenv "PATH" path-from-shell)
+    (setq exec-path (split-string path-from-shell path-separator))))
+
+(set-exec-path-from-shell-PATH)
