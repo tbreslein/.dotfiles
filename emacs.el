@@ -2,9 +2,7 @@
 ;; - emacs-eat: terminal
 ;;   - open emacs in terminal / eshell
 ;; - is there something like harpoon?
-;; - bookmarks
-;; - magit
-;; - hl-todo
+;;   - apparently bookmarks already solve this?
 ;; - direnv / https://github.com/purcell/envrc
 ;; - autocompletion (https://github.com/minad/corfu)
 ;; - treesitter // treesit-auto (https://github.com/renzmann/treesit-auto)
@@ -184,6 +182,10 @@
   :ensure nil
   :config
   (evil-global-set-key 'normal (kbd "-") 'dired-jump))
+
+(use-package hl-todo
+  :config
+  (hl-todo-mode))
 
 (use-package magit
   :config
