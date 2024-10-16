@@ -166,6 +166,17 @@
   ;; flex is fuzzy search, and basic is the regular built-in and it's used as a fallback
   (completion-styles '(flex basic)))
 
+(use-package projectile
+  :init
+  (setq
+    projectile-project-search-path '(("~/code" . 1) ("~/.dotfiles" . 0) ("~/notes" . 0) ("~/work" . 1) ("~/work/repos" . 1))
+    projectile-require-project-root nil
+    projectile-switch-project-action #'projectile-dired
+    projectile-sort-order 'recentf)
+  :config
+  (evil-global-set-key 'normal (kbd "<leader>p") 'projectile-command-map)
+  (projectile-mode +1))
+
 (use-package dired
   :ensure nil
   :config

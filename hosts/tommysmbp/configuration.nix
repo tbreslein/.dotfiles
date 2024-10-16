@@ -47,7 +47,10 @@
     enable = true;
     enableCompletion = true;
   };
-  services.nix-daemon.enable = true;
+  services = {
+    emacs.enable = true;
+    nix-daemon.enable = true;
+  };
   system = {
     stateVersion = 5;
     activationScripts.applications.text = let
