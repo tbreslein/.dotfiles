@@ -44,7 +44,7 @@
 
 ;; Actually get “package” to work.
 (package-initialize)
-;(package-refresh-contents)
+(package-refresh-contents)
 
 (require 'use-package)
 (setq use-package-always-ensure t)
@@ -60,6 +60,8 @@
 
 (use-package auto-package-update
   :custom
+  (auto-package-update-interval 7)
+  (auto-package-update-prompt-before-update t)
   (auto-package-update-delete-old-versions t)
   (auto-package-update-hide-results t)
   :config
@@ -251,9 +253,6 @@
 (use-package kind-icon
   :ensure t
   :after corfu
-  ;:custom
-  ; (kind-icon-blend-background t)
-  ; (kind-icon-default-face 'corfu-default) ; only needed with blend-background
   :config
   (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter))
 
@@ -282,6 +281,6 @@
   :config (evil-define-key 'normal 'cargo-mode-map (kbd "C-c") 'cargo-minor-mode-command-map))
 
 (use-package gruber-darker-theme)
-;; (use-package doom-themes)
 (load-theme 'gruber-darker t)
+;; (use-package doom-themes)
 ;; (load-theme 'doom-sourcerer t)
