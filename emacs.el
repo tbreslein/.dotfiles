@@ -1,6 +1,5 @@
 ;; TODO:
-;; - emacs-eat: terminal
-;;   - open emacs in terminal / eshell
+;; - configure vterm
 ;; - is there something like harpoon?
 ;;   - apparently bookmarks already solve this?
 ;; - direnv / https://github.com/purcell/envrc
@@ -190,6 +189,8 @@
 (use-package magit
   :config
   (evil-global-set-key 'normal (kbd "<leader>gg") 'magit))
+
+(use-package vterm)
 
 (defun set-exec-path-from-shell-PATH ()
   "Set up Emacs' `exec-path' and PATH environment variable to match
