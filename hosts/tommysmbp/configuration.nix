@@ -16,6 +16,8 @@
       # "clang-format"
       # "cppcheck"
       # "gcc"
+      "libtool"
+      "cmake"
       # "make"
       # "meson"
       # "ninja"
