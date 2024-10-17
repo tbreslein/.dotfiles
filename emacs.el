@@ -187,6 +187,8 @@
   (hl-todo-mode))
 
 (use-package magit
+  :init
+  (setq with-editor-emacsclient-executable "/run/current-system/sw/bin/emacsclient")
   :config
   (evil-global-set-key 'normal (kbd "<leader>gg") 'magit))
 
