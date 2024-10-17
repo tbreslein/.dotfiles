@@ -238,6 +238,7 @@
   (corfu-auto t)
   (corfu-auto-prefix 2)
   (corfu-echo-delay 0.2)
+  (corfu-popupinfo-delay 0.2)
   (corfu-preview-current nil)
   :bind (:map corfu-map ("RET" . nil))
   :config
@@ -245,6 +246,7 @@
   (evil-define-key 'insert 'corfu-map (kbd "C-k") 'corfu-previous)
   (evil-define-key 'insert 'corfu-map (kbd "C-l") 'corfu-insert)
   (evil-define-key 'insert 'corfu-map (kbd "C-h") 'corfu-insert-separator)
+  (corfu-popupinfo-mode)
   (global-corfu-mode))
 
 (use-package cape
@@ -255,6 +257,15 @@
   :config
   (advice-add 'pcomplete-completions-at-point :around #'cape-wrap-silent)
   (advice-add 'pcomplete-completions-at-point :around #'cape-wrap-purify))
+
+(use-package kind-icon
+  :ensure t
+  :after corfu
+  ;:custom
+  ; (kind-icon-blend-background t)
+  ; (kind-icon-default-face 'corfu-default) ; only needed with blend-background
+  :config
+  (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter))
 
 (use-package eglot
   :ensure nil)
@@ -270,4 +281,5 @@
   :hook
   (rust-mode . eglot-ensure))
 (use-package cargo
-  :hook (rust-mode . cargo-minor-mode))
+  :hook (rust-mode . cargo-minor-mode)
+  :config (evil-define-key 'normal 'cargo-mode-map (kbd "C-c") 'cargo-minor-mode-command-map))
