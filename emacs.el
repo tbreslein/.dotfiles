@@ -1,15 +1,10 @@
 ;; TODO:
 ;; - is there something like harpoon?
 ;;   - apparently bookmarks already solve this?
-;; - direnv / https://github.com/purcell/envrc
-;; - autocompletion (https://github.com/minad/corfu)
-;; - treesitter // treesit-auto (https://github.com/renzmann/treesit-auto)
-;; - lsp stuff // lsp-mode ++ lsp-booster (https://github.com/blahgeek/emacs-lsp-booster)
 ;; - flycheck
 ;; - some autoformatting package
 ;; - modes for these languages:
 ;;   - c/cpp
-;;   - rust
 ;;   - go
 ;;   - zig
 ;;   - python
@@ -28,7 +23,6 @@
 ;; - dap stuff
 ;; - configure org
 ;; - configure mode-line
-;; - try out kuronami-theme (https://github.com/inj0h/kuronami?tab=readme-ov-file)
 
 (setq custom-file "~/.emacs.d/custom.el")
 (ignore-errors (load custom-file)) ;; It may not yet exist.
@@ -75,7 +69,6 @@
     :custom
     (evil-want-C-d-scroll t)
     (evil-want-C-u-scroll t)
-    (evil-insert-state-cursor 'evil-normal-state-cursor)
     (evil-want-keybinding nil)
     :config
     (evil-set-leader nil (kbd "SPC"))
@@ -91,6 +84,7 @@
     ;; (evil-global-set-key 'normal (kbd "K") (concat ":m -2" (kbd "RET") "=="))
     (evil-global-set-key 'motion (kbd "j") 'evil-next-visual-line)
     (evil-global-set-key 'motion (kbd "k") 'evil-previous-visual-line)
+    (setq evil-insert-state-cursor 'box)
     (evil-mode 1))
 
 (use-package evil-collection
@@ -146,10 +140,6 @@
   (set-face-attribute 'default nil :family "Hack Nerd Font" :height line-height)
   (setq switch-to-prev-buffer-skip 'skip-these-buffers
     ring-bell-function #'ignore))
-
-(use-package gruber-darker-theme
-  :config
-  (load-theme 'gruber-darker))
 
 (use-package vertico
   :hook
@@ -267,6 +257,13 @@
   :config
   (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter))
 
+(use-package treesit-auto
+  :custom
+  (treesit-auto-install 'prompt)
+  :config
+  (treesit-auto-add-to-auto-mode-alist 'all)
+  (global-treesit-auto-mode))
+
 (use-package eglot
   :ensure nil)
 (use-package eglot-booster
@@ -277,9 +274,14 @@
 (use-package rust-mode
   :custom
   (rust-format-on-save t)
-  ;; (rust-mode-treesitter-derive t)
+  (rust-mode-treesitter-derive t)
   :hook
-  (rust-mode . eglot-ensure))
+  (rust-ts-mode . eglot-ensure))
 (use-package cargo
-  :hook (rust-mode . cargo-minor-mode)
+  :hook (rust-ts-mode . cargo-minor-mode)
   :config (evil-define-key 'normal 'cargo-mode-map (kbd "C-c") 'cargo-minor-mode-command-map))
+
+(use-package gruber-darker-theme)
+;; (use-package doom-themes)
+(load-theme 'gruber-darker t)
+;; (load-theme 'doom-sourcerer t)
