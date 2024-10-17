@@ -1,5 +1,4 @@
 ;; TODO:
-;; - configure vterm
 ;; - is there something like harpoon?
 ;;   - apparently bookmarks already solve this?
 ;; - direnv / https://github.com/purcell/envrc
@@ -56,18 +55,28 @@
 (require 'use-package)
 (setq use-package-always-ensure t)
 
+(use-package exec-path-from-shell)
+(when (memq window-system '(mac ns x))
+  (exec-path-from-shell-initialize))
+
+(use-package envrc
+  :custom
+  (envrc-show-summary-in-minibuffer nil)
+  :hook (after-init . envrc-global-mode))
+
 (use-package auto-package-update
+  :custom
+  (auto-package-update-delete-old-versions t)
+  (auto-package-update-hide-results t)
   :config
-  (setq auto-package-update-delete-old-versions t
-    auto-package-update-hide-results t)
   (auto-package-update-maybe))
 
 (use-package evil
-    :init
-    (setq evil-want-C-d-scroll t
-          evil-want-C-u-scroll t
-	  evil-insert-state-cursor 'evil-normal-state-cursor
-          evil-want-keybinding nil)
+    :custom
+    (evil-want-C-d-scroll t)
+    (evil-want-C-u-scroll t)
+    (evil-insert-state-cursor 'evil-normal-state-cursor)
+    (evil-want-keybinding nil)
     :config
     (evil-set-leader nil (kbd "SPC"))
     (evil-global-set-key 'normal (kbd "C-d") (lambda () (interactive) (evil-scroll-down 0) (recenter)))
@@ -101,27 +110,26 @@
   ;:hook
   ;(prog-mode . display-line-numbers-mode)
 
+  :custom
+  (inhibit-startup-screen t)
+  (display-line-numbers-type 'visual)
+  (make-backup-files nil)
+  (tab-width 4)
+  (indent-tabs-mode nil)
+  (use-dialog-box nil)
+  (scroll-step 1)
+  (scroll-conservatively 10000)
+  (text-mode-ispell-word-completion nil) ;; use cape-dict instead
+
   :init
   (tool-bar-mode -1)
   (menu-bar-mode -1)
   (tooltip-mode -1)
   (electric-indent-mode -1)
   (save-place-mode 1)
-  (when scroll-bar-mode
-    (scroll-bar-mode -1))
+  (when scroll-bar-mode (scroll-bar-mode -1))
   (global-hl-line-mode 1)
   (global-display-line-numbers-mode 1)
-  (dolist (mode '(term-mode-hook shell-mode-hook eshell-mode-hook))
-    (add-hook mode (lambda () (global-display-line-numbers-mode 0))))
-  (setq
-   inhibit-startup-screen t
-   display-line-numbers-type 'visual
-   make-backup-files nil
-   tab-width 4
-   indent-tabs-mode nil
-   use-dialog-box nil
-   scroll-step 1
-   scroll-conservatively 10000)
   (global-auto-revert-mode 1)
   (indent-tabs-mode -1)
   ;; Set the default coding system for files to UTF-8.
@@ -162,12 +170,11 @@
   (completion-styles '(flex basic)))
 
 (use-package projectile
-  :init
-  (setq
-    projectile-project-search-path '(("~/code" . 1) ("~/.dotfiles" . 0) ("~/notes" . 0) ("~/work" . 1) ("~/work/repos" . 1))
-    projectile-require-project-root nil
-    projectile-switch-project-action #'projectile-dired
-    projectile-sort-order 'recentf)
+  :custom
+  (projectile-project-search-path '(("~/code" . 1) ("~/.dotfiles" . 0) ("~/notes" . 0) ("~/work" . 1) ("~/work/repos" . 1)))
+  (projectile-require-project-root nil)
+  (projectile-switch-project-action #'projectile-dired)
+  (projectile-sort-order 'recentf)
   :config
   (evil-global-set-key 'normal (kbd "<leader>p") 'projectile-command-map)
   (projectile-mode +1))
@@ -177,9 +184,36 @@
 ;;   :config
 ;;   (evil-global-set-key 'normal (kbd "<leader>psr") 'consult-ripgrep))
 
+;; NOTE:
+;; keybinds:
+;;  m - mark file
+;;  u - unmark
+;;  U - remove all marks
+;;  t - invert all marks
+;;  %m - enter regex mode for marking files
+;;  C - copy marked/hovered file(s)
+;;  R - rename(/move) marked/hovered file(s)
+;;  D - delete marked/hovered file(s)
+;;  d - mark file for deletiong
+;;  x - execute all buffered deletions
+;;  z - compress file or folder to (.tar.gz)
+;;  c - compress selection to a specific file
+;;  gr - refresh buffer
+;;  T - touch
+;;  M - change file mode
+;;  O - change file owner
+;;  G - change file group
+;;  S - create symlink to hovered file
+;;  ! - run command on file (sync)
+;;  & - run command on file (async)
 (use-package dired
   :ensure nil
+  :commands (dired dired-jump)
+  :custom ((dired-listing-switches "-agho"))
   :config
+  (evil-collection-define-key 'normal 'dired-mode-map
+    "h" 'dired-up-directory
+    "l" 'dired-find-file)
   (evil-global-set-key 'normal (kbd "-") 'dired-jump))
 
 (use-package hl-todo
@@ -192,20 +226,48 @@
   :config
   (evil-global-set-key 'normal (kbd "<leader>gg") 'magit))
 
-(use-package vterm)
+(use-package vterm
+  :custom
+  (vterm-max-scrollback 20000)
+  :config
+  (evil-global-set-key 'normal (kbd "<leader>tt") 'vterm))
 
-(defun set-exec-path-from-shell-PATH ()
-  "Set up Emacs' `exec-path' and PATH environment variable to match
-that used by the user's shell.
+(use-package corfu
+  :custom
+  (corfu-cycle t)
+  (corfu-auto t)
+  (corfu-auto-prefix 2)
+  (corfu-echo-delay 0.2)
+  (corfu-preview-current nil)
+  :bind (:map corfu-map ("RET" . nil))
+  :config
+  (evil-define-key 'insert 'corfu-map (kbd "C-j") 'corfu-next)
+  (evil-define-key 'insert 'corfu-map (kbd "C-k") 'corfu-previous)
+  (evil-define-key 'insert 'corfu-map (kbd "C-l") 'corfu-insert)
+  (evil-define-key 'insert 'corfu-map (kbd "C-h") 'corfu-insert-separator)
+  (global-corfu-mode))
 
-This is particularly useful under Mac OS X and macOS, where GUI
-apps are not started from a shell."
-  (interactive)
-  (let ((path-from-shell (replace-regexp-in-string
-			  "[ \t\n]*$" "" (shell-command-to-string
-					  "$SHELL --login -c 'echo $PATH'"
-						    ))))
-    (setenv "PATH" path-from-shell)
-    (setq exec-path (split-string path-from-shell path-separator))))
+(use-package cape
+  :defer 10
+  :init
+  (add-to-list 'completion-at-point-functions #'cape-file)
+  (add-to-list 'completion-at-point-functions #'cape-dabbrev)
+  :config
+  (advice-add 'pcomplete-completions-at-point :around #'cape-wrap-silent)
+  (advice-add 'pcomplete-completions-at-point :around #'cape-wrap-purify))
 
-(set-exec-path-from-shell-PATH)
+(use-package eglot
+  :ensure nil)
+(use-package eglot-booster
+    :vc (:url "https://github.com/jdtsmith/eglot-booster")
+	:after eglot
+	:config	(eglot-booster-mode))
+
+(use-package rust-mode
+  :custom
+  (rust-format-on-save t)
+  ;; (rust-mode-treesitter-derive t)
+  :hook
+  (rust-mode . eglot-ensure))
+(use-package cargo
+  :hook (rust-mode . cargo-minor-mode))
