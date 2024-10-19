@@ -50,7 +50,7 @@ return {
       {
         "<leader>e",
         function()
-          local harpoon = require "harpoon"
+          local harpoon = require("harpoon")
           harpoon.ui:toggle_quick_menu(harpoon:list())
         end,
         "harpoon add to list",
@@ -71,7 +71,7 @@ return {
       {
         "<leader>ff",
         function()
-          vim.fn.system "git rev-parse --is-inside-work-tree"
+          vim.fn.system("git rev-parse --is-inside-work-tree")
           if vim.v.shell_error == 0 then
             require("telescope.builtin").git_files()
           else
@@ -103,7 +103,7 @@ return {
       },
     },
     config = function()
-      require("telescope").setup {
+      require("telescope").setup({
         extensions = {
           fzy_native = {
             override_generic_sorter = false,
@@ -114,16 +114,16 @@ return {
             mappings = { -- extend mappings
               i = {
                 ["<C-k>"] = require("telescope-live-grep-args.actions").quote_prompt(),
-                ["<C-i>"] = require("telescope-live-grep-args.actions").quote_prompt {
+                ["<C-i>"] = require("telescope-live-grep-args.actions").quote_prompt({
                   postfix = " --iglob ",
-                },
+                }),
               },
             },
           },
         },
-      }
-      require("telescope").load_extension "fzy_native"
-      require("telescope").load_extension "live_grep_args"
+      })
+      require("telescope").load_extension("fzy_native")
+      require("telescope").load_extension("live_grep_args")
     end,
   },
 

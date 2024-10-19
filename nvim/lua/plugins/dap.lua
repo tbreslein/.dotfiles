@@ -58,9 +58,9 @@ return {
       },
     },
     config = function()
-      local dap, dapui = require "dap", require "dapui"
+      local dap, dapui = require("dap"), require("dapui")
 
-      dapui.setup {
+      dapui.setup({
         layouts = {
           {
             elements = {
@@ -99,7 +99,7 @@ return {
             size = 10,
           },
         },
-      }
+      })
       dap.listeners.before.attach.dapui_config = function()
         dapui.open()
       end
@@ -113,14 +113,14 @@ return {
         dapui.close()
       end
 
-      require("dap-python").setup "python"
-      require("dap-go").setup {}
+      require("dap-python").setup("python")
+      require("dap-go").setup({})
 
       dap.adapters.lldb = {
         type = "server",
         port = "13000",
         executable = {
-          command = vim.fn.expand "$HOME/Downloads/extension/adapter/codelldb",
+          command = vim.fn.expand("$HOME/Downloads/extension/adapter/codelldb"),
           args = { "--port", "13000" },
         },
       }
@@ -138,7 +138,7 @@ return {
               return "not a rust file"
             end
 
-            local curdir = vim.fn.expand "%:p"
+            local curdir = vim.fn.expand("%:p")
 
             while endswith(curdir, "/src") ~= false do
               curdir = vim.fn.fnamemodify(curdir, ":h")
@@ -152,7 +152,7 @@ return {
           stopOnEntry = false,
         },
       }
-      dap.set_log_level "TRACE"
+      dap.set_log_level("TRACE")
     end,
   },
 }

@@ -11,7 +11,7 @@ return {
       vim.g.gruvbox_material_ui_contrast = "high"
       vim.g.gruvbox_material_diagnostic_virtual_text = "highlighted" -- or "colored"
       vim.g.gruvbox_material_transparent_background = 2
-      vim.cmd.colorscheme "gruvbox-material"
+      vim.cmd.colorscheme("gruvbox-material")
     end,
   },
   -- {
@@ -44,7 +44,7 @@ return {
     build = ":TSUpdate",
     dependencies = { "nvim-treesitter/nvim-treesitter-context" },
     config = function()
-      require("nvim-treesitter.configs").setup {
+      require("nvim-treesitter.configs").setup({
         ensure_installed = "all",
         ignore_install = { "norg" },
         highlight = {
@@ -54,10 +54,10 @@ return {
         },
         indent = { enable = true },
         autotag = { enable = true },
-      }
-      require("treesitter-context").setup { multiline_threshold = 2 }
-      vim.cmd [[hi TreesitterContextBottom gui=underline]]
-      vim.cmd [[hi TreesitterContext guibg=#363738]]
+      })
+      require("treesitter-context").setup({ multiline_threshold = 2 })
+      vim.cmd([[hi TreesitterContextBottom gui=underline]])
+      vim.cmd([[hi TreesitterContext guibg=#363738]])
     end,
   },
 

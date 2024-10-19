@@ -8,7 +8,7 @@ return {
       "j-hui/fidget.nvim",
     },
     config = function()
-      vim.diagnostic.config {
+      vim.diagnostic.config({
         virtual_text = {
           prefix = "",
           suffix = "",
@@ -22,10 +22,10 @@ return {
           header = "",
           prefix = "",
         },
-      }
-      require("fidget").setup {}
+      })
+      require("fidget").setup({})
 
-      require("blink.cmp").setup {
+      require("blink.cmp").setup({
         keymap = {
           show = {},
           hide = {},
@@ -82,9 +82,9 @@ return {
         --   Operator = "󰪚",
         --   TypeParameter = "󰬛",
         -- },
-      }
+      })
 
-      local lspconfig = require "lspconfig"
+      local lspconfig = require("lspconfig")
       local lsp_servers = {
         "bashls",
         "rust_analyzer",
@@ -101,28 +101,22 @@ return {
         "ols",
       }
       for _, s in ipairs(lsp_servers) do
-        lspconfig[s].setup { capabilities = lsp_capabilities }
+        lspconfig[s].setup({ capabilities = lsp_capabilities })
       end
 
-      vim.lsp.handlers["textDocument/hover"] =
-        vim.lsp.with(vim.lsp.handlers.hover, { border = "rounded" })
+      vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, { border = "rounded" })
 
-      lspconfig.pyright.setup {
+      lspconfig.pyright.setup({
         capabilities = lsp_capabilities,
         on_new_config = function(config, root_dir)
-          local env = vim.trim(
-            vim.fn.system(
-              'cd "'
-                .. (root_dir or ".")
-                .. '"; poetry env info --executable 2>/dev/null'
-            )
-          )
+          local env =
+            vim.trim(vim.fn.system('cd "' .. (root_dir or ".") .. '"; poetry env info --executable 2>/dev/null'))
           if string.len(env) > 0 then
             config.settings.python.pythonPath = env
           end
         end,
-      }
-      lspconfig.lua_ls.setup {
+      })
+      lspconfig.lua_ls.setup({
         capabilities = lsp_capabilities,
         cmd = { "lua-lsp" },
         settings = {
@@ -134,13 +128,13 @@ return {
             diagnostics = { globals = { "vim" } },
             workspace = {
               library = {
-                [vim.fn.expand "$VIMRUNTIME/lua"] = true,
-                [vim.fn.expand "$VIMRUNTIME/lua/vim/lsp"] = true,
+                [vim.fn.expand("$VIMRUNTIME/lua")] = true,
+                [vim.fn.expand("$VIMRUNTIME/lua/vim/lsp")] = true,
               },
             },
           },
         },
-      }
+      })
       vim.keymap.set("n", "gl", vim.diagnostic.open_float)
       vim.api.nvim_create_autocmd("LspAttach", {
         desc = "LSP actions",

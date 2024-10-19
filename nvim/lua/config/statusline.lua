@@ -18,28 +18,28 @@ function components.diagnostic_status()
     local num_info = #vim.diagnostic.get(0, { severity = levels.INFO })
 
     if num_errs > 0 then
-      output = table.concat {
+      output = table.concat({
         output,
         " %#DiagnosticError#",
         tostring(num_errs),
         " ✘%* ",
-      }
+      })
     end
     if num_warns > 0 then
-      output = table.concat {
+      output = table.concat({
         output,
         " %#DiagnosticWarning#",
         tostring(num_warns),
         " ▲%* ",
-      }
+      })
     end
     if num_info > 0 then
-      output = table.concat {
+      output = table.concat({
         output,
         " %#DiagnosticInfo#",
         tostring(num_info),
         " %* ",
-      }
+      })
     end
   end
   return output
@@ -59,6 +59,6 @@ local statusline = {
 vim.o.statusline = table.concat(statusline, "")
 vim.api.nvim_create_autocmd("DiagnosticChanged", {
   callback = function(args)
-    vim.cmd "let &stl=&stl"
+    vim.cmd("let &stl=&stl")
   end,
 })

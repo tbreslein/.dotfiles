@@ -1,14 +1,11 @@
 ;; TODO:
 ;; - is there something like harpoon?
 ;;   - apparently bookmarks already solve this?
-;; - fix consult icon size (on linux at least)
 ;; - modes for these languages:
-;;   - c/cpp
 ;;   - go
+;;   - haskell
 ;;   - zig
 ;;   - lua
-;;   - haskell
-;;   - nix
 ;;   - html
 ;;   - markdown
 ;;   - css/scss
@@ -24,6 +21,8 @@
 ;; - eww
 ;; - email
 ;; - dashboard? probably not though
+;; - try out eshell
+;; - try out dirvish (with nerd-dirvish)
 
 (setq custom-file "~/.emacs.d/custom.el")
 (ignore-errors (load custom-file)) ;; It may not yet exist.
@@ -170,14 +169,16 @@
   :config
   (add-hook 'format-all-mode-hook 'format-all-ensure-formatter)
   (let ((add-node-modules (lambda () (add-to-list 'exec-path (expand-file-name "node_modules/.bin" (locate-dominating-file (buffer-file-name) "node_modules")))))
-        (add-python-venv (lambda () (add-to-list 'exec-path (expand-file-name ".venv/bin" (locate-dominating-file (buffer-file-name) "node_modules"))))))
+        (add-python-venv (lambda () (add-to-list 'exec-path (expand-file-name ".venv/bin" (locate-dominating-file (buffer-file-name) ".venv"))))))
     (add-hook 'typescript-ts-mode add-node-modules)
     (add-hook 'javascript-mode add-node-modules)
     (add-hook 'python-ts-mode-hook add-python-venv)))
-;; (setq-default format-all-formatters
-;;               '(("C" (clang-format))
-;;                 ("Angular" (astyle "--mode=c"))
-;;                 ("Shell" (shfmt "-i" "4" "-ci")))))
+(setq-default format-all-formatters
+              '(("Haskell" (stylish-haskell))
+                ("Lua" (stylua))
+                ("Nix" (alejandra))
+                ;; ("Python" (ruff))
+                ("Shell" (shfmt "-i" "4" "-ci"))))
 
 (use-package vertico
   :hook
@@ -204,7 +205,7 @@
   (projectile-require-project-root nil)
   (projectile-sort-order 'recentf)
   :config
-  (evil-global-set-key 'normal (kbd "<leader>p") 'projectile-command-map)
+  (evil-global-set-key 'normal (kbd "<leader>f") 'projectile-command-map)
   (projectile-mode +1))
 
 ;; gonna try just using projectile with fd and ripgrep
@@ -291,10 +292,7 @@
   (advice-add 'pcomplete-completions-at-point :around #'cape-wrap-silent)
   (advice-add 'pcomplete-completions-at-point :around #'cape-wrap-purify))
 
-(use-package kind-icon
-  :after corfu
-  :config
-  (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter))
+;; (use-package
 
 (use-package treesit-auto
   :hook
@@ -311,6 +309,8 @@
   :after eglot
   :config	(eglot-booster-mode))
 
+(use-package nix-mode
+  :mode "\\.nix\\'")
 (use-package rust-mode
   :custom
   (rust-mode-treesitter-derive t)
@@ -319,6 +319,16 @@
 (use-package cargo
   :hook (rust-ts-mode . cargo-minor-mode)
   :config (evil-define-key 'normal 'cargo-mode-map (kbd "C-c") 'cargo-minor-mode-command-map))
+
+(use-package nerd-icons
+  :custom (nerd-icons-font-family "Hack Nerd Font"))
+(use-package nerd-icons-corfu
+  :after (nerd-icons corfu)
+  :config (add-to-list 'corfu-margin-formatters #'nerd-icons-corfu-formatter))
+(use-package nerd-icons-ibuffer
+  :hook (ibuffer-mode . nerd-icons-ibuffer-mode))
+(use-package nerd-icons-dired
+  :hook (dired-mode . nerd-icons-dired-mode))
 
 (use-package gruber-darker-theme)
 ;; (use-package sourcerer-theme)
