@@ -253,7 +253,9 @@
   :commands
   (magit)
   :init
-  (setq with-editor-emacsclient-executable "/run/current-system/sw/bin/emacsclient")
+  (when (eq system-type 'darwin)
+    (setq with-editor-emacsclient-executable "/run/current-system/sw/bin/emacsclient"))
+  ;; (setq line-height (if (eq system-type 'darwin) 150 110))
   :config
   (evil-global-set-key 'normal (kbd "<leader>gg") 'magit))
 
