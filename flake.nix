@@ -77,6 +77,30 @@
         "aarch64-darwin"
       ] (system: function nixpkgs.legacyPackages.${system});
   in {
+    homeConfigurations."tommy" = let
+      system = "x86_64-linux";
+      pkgs = import nixpkgs {
+        inherit system;
+        config.allowUnfree = true;
+      };
+      pkgs-stable = import nixpkgs-stable {
+        inherit system;
+        config.allowUnfree = true;
+      };
+      specialArgs = {inherit settings pkgs-stable;};
+    in
+      home-manager.lib.homeManagerConfiguration {
+        #inherit system;
+        inherit pkgs;
+        #inherit specialArgs;
+        extraSpecialArgs = specialArgs;
+        modules = [
+          ./hosts/kain/home.nix
+          ./modules/system
+          ./modules/hm
+        ];
+      };
+
     darwinConfigurations."tommysmbp" = let
       system = "aarch64-darwin";
       pkgs = import nixpkgs {

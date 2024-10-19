@@ -138,7 +138,7 @@
   (defun skip-these-buffers (_window buffer _bury-or-kill)
     "Function for `switch-to-prev-buffer-skip'."
     (string-match "\\*[^*]+\\*" (buffer-name buffer)))
-  (setq line-height (if (eq system-type 'darwin) 150 150))
+  (setq line-height (if (eq system-type 'darwin) 150 100))
   (set-face-attribute 'default nil :family "Hack Nerd Font" :height line-height)
   (setq switch-to-prev-buffer-skip 'skip-these-buffers
     ring-bell-function #'ignore))
