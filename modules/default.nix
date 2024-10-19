@@ -8,9 +8,7 @@
     ./code
     ./desktop
     ./dm
-    ./laptop
     ./linux
-    ./raspberry
   ];
 
   home = {
@@ -193,6 +191,7 @@
         c = "commit";
         ca = "commit -a";
         cam = "commit --amend --no-edit";
+        caam = "commit -a --amend --no-edit";
         co = "checkout";
         cb = "checkout -b";
         b = "branch";

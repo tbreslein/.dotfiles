@@ -87,17 +87,14 @@
         inherit system;
         config.allowUnfree = true;
       };
-      specialArgs = {inherit settings pkgs-stable;};
+      extraSpecialArgs = {inherit settings pkgs-stable;};
     in
       home-manager.lib.homeManagerConfiguration {
-        #inherit system;
         inherit pkgs;
-        #inherit specialArgs;
-        extraSpecialArgs = specialArgs;
+        inherit extraSpecialArgs;
         modules = [
           ./hosts/kain/home.nix
-          ./modules/system
-          ./modules/hm
+          ./modules
         ];
       };
 
@@ -119,7 +116,6 @@
         inherit specialArgs;
         modules = [
           ./hosts/tommysmbp/configuration.nix
-          ./modules/system
 
           nix-homebrew.darwinModules.nix-homebrew
           {
@@ -136,7 +132,7 @@
               useGlobalPkgs = true;
               useUserPackages = true;
               extraSpecialArgs = specialArgs;
-              users."tommy".imports = [./modules/hm ./hosts/tommysmbp/home.nix];
+              users."tommy".imports = [./modules ./hosts/tommysmbp/home.nix];
             };
           }
         ];
