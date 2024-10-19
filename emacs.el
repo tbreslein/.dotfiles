@@ -1,28 +1,29 @@
 ;; TODO:
 ;; - is there something like harpoon?
 ;;   - apparently bookmarks already solve this?
-;; - flycheck
-;; - some autoformatting package
+;; - fix consult icon size (on linux at least)
 ;; - modes for these languages:
 ;;   - c/cpp
 ;;   - go
 ;;   - zig
-;;   - python
 ;;   - lua
 ;;   - haskell
 ;;   - nix
-;;   - bash
-;;   - js/ts
 ;;   - html
 ;;   - markdown
 ;;   - css/scss
-;;   - yaml
 ;;   - toml
 ;;   - json
 ;;   - docker
-;; - dap stuff
 ;; - configure org
+;; - use org-babel
+;; - fix redo (maybe get an undo plugin?)
+;; - try to fix visual line move keybinds
+;; - dap stuff
 ;; - configure mode-line
+;; - eww
+;; - email
+;; - dashboard? probably not though
 
 (setq custom-file "~/.emacs.d/custom.el")
 (ignore-errors (load custom-file)) ;; It may not yet exist.
@@ -44,12 +45,12 @@
 
 ;; Actually get “package” to work.
 (package-initialize)
-(package-refresh-contents)
+;; (package-refresh-contents)
 
 (require 'use-package)
 (setq use-package-always-ensure t)
 
-(use-package exec-path-from-shell)
+(use-package exec-path-from-shell :demand t)
 (when (memq window-system '(mac ns x))
   (exec-path-from-shell-initialize))
 
@@ -59,6 +60,7 @@
   :hook (after-init . envrc-global-mode))
 
 (use-package auto-package-update
+  :defer 30
   :custom
   (auto-package-update-interval 7)
   (auto-package-update-prompt-before-update t)
@@ -68,26 +70,37 @@
   (auto-package-update-maybe))
 
 (use-package evil
-    :custom
-    (evil-want-C-d-scroll t)
-    (evil-want-C-u-scroll t)
-    (evil-want-keybinding nil)
-    :config
-    (evil-set-leader nil (kbd "SPC"))
-    (evil-global-set-key 'normal (kbd "C-d") (lambda () (interactive) (evil-scroll-down 0) (recenter)))
-    (evil-global-set-key 'normal (kbd "C-u") (lambda () (interactive) (evil-scroll-up 0) (recenter)))
-    (evil-global-set-key 'visual (kbd "C-d") (lambda () (interactive) (evil-scroll-down 0) (recenter)))
-    (evil-global-set-key 'visual (kbd "C-u") (lambda () (interactive) (evil-scroll-up 0) (recenter)))
-    (evil-global-set-key 'normal (kbd "n") (lambda () (interactive) (evil-search-next) (recenter)))
-    (evil-global-set-key 'normal (kbd "N") (lambda () (interactive) (evil-search-previous) (recenter)))
-    ;; (evil-global-set-key 'visual (kbd "J") (concat ":m '>+1" (kbd "RET") "gv=gv"))
-    ;; (evil-global-set-key 'visual (kbd "K") (concat ":m '<-2" (kbd "RET") "gv=gv"))
-    ;; (evil-global-set-key 'normal (kbd "J") (concat ":m +1" (kbd "RET") "=="))
-    ;; (evil-global-set-key 'normal (kbd "K") (concat ":m -2" (kbd "RET") "=="))
-    (evil-global-set-key 'motion (kbd "j") 'evil-next-visual-line)
-    (evil-global-set-key 'motion (kbd "k") 'evil-previous-visual-line)
-    (setq evil-insert-state-cursor 'box)
-    (evil-mode 1))
+  :demand t
+  :custom
+  (evil-want-C-d-scroll t)
+  (evil-want-C-u-scroll t)
+  (evil-want-keybinding nil)
+  (evil-split-window-below t)
+  (evil-vsplit-window-right t)
+  :config
+  (setq evil-insert-state-cursor 'box)
+  (evil-set-leader nil (kbd "SPC"))
+  (evil-global-set-key 'normal (kbd "C-d") (lambda () (interactive) (evil-scroll-down 0) (recenter)))
+  (evil-global-set-key 'normal (kbd "C-u") (lambda () (interactive) (evil-scroll-up 0) (recenter)))
+  (evil-global-set-key 'visual (kbd "C-d") (lambda () (interactive) (evil-scroll-down 0) (recenter)))
+  (evil-global-set-key 'visual (kbd "C-u") (lambda () (interactive) (evil-scroll-up 0) (recenter)))
+  (evil-global-set-key 'normal (kbd "n") (lambda () (interactive) (evil-search-next) (recenter)))
+  (evil-global-set-key 'normal (kbd "N") (lambda () (interactive) (evil-search-previous) (recenter)))
+  ;; (evil-global-set-key 'visual (kbd "J") (concat ":m '>+1" (kbd "RET") "gv=gv"))
+  ;; (evil-global-set-key 'visual (kbd "K") (concat ":m '<-2" (kbd "RET") "gv=gv"))
+  ;; (evil-global-set-key 'normal (kbd "J") (concat ":m +1" (kbd "RET") "=="))
+  ;; (evil-global-set-key 'normal (kbd "K") (concat ":m -2" (kbd "RET") "=="))
+  (evil-global-set-key 'motion (kbd "j") 'evil-next-visual-line)
+  (evil-global-set-key 'motion (kbd "k") 'evil-previous-visual-line)
+  (evil-global-set-key 'normal (kbd "C-m") 'compile)
+  (evil-global-set-key 'normal (kbd "C-h") 'evil-window-left)
+  (evil-global-set-key 'normal (kbd "C-j") 'evil-window-down)
+  (evil-global-set-key 'normal (kbd "C-k") 'evil-window-up)
+  (evil-global-set-key 'normal (kbd "C-l") 'evil-window-right)
+  (evil-global-set-key 'normal (kbd "<leader>sj") 'evil-window-new)
+  (evil-global-set-key 'normal (kbd "<leader>sl") 'evil-window-vnew)
+  (evil-global-set-key 'normal (kbd "<leader>st") (lambda () (interactive) (evil-window-new 20 "") (vterm)))
+  (evil-mode))
 
 (use-package evil-collection
   :after evil
@@ -102,9 +115,6 @@
 
 (use-package emacs
   :ensure nil
-
-  ;:hook
-  ;(prog-mode . display-line-numbers-mode)
 
   :custom
   (inhibit-startup-screen t)
@@ -143,7 +153,31 @@
   (setq alpha-val (if (eq system-type 'darwin) 100 92))
   (set-frame-parameter nil 'alpha alpha-val)
   (setq switch-to-prev-buffer-skip 'skip-these-buffers
-    ring-bell-function #'ignore))
+        ring-bell-function #'ignore))
+
+(use-package flymake
+  :ensure nil
+  :config
+  (add-hook 'emacs-lisp-mode-hook 'flymake-mode)
+  (evil-define-key 'normal 'flymake-mode-map (kbd "]d") 'flymake-goto-next-error)
+  (evil-define-key 'normal 'flymake-mode-map (kbd "[d") 'flymake-goto-prev-error)
+  (evil-define-key 'normal 'flymake-mode-map (kbd "gd") 'flymake-show-project-diagnostics)
+  (flymake-mode 1))
+
+(use-package format-all
+  :commands format-all-mode
+  :hook (prog-mode-hook . format-all-mode)
+  :config
+  (add-hook 'format-all-mode-hook 'format-all-ensure-formatter)
+  (let ((add-node-modules (lambda () (add-to-list 'exec-path (expand-file-name "node_modules/.bin" (locate-dominating-file (buffer-file-name) "node_modules")))))
+        (add-python-venv (lambda () (add-to-list 'exec-path (expand-file-name ".venv/bin" (locate-dominating-file (buffer-file-name) "node_modules"))))))
+    (add-hook 'typescript-ts-mode add-node-modules)
+    (add-hook 'javascript-mode add-node-modules)
+    (add-hook 'python-ts-mode-hook add-python-venv)))
+;; (setq-default format-all-formatters
+;;               '(("C" (clang-format))
+;;                 ("Angular" (astyle "--mode=c"))
+;;                 ("Shell" (shfmt "-i" "4" "-ci")))))
 
 (use-package vertico
   :hook
@@ -154,20 +188,20 @@
   (vertico-cycle nil))
 
 (use-package marginalia
+  :after vertico
   :config
   (marginalia-mode 1))
 
 (use-package orderless
-  :custom
-  ;; this defines which completion styles to use.
-  ;; flex is fuzzy search, and basic is the regular built-in and it's used as a fallback
-  (completion-styles '(flex basic)))
+  :after vertico
+  :custom (completion-styles '(flex basic)))
+;; ^ this defines which completion styles to use.
+;; flex is fuzzy search, and basic is the regular built-in and it's used as a fallback
 
 (use-package projectile
   :custom
   (projectile-project-search-path '(("~/code" . 1) ("~/.dotfiles" . 0) ("~/notes" . 0) ("~/work" . 1) ("~/work/repos" . 1)))
   (projectile-require-project-root nil)
-  (projectile-switch-project-action #'projectile-dired)
   (projectile-sort-order 'recentf)
   :config
   (evil-global-set-key 'normal (kbd "<leader>p") 'projectile-command-map)
@@ -211,22 +245,27 @@
   (evil-global-set-key 'normal (kbd "-") 'dired-jump))
 
 (use-package hl-todo
-  :config
-  (hl-todo-mode))
+  :hook
+  (after-init . hl-todo-mode))
 
 (use-package magit
+  :commands
+  (magit)
   :init
   (setq with-editor-emacsclient-executable "/run/current-system/sw/bin/emacsclient")
   :config
   (evil-global-set-key 'normal (kbd "<leader>gg") 'magit))
 
 (use-package vterm
+  :commands
+  (vterm)
   :custom
   (vterm-max-scrollback 20000)
   :config
   (evil-global-set-key 'normal (kbd "<leader>tt") 'vterm))
 
 (use-package corfu
+  :after vertico
   :custom
   (corfu-cycle t)
   (corfu-auto t)
@@ -244,7 +283,7 @@
   (global-corfu-mode))
 
 (use-package cape
-  :defer 10
+  :after corfu
   :init
   (add-to-list 'completion-at-point-functions #'cape-file)
   (add-to-list 'completion-at-point-functions #'cape-dabbrev)
@@ -253,28 +292,27 @@
   (advice-add 'pcomplete-completions-at-point :around #'cape-wrap-purify))
 
 (use-package kind-icon
-  :ensure t
   :after corfu
   :config
   (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter))
 
 (use-package treesit-auto
+  :hook
+  (after-init . global-treesit-auto-mode)
   :custom
   (treesit-auto-install 'prompt)
   :config
-  (treesit-auto-add-to-auto-mode-alist 'all)
-  (global-treesit-auto-mode))
+  (treesit-auto-add-to-auto-mode-alist 'all))
 
 (use-package eglot
   :ensure nil)
 (use-package eglot-booster
-    :vc (:url "https://github.com/jdtsmith/eglot-booster")
-	:after eglot
-	:config	(eglot-booster-mode))
+  :vc (:url "https://github.com/jdtsmith/eglot-booster")
+  :after eglot
+  :config	(eglot-booster-mode))
 
 (use-package rust-mode
   :custom
-  (rust-format-on-save t)
   (rust-mode-treesitter-derive t)
   :hook
   (rust-ts-mode . eglot-ensure))
@@ -283,6 +321,8 @@
   :config (evil-define-key 'normal 'cargo-mode-map (kbd "C-c") 'cargo-minor-mode-command-map))
 
 (use-package gruber-darker-theme)
+;; (use-package sourcerer-theme)
+;; (use-package gruvbox-theme)
 (load-theme 'gruber-darker t)
-;; (use-package doom-themes)
-;; (load-theme 'doom-sourcerer t)
+;; (load-theme 'sourcerer t)
+;; (load-theme 'gruvbox-dark-soft t)
