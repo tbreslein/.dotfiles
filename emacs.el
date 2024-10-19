@@ -164,7 +164,6 @@
   (flymake-mode 1))
 
 (use-package format-all
-  :commands format-all-mode
   :hook (prog-mode-hook . format-all-mode)
   :config
   (add-hook 'format-all-mode-hook 'format-all-ensure-formatter)
@@ -250,18 +249,13 @@
   (after-init . hl-todo-mode))
 
 (use-package magit
-  :commands
-  (magit)
   :init
   (when (eq system-type 'darwin)
     (setq with-editor-emacsclient-executable "/run/current-system/sw/bin/emacsclient"))
-  ;; (setq line-height (if (eq system-type 'darwin) 150 110))
   :config
   (evil-global-set-key 'normal (kbd "<leader>gg") 'magit))
 
 (use-package vterm
-  :commands
-  (vterm)
   :custom
   (vterm-max-scrollback 20000)
   :config
