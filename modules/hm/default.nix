@@ -21,7 +21,7 @@
       g = "git";
       gg = "git status -s";
       GG = "git status";
-      v = "$EDITOR";
+      v = "nvim";
       ls = "eza --icons=always";
       la = "ls -aa";
       ll = "ls -l";

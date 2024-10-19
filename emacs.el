@@ -140,6 +140,8 @@
     (string-match "\\*[^*]+\\*" (buffer-name buffer)))
   (setq line-height (if (eq system-type 'darwin) 150 100))
   (set-face-attribute 'default nil :family "Hack Nerd Font" :height line-height)
+  (setq alpha-val (if (eq system-type 'darwin) 100 92))
+  (set-frame-parameter nil 'alpha alpha-val)
   (setq switch-to-prev-buffer-skip 'skip-these-buffers
     ring-bell-function #'ignore))
 
