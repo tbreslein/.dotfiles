@@ -5,7 +5,6 @@
 ;;   - go
 ;;   - haskell
 ;;   - zig
-;;   - lua
 ;;   - html
 ;;   - markdown
 ;;   - css/scss
