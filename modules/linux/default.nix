@@ -38,6 +38,11 @@ in {
           --ozone-platform=wayland
         '';
       };
+      sessionVariables = {
+        QT_QPA_PLATFORM = "wayland";
+        MOZ_ENABLE_WAYLAND = 1;
+        ELECTRON_OZONE_PLATFORM_HINT = "wayland";
+      };
     };
     nix = {
       package = pkgs.nix;
