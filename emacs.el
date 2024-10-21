@@ -1,4 +1,7 @@
 ;; TODO:
+;; - editorconfig
+;; - try out ido
+;; - stop using treesit-auto
 ;; - is there something like harpoon?
 ;;   - apparently bookmarks already solve this?
 ;; - modes for these languages:
