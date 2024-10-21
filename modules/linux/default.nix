@@ -4,7 +4,7 @@
   pkgs,
   ...
 }: let
-  cfg = config.homeConf.code;
+  cfg = config.homeConf.linux;
 in {
   options = {
     homeConf.linux.enable = lib.mkEnableOption "Enable hm-linux role";
