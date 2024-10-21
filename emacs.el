@@ -1,5 +1,4 @@
 ;; TODO:
-;; - editorconfig
 ;; - try out ido
 ;; - stop using treesit-auto
 ;; - is there something like harpoon?
@@ -40,9 +39,9 @@
 (setq read-process-output-max (* 1024 1024 4))
 
 (require 'package)
-(setq package-archives '(("org"       . "http://orgmode.org/elpa/")
-                         ("gnu"       . "http://elpa.gnu.org/packages/")
-                         ("melpa"     . "http://melpa.org/packages/")))
+(setq package-archives '(("org"   . "http://orgmode.org/elpa/")
+                         ("gnu"   . "http://elpa.gnu.org/packages/")
+                         ("melpa" . "http://melpa.org/packages/")))
 
 ;; Actually get “package” to work.
 (package-initialize)
