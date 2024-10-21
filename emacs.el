@@ -115,6 +115,7 @@
   :ensure nil
 
   :custom
+  (backup-directory-alist '(("." . "~/.emacs.d/backup")))
   (inhibit-startup-screen t)
   (display-line-numbers-type 'visual)
   (make-backup-files nil)
@@ -167,15 +168,15 @@
   :config
   (add-hook 'format-all-mode-hook 'format-all-ensure-formatter)
   (let ((add-node-modules (lambda () (add-to-list 'exec-path (expand-file-name "node_modules/.bin" (locate-dominating-file (buffer-file-name) "node_modules")))))
-        (add-python-venv (lambda () (add-to-list 'exec-path (expand-file-name ".venv/bin" (locate-dominating-file (buffer-file-name) ".venv"))))))
+        (add-python-venv (lambda () (message "foo") (add-to-list 'exec-path (expand-file-name ".venv/bin" (locate-dominating-file (buffer-file-name) ".venv"))))))
     (add-hook 'typescript-ts-mode add-node-modules)
     (add-hook 'javascript-mode add-node-modules)
-    (add-hook 'python-ts-mode-hook add-python-venv)))
+    (add-hook 'python-ts-mode add-python-venv)))
 (setq-default format-all-formatters
               '(("Haskell" (stylish-haskell))
                 ("Lua" (stylua))
                 ("Nix" (alejandra))
-                ;; ("Python" (ruff))
+                ("Python" (ruff))
                 ("Shell" (shfmt "-i" "4" "-ci"))))
 
 (use-package vertico
