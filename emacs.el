@@ -1,6 +1,7 @@
+;;; config --- Summary
+;;; Commentary:
 ;; TODO:
 ;; - try out ido
-;; - stop using treesit-auto
 ;; - is there something like harpoon?
 ;;   - apparently bookmarks already solve this?
 ;; - modes for these languages:
@@ -25,6 +26,7 @@
 ;; - try out eshell
 ;; - try out dirvish (with nerd-dirvish)
 
+;;; Code:
 (setq custom-file "~/.emacs.d/custom.el")
 (ignore-errors (load custom-file)) ;; It may not yet exist.
 
@@ -320,15 +322,43 @@
   (advice-add 'pcomplete-completions-at-point :around #'cape-wrap-silent)
   (advice-add 'pcomplete-completions-at-point :around #'cape-wrap-purify))
 
-;; (use-package
-
-(use-package treesit-auto
-  :hook
-  (after-init . global-treesit-auto-mode)
-  :custom
-  (treesit-auto-install 'prompt)
-  :config
-  (treesit-auto-add-to-auto-mode-alist 'all))
+(use-package treesit
+  :defer t
+  :straight (:type built-in)
+  ;; :hook ((bash-ts-mode c-ts-mode c++-ts-mode
+  ;;                      html-ts-mode js-ts-mode typescript-ts-mode
+  ;;                      json-ts-mode rust-ts-mode tsx-ts-mode python-ts-mode
+  ;;                      css-ts-mode yaml-ts-mode) . lsp-deferred)
+  :init
+  (setq treesit-font-lock-level 4
+        treesit-language-source-alist
+        '((astro "https://github.com/virchau13/tree-sitter-astro")
+          (bash "https://github.com/tree-sitter/tree-sitter-bash")
+          (c "https://github.com/tree-sitter/tree-sitter-c")
+          (cmake "https://github.com/uyha/tree-sitter-cmake")
+          (common-lisp "https://github.com/theHamsta/tree-sitter-commonlisp")
+          (cpp "https://github.com/tree-sitter/tree-sitter-cpp")
+          (css "https://github.com/tree-sitter/tree-sitter-css")
+          (scss "https://github.com/serenadeai/tree-sitter-scss")
+          (elisp "https://github.com/Wilfred/tree-sitter-elisp")
+          (go "https://github.com/tree-sitter/tree-sitter-go")
+          (go-mod "https://github.com/camdencheek/tree-sitter-go-mod")
+          (haskell "https://github.com/tree-sitter/tree-sitter-haskell")
+          (html "https://github.com/tree-sitter/tree-sitter-html")
+          (js ("https://github.com/tree-sitter/tree-sitter-javascript" "master" "src"))
+          (json "https://github.com/tree-sitter/tree-sitter-json")
+          (lua "https://github.com/Azganoth/tree-sitter-lua")
+          (make "https://github.com/alemuller/tree-sitter-make")
+          (markdown "https://github.com/ikatyang/tree-sitter-markdown")
+          (nix "https://github.com/nix-community/tree-sitter-markdown")
+          (ocaml "https://github.com/ikatyang/tree-sitter-ocaml")
+          (python "https://github.com/tree-sitter/tree-sitter-python")
+          (rust "https://github.com/tree-sitter/tree-sitter-rust")
+          (toml "https://github.com/tree-sitter/tree-sitter-toml")
+          (tsx "https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src")
+          (yaml "https://github.com/ikatyang/tree-sitter-yaml")
+          (zsh "https://github.com/tree-sitter-grammars/tree-sitter-zsh")
+          (zig "https://github.com/maxxnino/tree-sitter-zig"))))
 
 ;; ;; This SHOULD take care of the problem that project-root-override tries to solve,
 ;; ;; but for some reason it does not work. I have no idea why, but I don't seem to
