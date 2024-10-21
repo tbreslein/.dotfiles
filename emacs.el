@@ -57,16 +57,6 @@
   (envrc-show-summary-in-minibuffer nil)
   :hook (after-init . envrc-global-mode))
 
-(use-package auto-package-update
-  :defer 30
-  :custom
-  (auto-package-update-interval 7)
-  (auto-package-update-prompt-before-update t)
-  (auto-package-update-delete-old-versions t)
-  (auto-package-update-hide-results t)
-  :config
-  (auto-package-update-maybe))
-
 (use-package evil
   :demand t
   :custom
@@ -163,21 +153,45 @@
   (evil-define-key 'normal 'flymake-mode-map (kbd "gd") 'flymake-show-project-diagnostics)
   (flymake-mode 1))
 
-(use-package format-all
-  :hook (prog-mode-hook . format-all-mode)
+(defun add-node-modules ()
+  "Foo."
+  (add-to-list 'exec-path (expand-file-name "node_modules/.bin/" (locate-dominating-file (buffer-file-name) "node_modules"))))
+(defun add-python-venv ()
+  "Foo."
+  (add-to-list 'exec-path (expand-file-name ".venv/bin/" (locate-dominating-file (buffer-file-name) ".venv"))))
+
+(use-package apheleia
   :config
-  (add-hook 'format-all-mode-hook 'format-all-ensure-formatter)
-  (let ((add-node-modules (lambda () (add-to-list 'exec-path (expand-file-name "node_modules/.bin" (locate-dominating-file (buffer-file-name) "node_modules")))))
-        (add-python-venv (lambda () (message "foo") (add-to-list 'exec-path (expand-file-name ".venv/bin" (locate-dominating-file (buffer-file-name) ".venv"))))))
-    (add-hook 'typescript-ts-mode add-node-modules)
-    (add-hook 'javascript-mode add-node-modules)
-    (add-hook 'python-ts-mode add-python-venv)))
-(setq-default format-all-formatters
-              '(("Haskell" (stylish-haskell))
-                ("Lua" (stylua))
-                ("Nix" (alejandra))
-                ("Python" (ruff))
-                ("Shell" (shfmt "-i" "4" "-ci"))))
+  (setf (alist-get 'black apheleia-formatters)
+        '("poetry" "run" "black" "-"))
+  (setf (alist-get 'alejandra apheleia-formatters)
+        '("alejandra"))
+  (setf (alist-get 'nix-mode apheleia-mode-alist)
+        '(alejandra))
+  (apheleia-global-mode +1))
+
+;; ;; (cl-flet ((add-node-modules (lambda () (interactive) (add-to-list 'exec-path (expand-file-name "node_modules/.bin" (locate-dominating-file (buffer-file-name) "node_modules")))))
+;; ;;           (add-python-venv (lambda () (interactive) (message "foo") (add-to-list 'exec-path (expand-file-name ".venv/bin" (locate-dominating-file (buffer-file-name) ".venv"))))))
+;; (use-package format-all
+;;   :hook (prog-mode-hook . format-all-mode)
+;;   :config
+;;   (add-hook 'format-all-mode-hook 'format-all-ensure-formatter)
+;;   (add-hook 'typescript-ts-mode 'add-node-modules)
+;;   (add-hook 'javascript-mode 'add-node-modules)
+;;   ;; (add-hook 'python-ts-mode 'add-python-venv)
+;;   (add-hook
+;;    'python-ts-mode-hook
+;;    'add-python-venv
+;;    ;; (lambda ()
+;;    ;;   (message "foo")
+;;    ;;   (add-to-list 'exec-path (expand-file-name ".venv/bin" (locate-dominating-file (buffer-file-name) ".venv"))))
+;;    )
+;;   (setq-default format-all-formatters
+;;                 '(("Haskell" (stylish-haskell))
+;;                   ("Lua" (stylua))
+;;                   ("Nix" (alejandra))
+;;                   ;; ("Python" (ruff))
+;;                   ("Shell" (shfmt "-i" "4" "-ci")))))
 
 (use-package vertico
   :hook
@@ -198,14 +212,30 @@
 ;; ^ this defines which completion styles to use.
 ;; flex is fuzzy search, and basic is the regular built-in and it's used as a fallback
 
-(use-package projectile
-  :custom
-  (projectile-project-search-path '(("~/code" . 1) ("~/.dotfiles" . 0) ("~/notes" . 0) ("~/work" . 1) ("~/work/repos" . 1)))
-  (projectile-require-project-root nil)
-  (projectile-sort-order 'recentf)
+(use-package project
+  :ensure nil
   :config
-  (evil-global-set-key 'normal (kbd "<leader>f") 'projectile-command-map)
-  (projectile-mode +1))
+  (evil-global-set-key 'normal (kbd "<leader>ff") 'project-find-file)
+  (evil-global-set-key 'normal (kbd "<leader>fs") 'project-find-regexp)
+  (evil-global-set-key 'normal (kbd "<leader>fp") 'project-switch-project))
+
+;; (use-package projectile
+;;   :custom
+;;   (projectile-project-search-path '(("~/code" . 1) ("~/.dotfiles" . 0) ("~/notes" . 0) ("~/work" . 1) ("~/work/repos" . 1)))
+;;   (projectile-require-project-root nil)
+;;   (projectile-sort-order 'recentf)
+;;   :config
+;;   (defcustom projectile-project-root-functions
+;;     '(projectile-root-local
+;;       projectile-root-marked
+;;       projectile-root-top-down
+;;       projectile-root-top-down-recurring
+;;       projectile-root-bottom-up)
+;;     "A list of functions for finding project roots."
+;;     :group 'projectile
+;;     :type '(repeat function))
+;;   (evil-global-set-key 'normal (kbd "<leader>f") 'projectile-command-map)
+;;   (projectile-mode +1))
 
 ;; gonna try just using projectile with fd and ripgrep
 ;; (use-package consult
@@ -298,20 +328,95 @@
   :config
   (treesit-auto-add-to-auto-mode-alist 'all))
 
+;; ;; This SHOULD take care of the problem that project-root-override tries to solve,
+;; ;; but for some reason it does not work. I have no idea why, but I don't seem to
+;; ;; be the only one.
+;; (setq project-vc-extra-root-markers
+;;       '("Cargo.toml" "pyproject.toml"))
+
+(defun project-root-override (dir)
+  "Find DIR's project root by searching for a '.project.el' file.
+
+If this file exists, it marks the project root. For convenient compatibility
+with Projectile, '.projectile' is also considered a project root marker.
+
+https://blog.jmthornton.net/p/emacs-project-override"
+  (let ((root (or (locate-dominating-file dir ".project.el")
+                  (locate-dominating-file dir ".projectile")
+                  (locate-dominating-file dir "Cargo.toml")
+                  (locate-dominating-file dir "setup.py")
+                  (locate-dominating-file dir "requirements.txt")
+                  (locate-dominating-file dir "pyproject.toml")))
+        (backend (ignore-errors (vc-responsible-backend dir))))
+    (when root (if (version<= emacs-version "28")
+                   (cons 'vc root)
+                 (list 'vc backend root)))))
+
+;; Note that we cannot use :hook here because `project-find-functions' doesn't
+;; end in "-hook", and we can't use this in :init because it won't be defined
+;; yet.
+(use-package project
+  :config
+  (add-hook 'project-find-functions #'project-root-override))
+
+(defun run-command-in-directory (dir cmd &rest args)
+  "Run a command in the specified directory. If the directory is nil, the directory of the file is used. The stdout result is trimmed of whitespace and returned."
+  (let (
+        (default-directory (or dir default-directory))
+        (stdout-buffer (generate-new-buffer "tmp-stdout" t))
+        (full-cmd (append '(call-process cmd nil (list stdout-buffer nil) nil) args))
+        )
+    (unwind-protect
+        (let ((exit-status (condition-case nil (eval full-cmd) (file-missing nil))))
+          (if (eq exit-status 0)
+              (progn
+                (with-current-buffer stdout-buffer
+                  (string-trim (buffer-string))
+                  )
+                )
+            )
+          )
+      (kill-buffer stdout-buffer)
+      )
+    )
+  )
+
+(defun locate-venv-poetry ()
+  "Find a poetry venv."
+  (run-command-in-directory nil "poetry" "env" "info" "-p")
+  )
+
 (use-package eglot
-  :ensure nil)
+  :ensure nil
+  :hook
+  ((go-ts-mode
+    python-base-mode-hook
+    rust-ts-mode) . eglot-ensure))
+
+;; (add-hook
+;;  'python-ts-mode
+;;  (lambda ()
+;;    (when (executable-find "poetry")
+;;      (let
+;;          ((venv (locate-venv-poetry)))
+;;        (when venv
+;;          (setq eglot-workspace-configuration
+;;                (list (cons ':python (list ':venvPath venv ':pythonPath (concat venv "/bin/python")))))
+;;          ))
+;;      )
+;;    (eglot-ensure)))
+
 (use-package eglot-booster
   :vc (:url "https://github.com/jdtsmith/eglot-booster")
   :after eglot
   :config	(eglot-booster-mode))
 
+
 (use-package nix-mode
   :mode "\\.nix\\'")
 (use-package rust-mode
   :custom
-  (rust-mode-treesitter-derive t)
-  :hook
-  (rust-ts-mode . eglot-ensure))
+  (rust-mode-treesitter-derive t))
 (use-package cargo
   :hook (rust-ts-mode . cargo-minor-mode)
   :config (evil-define-key 'normal 'cargo-mode-map (kbd "C-c") 'cargo-minor-mode-command-map))
