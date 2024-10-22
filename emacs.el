@@ -1,6 +1,7 @@
 ;;; config --- Summary
 ;;; Commentary:
 ;; TODO:
+;; - use perspective.el to seperate projects/workspaces
 ;; - try out ido
 ;; - is there something like harpoon?
 ;;   - apparently bookmarks already solve this?
@@ -100,7 +101,6 @@
   :ensure nil
 
   :custom
-  (backup-directory-alist '(("." . "~/.emacs.d/backup")))
   (inhibit-startup-screen t)
   (display-line-numbers-type 'visual)
   (make-backup-files nil)
@@ -129,13 +129,17 @@
   (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
 
   :config
+  (setq backup-directory-alist '(("." . "~/.emacs.d/backups")))
+  (setq delete-old-versions t)
+  (setq kept-old-versions 1000)
+  (setq vc-make-backup-files t)
+  (setq version-control t)
   (defun skip-these-buffers (_window buffer _bury-or-kill)
     "Function for `switch-to-prev-buffer-skip'."
     (string-match "\\*[^*]+\\*" (buffer-name buffer)))
-  (setq line-height (if (eq system-type 'darwin) 150 110))
+  (setq line-height (if (eq system-type 'darwin) 180 110))
   (set-face-attribute 'default nil :family "Hack Nerd Font" :height line-height)
-  (setq alpha-val (if (eq system-type 'darwin) 100 92))
-  (set-frame-parameter nil 'alpha alpha-val)
+  (set-frame-parameter nil 'alpha 96)
   (setq switch-to-prev-buffer-skip 'skip-these-buffers
         ring-bell-function #'ignore))
 
@@ -216,32 +220,32 @@
 ;;                   nil
 ;;                   #'file-directory-p))
 
-(use-package project
-  :ensure nil
-  ;; :custom
-  ;; (project-prompter #'my/project-prompter)
-  :config
-  (evil-global-set-key 'normal (kbd "<leader>ff") 'project-find-file)
-  (evil-global-set-key 'normal (kbd "<leader>fs") 'project-find-regexp)
-  (evil-global-set-key 'normal (kbd "<leader>fp") 'project-switch-project))
-
-;; (use-package projectile
-;;   :custom
-;;   (projectile-project-search-path '(("~/code" . 1) ("~/.dotfiles" . 0) ("~/notes" . 0) ("~/work" . 1) ("~/work/repos" . 1)))
-;;   (projectile-require-project-root nil)
-;;   (projectile-sort-order 'recentf)
+;; (use-package project
+;;   :ensure nil
+;;   ;; :custom
+;;   ;; (project-prompter #'my/project-prompter)
 ;;   :config
-;;   (defcustom projectile-project-root-functions
-;;     '(projectile-root-local
-;;       projectile-root-marked
-;;       projectile-root-top-down
-;;       projectile-root-top-down-recurring
-;;       projectile-root-bottom-up)
-;;     "A list of functions for finding project roots."
-;;     :group 'projectile
-;;     :type '(repeat function))
-;;   (evil-global-set-key 'normal (kbd "<leader>f") 'projectile-command-map)
-;;   (projectile-mode +1))
+;;   (evil-global-set-key 'normal (kbd "<leader>ff") 'project-find-file)
+;;   (evil-global-set-key 'normal (kbd "<leader>fs") 'project-find-regexp)
+;;   (evil-global-set-key 'normal (kbd "<leader>fp") 'project-switch-project))
+
+(use-package projectile
+  :custom
+  (projectile-project-search-path '(("~/code" . 1) ("~/.dotfiles" . 0) ("~/notes" . 0) ("~/work" . 1) ("~/work/repos" . 1)))
+  (projectile-require-project-root nil)
+  (projectile-sort-order 'recentf)
+  :config
+  (defcustom projectile-project-root-functions
+    '(projectile-root-local
+      projectile-root-marked
+      projectile-root-top-down
+      projectile-root-top-down-recurring
+      projectile-root-bottom-up)
+    "A list of functions for finding project roots."
+    :group 'projectile
+    :type '(repeat function))
+  (evil-global-set-key 'normal (kbd "<leader>f") 'projectile-command-map)
+  (projectile-mode +1))
 
 ;; gonna try just using projectile with fd and ripgrep
 ;; (use-package consult
@@ -454,33 +458,6 @@ https://blog.jmthornton.net/p/emacs-project-override"
   :config
   (add-hook 'project-find-functions #'project-root-override))
 
-(defun run-command-in-directory (dir cmd &rest args)
-  "Run a command in the specified directory. If the directory is nil, the directory of the file is used. The stdout result is trimmed of whitespace and returned."
-  (let (
-        (default-directory (or dir default-directory))
-        (stdout-buffer (generate-new-buffer "tmp-stdout" t))
-        (full-cmd (append '(call-process cmd nil (list stdout-buffer nil) nil) args))
-        )
-    (unwind-protect
-        (let ((exit-status (condition-case nil (eval full-cmd) (file-missing nil))))
-          (if (eq exit-status 0)
-              (progn
-                (with-current-buffer stdout-buffer
-                  (string-trim (buffer-string))
-                  )
-                )
-            )
-          )
-      (kill-buffer stdout-buffer)
-      )
-    )
-  )
-
-(defun locate-venv-poetry ()
-  "Find a poetry venv."
-  (run-command-in-directory nil "poetry" "env" "info" "-p")
-  )
-
 (use-package eglot
   :ensure nil
   :hook
@@ -489,7 +466,9 @@ https://blog.jmthornton.net/p/emacs-project-override"
     python-base-mode-hook
     rust-ts-mode
     zig-ts-mode
-    ) . eglot-ensure))
+    ) . eglot-ensure)
+  :config
+  (eglot-inlay-hints-mode -1))
 
 ;; (add-hook
 ;;  'python-ts-mode
@@ -535,6 +514,8 @@ https://blog.jmthornton.net/p/emacs-project-override"
   :hook (ibuffer-mode . nerd-icons-ibuffer-mode))
 (use-package nerd-icons-dired
   :hook (dired-mode . nerd-icons-dired-mode))
+
+(use-package writeroom-mode)
 
 (use-package gruber-darker-theme)
 ;; (use-package sourcerer-theme)
