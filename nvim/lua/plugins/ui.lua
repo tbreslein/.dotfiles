@@ -1,27 +1,28 @@
 return {
-  -- {
-  --   "blazkowolf/gruber-darker.nvim",
-  --   lazy = false,
-  --   priority = 1000,
-  --   config = function()
-  --     vim.cmd.colorscheme("gruber-darker")
-  --   end,
-  -- },
   {
-    "sainnhe/gruvbox-material",
+    "blazkowolf/gruber-darker.nvim",
     lazy = false,
     priority = 1000,
     config = function()
-      vim.o.termguicolors = true
-      vim.g.gruvbox_material_enable_italic = true
-      vim.g.gruvbox_material_enable_bold = true
-      vim.g.gruvbox_material_better_performance = true
-      vim.g.gruvbox_material_ui_contrast = "high"
-      vim.g.gruvbox_material_diagnostic_virtual_text = "highlighted" -- or "colored"
-      vim.g.gruvbox_material_transparent_background = 2
-      vim.cmd.colorscheme("gruvbox-material")
+      vim.cmd.colorscheme("gruber-darker")
     end,
   },
+
+  -- {
+  --   "sainnhe/gruvbox-material",
+  --   lazy = false,
+  --   priority = 1000,
+  --   config = function()
+  --     vim.o.termguicolors = true
+  --     vim.g.gruvbox_material_enable_italic = true
+  --     vim.g.gruvbox_material_enable_bold = true
+  --     vim.g.gruvbox_material_better_performance = true
+  --     vim.g.gruvbox_material_ui_contrast = "high"
+  --     vim.g.gruvbox_material_diagnostic_virtual_text = "highlighted" -- or "colored"
+  --     vim.g.gruvbox_material_transparent_background = 2
+  --     vim.cmd.colorscheme("gruvbox-material")
+  --   end,
+  -- },
 
   {
     "nvim-lualine/lualine.nvim",
