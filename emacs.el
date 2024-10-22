@@ -334,8 +334,9 @@
   (advice-add 'pcomplete-completions-at-point :around #'cape-wrap-purify))
 
 (use-package treesit
+  :ensure nil
   :defer t
-  :straight (:type built-in)
+  ;; :straight (:type built-in)
   ;; :hook ((bash-ts-mode c-ts-mode c++-ts-mode
   ;;                      html-ts-mode js-ts-mode typescript-ts-mode
   ;;                      json-ts-mode rust-ts-mode tsx-ts-mode python-ts-mode
@@ -343,33 +344,84 @@
   :init
   (setq treesit-font-lock-level 4
         treesit-language-source-alist
-        '((astro "https://github.com/virchau13/tree-sitter-astro")
+        '(;; shell / config langs / text
+          (awk "https://github.com/Beaglefoot/tree-sitter-awk")
+          (csv "https://github.com/tree-sitter-grammars/tree-sitter-csv")
           (bash "https://github.com/tree-sitter/tree-sitter-bash")
+          (dockerfile "https://github.com/camdencheek/tree-sitter-dockerfile")
+          (editorconfig "https://github.com/ValdezFOmar/tree-sitter-editorconfig")
+          (git-config "https://github.com/the-mikedavis/tree-sitter-git-commit")
+          (git-rebase "https://github.com/the-mikedavis/tree-sitter-git-rebase")
+          (gitattributes "https://github.com/tree-sitter-grammars/tree-sitter-gitattributes")
+          (gitcommit "https://github.com/the-mikedavis/tree-sitter-git-commit")
+          (hyprlang "https://github.com/tree-sitter-grammars/tree-sitter-hyprlang")
+          (json "https://github.com/tree-sitter/tree-sitter-json")
+          (jq "https://github.com/flurie/tree-sitter-jq")
+          (json5 "https://github.com/Joakker/tree-sitter-json5")
+          (markdown "https://github.com/tree-sitter-grammars/tree-sitter-markdown" "master" "tree-sitter-markdown/src")
+          (markdown-inline "https://github.com/tree-sitter-grammars/tree-sitter-markdown" "master" "tree-sitter-markdown-inline/src")
+          (nix "https://github.com/nix-community/tree-sitter-markdown")
+          (readline "https://github.com/tree-sitter-grammars/tree-sitter-readline")
+          (requirements "https://github.com/tree-sitter-grammars/tree-sitter-requirements")
+          (sql "https://github.com/DerekStride/tree-sitter-sql")
+          (ssh-config "https://github.com/tree-sitter-grammars/tree-sitter-ssh-config")
+          (tmux "https://github.com/Freed-Wu/tree-sitter-tmux")
+          (toml "https://github.com/tree-sitter/tree-sitter-toml")
+          (vim "https://github.com/tree-sitter-grammars/tree-sitter-vim")
+          (vimdoc "https://github.com/neovim/tree-sitter-vimdoc")
+          (xml "https://github.com/tree-sitter-grammars/tree-sitter-xml")
+          (yaml "https://github.com/tree-sitter-grammars/tree-sitter-yaml")
+          (zsh "https://github.com/tree-sitter-grammars/tree-sitter-zsh")
+
+          ;; prog langs
+          (asm "https://github.com/RubixDev/tree-sitter-asm")
           (c "https://github.com/tree-sitter/tree-sitter-c")
+          (cuda "https://github.com/tree-sitter-grammars/tree-sitter-cuda")
           (cmake "https://github.com/uyha/tree-sitter-cmake")
-          (common-lisp "https://github.com/theHamsta/tree-sitter-commonlisp")
+          (meson "https://github.com/tree-sitter-grammars/tree-sitter-meson")
+          (doxygen "https://github.com/tree-sitter-grammars/tree-sitter-doxygen")
+          (common-lisp "https://github.com/tree-sitter-grammars/tree-sitter-commonlisp")
           (cpp "https://github.com/tree-sitter/tree-sitter-cpp")
-          (css "https://github.com/tree-sitter/tree-sitter-css")
-          (scss "https://github.com/serenadeai/tree-sitter-scss")
           (elisp "https://github.com/Wilfred/tree-sitter-elisp")
+          (fortran "https://github.com/stadelmanma/tree-sitter-fortran")
           (go "https://github.com/tree-sitter/tree-sitter-go")
           (go-mod "https://github.com/camdencheek/tree-sitter-go-mod")
+          (go-sum "https://github.com/tree-sitter-grammars/tree-sitter-go-sum")
           (haskell "https://github.com/tree-sitter/tree-sitter-haskell")
+          (julia "https://github.com/tree-sitter/tree-sitter-julia")
+          (just "https://github.com/IndianBoy42/tree-sitter-just")
+          (lua "https://github.com/tree-sitter-grammars/tree-sitter-lua")
+          (luadoc "https://github.com/tree-sitter-grammars/tree-sitter-luadoc")
+          (llvm "https://github.com/benwilliamgraham/tree-sitter-llvm")
+          (llvm-mir "https://github.com/Flakebi/tree-sitter-llvm-mir")
+          ;; might not need this one as it's covered by asm
+          ;; (x86-asm "https://github.com/bearcove/tree-sitter-x86asm")
+          (nasm "https://github.com/naclsn/tree-sitter-nasm")
+          (make "https://github.com/tree-sitter-grammars/tree-sitter-make")
+          (ninja "https://github.com/alemuller/tree-sitter-ninja")
+          (ocaml "https://github.com/ikatyang/tree-sitter-ocaml")
+          (ocaml-interace "https://github.com/ikatyang/tree-sitter-ocaml" "master" "grammars/interace/src")
+          (ocaml-type "https://github.com/ikatyang/tree-sitter-ocaml" "master" "grammars/type/src")
+          (odin "https://github.com/tree-sitter-grammars/tree-sitter-odin")
+          (python "https://github.com/tree-sitter/tree-sitter-python")
+          (scheme "https://github.com/6cdh/tree-sitter-scheme")
+          (rust "https://github.com/tree-sitter/tree-sitter-rust")
+          (zig "https://github.com/tree-sitter-grammars/tree-sitter-zig")
+
+          ;; web
+          (astro "https://github.com/virchau13/tree-sitter-astro")
+          (css "https://github.com/tree-sitter/tree-sitter-css")
+          (scss "https://github.com/tree-sitter-grammars/tree-sitter-scss")
           (html "https://github.com/tree-sitter/tree-sitter-html")
           (js ("https://github.com/tree-sitter/tree-sitter-javascript" "master" "src"))
-          (json "https://github.com/tree-sitter/tree-sitter-json")
-          (lua "https://github.com/Azganoth/tree-sitter-lua")
-          (make "https://github.com/alemuller/tree-sitter-make")
-          (markdown "https://github.com/ikatyang/tree-sitter-markdown")
-          (nix "https://github.com/nix-community/tree-sitter-markdown")
-          (ocaml "https://github.com/ikatyang/tree-sitter-ocaml")
-          (python "https://github.com/tree-sitter/tree-sitter-python")
-          (rust "https://github.com/tree-sitter/tree-sitter-rust")
-          (toml "https://github.com/tree-sitter/tree-sitter-toml")
+          (typescript "https://github.com/tree-sitter/tree-sitter-typescript" "master" "typesript/src")
           (tsx "https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src")
-          (yaml "https://github.com/ikatyang/tree-sitter-yaml")
-          (zsh "https://github.com/tree-sitter-grammars/tree-sitter-zsh")
-          (zig "https://github.com/maxxnino/tree-sitter-zig"))))
+          (svelte "https://github.com/tree-sitter-grammars/tree-sitter-svelte")
+          ))
+  :config
+  (mapc #'treesit-install-language-grammar (mapcar #'car treesit-language-source-alist))
+  (global-tree-sitter-mode))
+
 
 ;; ;; This SHOULD take care of the problem that project-root-override tries to solve,
 ;; ;; but for some reason it does not work. I have no idea why, but I don't seem to
