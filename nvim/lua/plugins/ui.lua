@@ -73,7 +73,16 @@ return {
       "nvim-telescope/telescope.nvim",
     },
     keys = { { "<leader>gg", ":Neogit<cr>", "Neogit" } },
-    config = true,
+    opts = {
+      integrations = {
+        telescope = true,
+        diffview = true,
+      },
+      commit_editor = {
+        staged_diff_split_kind = "split_above",
+        spell_check = false,
+      },
+    },
   },
 
   {
