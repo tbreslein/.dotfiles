@@ -100,6 +100,7 @@ in {
             bind-key -r f run-shell "tmux new-window ${tmux_sessionizer}/bin/tmux-sessionizer"
 
             set -s escape-time 0
+            setw -g mode-keys vi
             set -g status-keys vi
             set -g mouse on
             set -g history-limit 25000
