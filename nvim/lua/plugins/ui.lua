@@ -24,19 +24,24 @@ return {
   -- },
 
   {
-    "tpope/vim-fugitive",
-    lazy = false, -- I need FugitiveStatusline for my statusline
-    -- keys = {
-    --   { "<leader>gg", ":Git<cr>4j", "Git" },
-    --   { "<leader>gpp", ":Git push<cr>", "Git push" },
-    --   { "<leader>gpu", ":Git push --set-upstream origin<cr>", "Git push -u" },
-    --   {
-    --     "<leader>gpf",
-    --     ":Git push --force-with-lease<cr>",
-    --     "Git push --force-with-lease",
-    --   },
-    -- },
+    "nvim-lualine/lualine.nvim",
+    lazy = false,
   },
+
+  -- {
+  --   "tpope/vim-fugitive",
+  --   lazy = false, -- I need FugitiveStatusline for my statusline
+  --   -- keys = {
+  --   --   { "<leader>gg", ":Git<cr>4j", "Git" },
+  --   --   { "<leader>gpp", ":Git push<cr>", "Git push" },
+  --   --   { "<leader>gpu", ":Git push --set-upstream origin<cr>", "Git push -u" },
+  --   --   {
+  --   --     "<leader>gpf",
+  --   --     ":Git push --force-with-lease<cr>",
+  --   --     "Git push --force-with-lease",
+  --   --   },
+  --   -- },
+  -- },
 
   {
     "NeogitOrg/neogit",
