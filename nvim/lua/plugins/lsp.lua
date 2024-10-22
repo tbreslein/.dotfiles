@@ -2,7 +2,7 @@ return {
   {
     "Saghen/blink.cmp",
     event = "VeryLazy",
-    version = "v0.2.0",
+    version = "v0.3.1",
     dependencies = {
       "neovim/nvim-lspconfig",
       "j-hui/fidget.nvim",
@@ -104,13 +104,19 @@ return {
         lspconfig[s].setup({ capabilities = lsp_capabilities })
       end
 
-      vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, { border = "rounded" })
+      vim.lsp.handlers["textDocument/hover"] =
+        vim.lsp.with(vim.lsp.handlers.hover, { border = "rounded" })
 
       lspconfig.pyright.setup({
         capabilities = lsp_capabilities,
         on_new_config = function(config, root_dir)
-          local env =
-            vim.trim(vim.fn.system('cd "' .. (root_dir or ".") .. '"; poetry env info --executable 2>/dev/null'))
+          local env = vim.trim(
+            vim.fn.system(
+              'cd "'
+                .. (root_dir or ".")
+                .. '"; poetry env info --executable 2>/dev/null'
+            )
+          )
           if string.len(env) > 0 then
             config.settings.python.pythonPath = env
           end
