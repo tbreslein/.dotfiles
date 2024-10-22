@@ -1,42 +1,52 @@
 return {
   {
-    "sainnhe/gruvbox-material",
+    "blazkowolf/gruber-darker.nvim",
     lazy = false,
     priority = 1000,
     config = function()
-      vim.o.termguicolors = true
-      vim.g.gruvbox_material_enable_italic = true
-      vim.g.gruvbox_material_enable_bold = true
-      vim.g.gruvbox_material_better_performance = true
-      vim.g.gruvbox_material_ui_contrast = "high"
-      vim.g.gruvbox_material_diagnostic_virtual_text = "highlighted" -- or "colored"
-      vim.g.gruvbox_material_transparent_background = 2
-      vim.cmd.colorscheme("gruvbox-material")
+      vim.cmd.colorscheme("gruber-darker")
     end,
   },
   -- {
-  --   "vague2k/vague.nvim",
+  --   "sainnhe/gruvbox-material",
   --   lazy = false,
   --   priority = 1000,
   --   config = function()
-  --     require("vague").setup { transparent = true }
-  --     vim.cmd.colorscheme "vague"
+  --     vim.o.termguicolors = true
+  --     vim.g.gruvbox_material_enable_italic = true
+  --     vim.g.gruvbox_material_enable_bold = true
+  --     vim.g.gruvbox_material_better_performance = true
+  --     vim.g.gruvbox_material_ui_contrast = "high"
+  --     vim.g.gruvbox_material_diagnostic_virtual_text = "highlighted" -- or "colored"
+  --     vim.g.gruvbox_material_transparent_background = 2
+  --     vim.cmd.colorscheme("gruvbox-material")
   --   end,
   -- },
 
   {
     "tpope/vim-fugitive",
     lazy = false, -- I need FugitiveStatusline for my statusline
-    keys = {
-      { "<leader>gg", ":Git<cr>4j", "Git" },
-      { "<leader>gpp", ":Git push<cr>", "Git push" },
-      { "<leader>gpu", ":Git push --set-upstream origin<cr>", "Git push -u" },
-      {
-        "<leader>gpf",
-        ":Git push --force-with-lease<cr>",
-        "Git push --force-with-lease",
-      },
+    -- keys = {
+    --   { "<leader>gg", ":Git<cr>4j", "Git" },
+    --   { "<leader>gpp", ":Git push<cr>", "Git push" },
+    --   { "<leader>gpu", ":Git push --set-upstream origin<cr>", "Git push -u" },
+    --   {
+    --     "<leader>gpf",
+    --     ":Git push --force-with-lease<cr>",
+    --     "Git push --force-with-lease",
+    --   },
+    -- },
+  },
+
+  {
+    "NeogitOrg/neogit",
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+      "sindrets/diffview.nvim",
+      "nvim-telescope/telescope.nvim",
     },
+    keys = { { "<leader>gg", ":Neogit<cr>", "Neogit" } },
+    config = true,
   },
 
   {

@@ -1,3 +1,6 @@
+-- TODO:
+-- org-mode
+
 function map(mode, keys, action, desc, opts)
   vim.keymap.set(
     mode,
@@ -11,7 +14,7 @@ function map(mode, keys, action, desc, opts)
   )
 end
 
-require "config.vimsettings"
-require "config.keymaps"
-require "config.lazy"
-require "config.statusline"
+require("config.vimsettings")
+require("config.keymaps")
+require("config.lazy")
+require("config.statusline")
