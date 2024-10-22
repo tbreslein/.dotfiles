@@ -48,7 +48,7 @@
     home-manager.enable = true;
     bash = {
       enable = true;
-      completion.enable = true;
+      enableCompletion = true;
       bashrcExtra =
         /*
         bash
