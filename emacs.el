@@ -216,8 +216,19 @@
 ;; ^ this defines which completion styles to use.
 ;; flex is fuzzy search, and basic is the regular built-in and it's used as a fallback
 
+;; TODO: turn this into something I can actually pre-define projects with, including notes, work, and work repos
+;; (defun my/project-prompter ()
+;;   (read-file-name "Select a project folder: "
+;;                   "~/code/"
+;;                   nil
+;;                   nil
+;;                   nil
+;;                   #'file-directory-p))
+
 (use-package project
   :ensure nil
+  ;; :custom
+  ;; (project-prompter #'my/project-prompter)
   :config
   (evil-global-set-key 'normal (kbd "<leader>ff") 'project-find-file)
   (evil-global-set-key 'normal (kbd "<leader>fs") 'project-find-regexp)
