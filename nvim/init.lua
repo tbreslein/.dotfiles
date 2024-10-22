@@ -17,4 +17,4 @@ end
 require("config.vimsettings")
 require("config.keymaps")
 require("config.lazy")
-require("config.statusline")
+-- require("config.statusline")

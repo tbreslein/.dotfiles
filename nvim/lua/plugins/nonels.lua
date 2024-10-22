@@ -8,6 +8,7 @@ return {
       local augroup = vim.api.nvim_create_augroup("LspFormatting", {})
       null_ls.setup({
         sources = {
+          null_ls.builtins.completion.spell,
           null_ls.builtins.code_actions.statix,
           require("none-ls.code_actions.eslint").with({
             prefer_local = "node_modules/.bin",

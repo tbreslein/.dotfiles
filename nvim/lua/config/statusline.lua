@@ -79,14 +79,6 @@ local function ins_right(component)
 end
 
 ins_left({
-  function()
-    return "▊"
-  end,
-  color = { fg = colors.blue }, -- Sets highlighting of component
-  padding = { left = 0, right = 1 }, -- We don't need space before this
-})
-
-ins_left({
   -- mode component
   function()
     return "󰣇"
@@ -125,8 +117,6 @@ ins_left({
   cond = conditions.buffer_not_empty,
   color = { fg = colors.magenta, gui = "bold" },
 })
-ins_left({ "location" })
-ins_left({ "progress", color = { fg = colors.fg, gui = "bold" } })
 
 ins_left({
   "diagnostics",
@@ -145,25 +135,8 @@ ins_right({
   icon = "",
   color = { fg = colors.violet, gui = "bold" },
 })
-
-ins_right({
-  "diff",
-  symbols = { added = "+ ", modified = "~ ", removed = "- " },
-  diff_color = {
-    added = { fg = colors.green },
-    modified = { fg = colors.orange },
-    removed = { fg = colors.red },
-  },
-  cond = conditions.hide_in_width,
-})
-
-ins_right({
-  function()
-    return "▊"
-  end,
-  color = { fg = colors.blue },
-  padding = { left = 1 },
-})
+ins_right({ "location" })
+ins_right({ "progress", color = { fg = colors.fg, gui = "bold" } })
 
 -- Now don't forget to initialize lualine
 lualine.setup(config)
