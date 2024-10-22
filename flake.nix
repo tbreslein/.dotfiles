@@ -26,7 +26,7 @@
       ];
       sessionVariables = rec {
         EDITOR = "nvim";
-        VISUAL = "emacs";
+        VISUAL = EDITOR;
         BROWSER = "brave";
       };
       colors = gruvbox-material;

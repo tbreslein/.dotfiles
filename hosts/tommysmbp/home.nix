@@ -9,7 +9,7 @@
     code.enable = true;
     desktop = {
       enable = true;
-      # terminalFontSize = 22;
+      terminalFontSize = 16;
     };
     dm.enable = true;
   };
