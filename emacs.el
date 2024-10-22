@@ -4,18 +4,9 @@
 ;; - try out ido
 ;; - is there something like harpoon?
 ;;   - apparently bookmarks already solve this?
-;; - modes for these languages:
-;;   - go
-;;   - haskell
-;;   - zig
-;;   - html
-;;   - markdown
-;;   - css/scss
-;;   - toml
-;;   - json
-;;   - docker
 ;; - configure org
 ;; - use org-babel
+;; - try out elpaca
 ;; - fix redo (maybe get an undo plugin?)
 ;; - try to fix visual line move keybinds
 ;; - dap stuff
@@ -350,17 +341,18 @@
           (bash "https://github.com/tree-sitter/tree-sitter-bash")
           (dockerfile "https://github.com/camdencheek/tree-sitter-dockerfile")
           (editorconfig "https://github.com/ValdezFOmar/tree-sitter-editorconfig")
-          (git-config "https://github.com/the-mikedavis/tree-sitter-git-commit")
+          ;; (git-config "https://github.com/the-mikedavis/tree-sitter-git-config")
           (git-rebase "https://github.com/the-mikedavis/tree-sitter-git-rebase")
           (gitattributes "https://github.com/tree-sitter-grammars/tree-sitter-gitattributes")
-          (gitcommit "https://github.com/the-mikedavis/tree-sitter-git-commit")
+          ;; (gitcommit "https://github.com/the-mikedavis/tree-sitter-git-commit")
           (hyprlang "https://github.com/tree-sitter-grammars/tree-sitter-hyprlang")
           (json "https://github.com/tree-sitter/tree-sitter-json")
           (jq "https://github.com/flurie/tree-sitter-jq")
           (json5 "https://github.com/Joakker/tree-sitter-json5")
-          (markdown "https://github.com/tree-sitter-grammars/tree-sitter-markdown" "master" "tree-sitter-markdown/src")
-          (markdown-inline "https://github.com/tree-sitter-grammars/tree-sitter-markdown" "master" "tree-sitter-markdown-inline/src")
-          (nix "https://github.com/nix-community/tree-sitter-markdown")
+
+          (markdown "https://github.com/tree-sitter-grammars/tree-sitter-markdown" "split_parser" "tree-sitter-markdown/src")
+          (markdown-inline "https://github.com/tree-sitter-grammars/tree-sitter-markdown" "split_parser" "tree-sitter-markdown-inline/src")
+          (nix "https://github.com/nix-community/tree-sitter-nix")
           (readline "https://github.com/tree-sitter-grammars/tree-sitter-readline")
           (requirements "https://github.com/tree-sitter-grammars/tree-sitter-requirements")
           (sql "https://github.com/DerekStride/tree-sitter-sql")
@@ -380,7 +372,7 @@
           (cmake "https://github.com/uyha/tree-sitter-cmake")
           (meson "https://github.com/tree-sitter-grammars/tree-sitter-meson")
           (doxygen "https://github.com/tree-sitter-grammars/tree-sitter-doxygen")
-          (common-lisp "https://github.com/tree-sitter-grammars/tree-sitter-commonlisp")
+          ;; (common-lisp "https://github.com/tree-sitter-grammars/tree-sitter-commonlisp")
           (cpp "https://github.com/tree-sitter/tree-sitter-cpp")
           (elisp "https://github.com/Wilfred/tree-sitter-elisp")
           (fortran "https://github.com/stadelmanma/tree-sitter-fortran")
@@ -413,14 +405,22 @@
           (css "https://github.com/tree-sitter/tree-sitter-css")
           (scss "https://github.com/tree-sitter-grammars/tree-sitter-scss")
           (html "https://github.com/tree-sitter/tree-sitter-html")
-          (js ("https://github.com/tree-sitter/tree-sitter-javascript" "master" "src"))
-          (typescript "https://github.com/tree-sitter/tree-sitter-typescript" "master" "typesript/src")
+          (js "https://github.com/tree-sitter/tree-sitter-javascript" "master" "src")
+          (typescript "https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src")
           (tsx "https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src")
           (svelte "https://github.com/tree-sitter-grammars/tree-sitter-svelte")
           ))
+  ;; :config
+  ;; (mapc #'treesit-install-language-grammar (mapcar #'car treesit-language-source-alist))
+  ;; (global-tree-sitter-mode)
+  )
+
+(use-package treesit-auto
+  :custom
+  (treesit-auto-install 'prompt)
   :config
-  (mapc #'treesit-install-language-grammar (mapcar #'car treesit-language-source-alist))
-  (global-tree-sitter-mode))
+  (treesit-auto-add-to-auto-mode-alist 'all)
+  (global-treesit-auto-mode))
 
 
 ;; ;; This SHOULD take care of the problem that project-root-override tries to solve,
@@ -485,8 +485,11 @@ https://blog.jmthornton.net/p/emacs-project-override"
   :ensure nil
   :hook
   ((go-ts-mode
+    haskell-ts-mode
     python-base-mode-hook
-    rust-ts-mode) . eglot-ensure))
+    rust-ts-mode
+    zig-ts-mode
+    ) . eglot-ensure))
 
 ;; (add-hook
 ;;  'python-ts-mode
@@ -509,12 +512,19 @@ https://blog.jmthornton.net/p/emacs-project-override"
 
 (use-package nix-mode
   :mode "\\.nix\\'")
+(use-package go-mode
+  :mode "\\.go\\'")
+(use-package haskell-mode
+  :mode "\\.hs\\'")
 (use-package rust-mode
+  :mode "\\.rs\\'"
   :custom
   (rust-mode-treesitter-derive t))
 (use-package cargo
   :hook (rust-ts-mode . cargo-minor-mode)
   :config (evil-define-key 'normal 'cargo-mode-map (kbd "C-c") 'cargo-minor-mode-command-map))
+(use-package zig-mode
+  :mode "\\.zig\\'")
 
 (use-package nerd-icons
   :custom (nerd-icons-font-family "Hack Nerd Font"))
