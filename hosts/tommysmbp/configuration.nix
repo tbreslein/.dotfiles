@@ -16,8 +16,8 @@
       # "clang-format"
       # "cppcheck"
       # "gcc"
-      "libtool"
-      "cmake"
+      # "libtool"
+      # "cmake"
       # "make"
       # "meson"
       # "ninja"
@@ -35,7 +35,7 @@
   };
   environment = {
     shells = [pkgs.bashInteractive pkgs.zsh];
-    systemPackages = [pkgs.emacs30];
+    # systemPackages = [pkgs.emacs30];
   };
   fonts.packages = with pkgs; [
     (nerdfonts.override
@@ -50,10 +50,10 @@
     enableCompletion = true;
   };
   services = {
-    emacs = {
-      enable = true;
-      package = pkgs.emacs30;
-    };
+    # emacs = {
+    #   enable = true;
+    #   package = pkgs.emacs30;
+    # };
     nix-daemon.enable = true;
   };
   system = {
