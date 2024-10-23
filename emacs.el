@@ -1,17 +1,19 @@
 ;;; config --- Summary
 ;;; Commentary:
 ;; TODO:
-;; - use perspective.el to seperate projects/workspaces
-;; - try out ido
-;; - is there something like harpoon?
-;;   - apparently bookmarks already solve this?
 ;; - configure org
 ;; - use org-babel
+;; - configure mode-line
+;; - see if I can get rid of apheleia and let language modes handle formatting
+;; - try out rustic instead of rust-mode
+;; - try out ido
+;; - use perspective.el to seperate projects/workspaces
+;; - is there something like harpoon?
+;;   - apparently bookmarks already solve this?
 ;; - try out elpaca
 ;; - fix redo (maybe get an undo plugin?)
 ;; - try to fix visual line move keybinds
 ;; - dap stuff
-;; - configure mode-line
 ;; - eww
 ;; - email
 ;; - dashboard? probably not though
