@@ -83,6 +83,9 @@ return {
         staged_diff_split_kind = "split_above",
         spell_check = false,
       },
+      mappings = {
+        popup = { ["p"] = "PushPopup", ["F"] = "PullPopup" },
+      },
     },
   },
 

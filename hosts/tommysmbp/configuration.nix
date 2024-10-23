@@ -47,7 +47,7 @@
   };
   programs.bash = {
     enable = true;
-    enableCompletion = true;
+    completion.enable = false;
   };
   services = {
     emacs = {
