@@ -1,10 +1,23 @@
 return {
+  -- {
+  --   "blazkowolf/gruber-darker.nvim",
+  --   lazy = false,
+  --   priority = 1000,
+  --   config = function()
+  --     vim.cmd.colorscheme("gruber-darker")
+  --   end,
+  -- },
+
   {
-    "blazkowolf/gruber-darker.nvim",
+    "rebelot/kanagawa.nvim",
     lazy = false,
     priority = 1000,
     config = function()
-      vim.cmd.colorscheme("gruber-darker")
+      require("kanagawa").setup({
+        compile = true,
+        background = { dark = "dragon" },
+      })
+      vim.cmd.colorscheme("kanagawa-dragon")
     end,
   },
 

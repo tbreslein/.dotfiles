@@ -112,6 +112,7 @@
   (scroll-step 1)
   (scroll-conservatively 10000)
   (text-mode-ispell-word-completion nil) ;; use cape-dict instead
+  (frame-title-format nil)
 
   :init
   (tool-bar-mode -1)
@@ -139,7 +140,7 @@
   (defun skip-these-buffers (_window buffer _bury-or-kill)
     "Function for `switch-to-prev-buffer-skip'."
     (string-match "\\*[^*]+\\*" (buffer-name buffer)))
-  (setq line-height (if (eq system-type 'darwin) 180 110))
+  (setq line-height (if (eq system-type 'darwin) 160 110))
   (set-face-attribute 'default nil :family "Hack Nerd Font" :height line-height)
   (set-frame-parameter nil 'alpha 96)
   (setq switch-to-prev-buffer-skip 'skip-these-buffers
@@ -170,29 +171,6 @@
   (setf (alist-get 'nix-mode apheleia-mode-alist)
         '(alejandra))
   (apheleia-global-mode +1))
-
-;; ;; (cl-flet ((add-node-modules (lambda () (interactive) (add-to-list 'exec-path (expand-file-name "node_modules/.bin" (locate-dominating-file (buffer-file-name) "node_modules")))))
-;; ;;           (add-python-venv (lambda () (interactive) (message "foo") (add-to-list 'exec-path (expand-file-name ".venv/bin" (locate-dominating-file (buffer-file-name) ".venv"))))))
-;; (use-package format-all
-;;   :hook (prog-mode-hook . format-all-mode)
-;;   :config
-;;   (add-hook 'format-all-mode-hook 'format-all-ensure-formatter)
-;;   (add-hook 'typescript-ts-mode 'add-node-modules)
-;;   (add-hook 'javascript-mode 'add-node-modules)
-;;   ;; (add-hook 'python-ts-mode 'add-python-venv)
-;;   (add-hook
-;;    'python-ts-mode-hook
-;;    'add-python-venv
-;;    ;; (lambda ()
-;;    ;;   (message "foo")
-;;    ;;   (add-to-list 'exec-path (expand-file-name ".venv/bin" (locate-dominating-file (buffer-file-name) ".venv"))))
-;;    )
-;;   (setq-default format-all-formatters
-;;                 '(("Haskell" (stylish-haskell))
-;;                   ("Lua" (stylua))
-;;                   ("Nix" (alejandra))
-;;                   ;; ("Python" (ruff))
-;;                   ("Shell" (shfmt "-i" "4" "-ci")))))
 
 (use-package vertico
   :hook
@@ -520,8 +498,10 @@ https://blog.jmthornton.net/p/emacs-project-override"
 (use-package writeroom-mode)
 
 (use-package gruber-darker-theme)
-;; (use-package sourcerer-theme)
-;; (use-package gruvbox-theme)
-(load-theme 'gruber-darker t)
+(use-package sourcerer-theme)
+(use-package kanagawa-themes)
+;; (load-theme 'gruber-darker t)
 ;; (load-theme 'sourcerer t)
-;; (load-theme 'gruvbox-dark-soft t)
+(load-theme 'kanagawa-dragon t)
+
+;;; emacs.el ends here
