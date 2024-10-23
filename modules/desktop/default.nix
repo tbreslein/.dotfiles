@@ -31,8 +31,8 @@ in {
           };
           font = {
             size = cfg.terminalFontSize;
-            normal.family = "Hack Nerd Font";
-            # normal.family = "ProggyClean Nerd Font";
+            normal.family = (builtins.elemAt settings.fonts 0) + " Nerd Font";
+            # normal.family = "Hack Nerd Font";
           };
           colors = {
             primary = {

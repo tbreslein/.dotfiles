@@ -1,6 +1,7 @@
 {
   config,
   pkgs,
+  settings,
   ...
 }: {
   homebrew = {
@@ -39,7 +40,7 @@
   };
   fonts.packages = with pkgs; [
     (nerdfonts.override
-      {fonts = ["Hack"];})
+      {inherit (settings) fonts;})
   ];
   nix = {
     package = pkgs.nix;

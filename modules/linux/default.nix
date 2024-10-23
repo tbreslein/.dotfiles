@@ -2,6 +2,7 @@
   config,
   lib,
   pkgs,
+  settings,
   ...
 }: let
   cfg = config.homeConf.linux;
@@ -12,7 +13,7 @@ in {
 
   config = lib.mkIf cfg.enable {
     home = {
-      packages = with pkgs; [(nerdfonts.override {fonts = ["Hack"];})];
+      packages = with pkgs; [(nerdfonts.override {inherit (settings) fonts;})];
       file = {
         ".config/electron/electron-flags.conf".text = ''
           --ozone-platform-hint=auto

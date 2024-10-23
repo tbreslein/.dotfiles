@@ -29,14 +29,65 @@
         VISUAL = EDITOR;
         BROWSER = "brave";
       };
-      colors = gruvbox-material;
+      fonts = ["Iosevka" "IosevkaTerm" "Hack"];
+      colors = kanagawa-dragon;
+      # normal:
+      #   black:   '#0d0c0c'
+      #   red:     '#c4746e'
+      #   green:   '#8a9a7b'
+      #   yellow:  '#c4b28a'
+      #   blue:    '#8ba4b0'
+      #   magenta: '#a292a3'
+      #   cyan:    '#8ea4a2'
+      #   white:   '#C8C093'
+      #
+      # bright:
+      #   black:   '#a6a69c'
+      #   red:     '#E46876'
+      #   green:   '#87a987'
+      #   yellow:  '#E6C384'
+      #   blue:    '#7FB4CA'
+      #   magenta: '#938AA9'
+      #   cyan:    '#7AA89F'
+      #   white:   '#c5c9c5'
+      #
+      # selection:
+      #   background: '#2D4F67'
+      #   foreground: '#C8C093'
+      kanagawa-dragon = rec {
+        primary = {
+          background = "181616";
+          foreground = "c5c9c5";
+        };
+        indexed = ["b6927b" "b98d7b"];
+        normal = {
+          black = "0d0c0c";
+          red = "c4746e";
+          green = "8a9a7b";
+          yellow = "c4b28a";
+          blue = "8ba4b0";
+          magenta = "a292a3";
+          cyan = "8ea4a2";
+          white = "c8c093";
+        };
+        bright = {
+          black = "a6a69c";
+          red = "e46876";
+          green = "87a987";
+          yellow = "e6c384";
+          blue = "7fb4ca";
+          magenta = "938aa9";
+          cyan = "7aa89f";
+          white = "c5c9c5";
+        };
+        dim = normal;
+      };
       gruvbox-material = {
         primary = {
-          # background = "1d2021";
           background = "282828";
           foreground = "d4be98";
-          accent = "d8a657";
         };
+        indexed = ["d8a657"];
         normal = {
           black = "32302f";
           red = "ea6962";
