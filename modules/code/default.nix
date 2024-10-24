@@ -52,7 +52,18 @@ in {
 
   config = lib.mkIf cfg.enable {
     home = {
-      packages = with pkgs; [emacs-lsp-booster jq neovim tmux_sessionizer marksman nodePackages.prettier bash-language-server];
+      packages = with pkgs; [
+        emacs-lsp-booster
+        jq
+        neovim
+        tmux_sessionizer
+        marksman
+        nodePackages.prettier
+        bash-language-server
+        nixd
+        statix
+        alejandra
+      ];
       file.".luacheckrc" = {
         text = ''
           globals = { "vim", "LAZY_PLUGIN_SPEC", "spec", "kmap" }

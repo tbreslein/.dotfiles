@@ -193,9 +193,6 @@
       default = pkgs.mkShell {
         packages = with pkgs; [
           vim
-          nil
-          statix
-          alejandra
           luajitPackages.lua-lsp
           stylua
         ];
