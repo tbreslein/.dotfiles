@@ -8,25 +8,17 @@
     enable = true;
     brews = [
       "coreutils"
+      "libtool"
+      "cmake"
       {
         name = "syncthing";
         restart_service = true;
       }
-
-      # "bear"
-      # "clang-format"
-      # "cppcheck"
-      # "gcc"
-      "libtool"
-      "cmake"
-      # "make"
-      # "meson"
-      # "ninja"
     ];
     casks = [
       "alacritty"
-      "amethyst"
       "rectangle"
+      "wezterm"
     ];
     onActivation = {
       cleanup = "zap";
