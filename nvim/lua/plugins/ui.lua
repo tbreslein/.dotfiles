@@ -13,8 +13,11 @@ return {
     lazy = false,
     priority = 1000,
     config = function()
+      -- when making changes to this, remember to run :KanagawaCompile!
       require("kanagawa").setup({
         compile = true,
+        transparent = true,
+        dimInactive = true,
         background = { dark = "dragon" },
       })
       vim.cmd.colorscheme("kanagawa-dragon")
