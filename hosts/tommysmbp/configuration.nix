@@ -18,12 +18,10 @@
     casks = [
       "alacritty"
       "rectangle"
-      "wezterm"
     ];
     onActivation = {
       cleanup = "zap";
       autoUpdate = true;
-      # upgrade = true;
     };
   };
   environment = {

@@ -1,8 +1,9 @@
 return {
   {
     "Saghen/blink.cmp",
+    enabled = true,
     event = "VeryLazy",
-    version = "v0.3.1",
+    version = "v0.4.1",
     dependencies = {
       "neovim/nvim-lspconfig",
       "j-hui/fidget.nvim",
