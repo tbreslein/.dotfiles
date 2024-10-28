@@ -10,7 +10,6 @@ in {
   options = {
     homeConf.linux.enable = lib.mkEnableOption "Enable hm-linux role";
   };
-
   config = lib.mkIf cfg.enable {
     home = {
       packages = with pkgs; [(nerdfonts.override {inherit (settings) fonts;})];

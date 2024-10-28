@@ -14,7 +14,7 @@
   home = {
     username = "tommy";
     stateVersion = "24.05";
-    packages = with pkgs; [rm-improved tree];
+    packages = with pkgs; [rm-improved tree nh];
     shellAliases = {
       g = "git";
       gg = "git status -s";

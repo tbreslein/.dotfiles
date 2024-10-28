@@ -131,7 +131,7 @@
 
           pushd "$DOTFILES"
           case $(uname -s) in
-              "Linux") home-manager switch --flake .;;
+              "Linux") home-manager switch --extra-experimental-features "nix-command flakes" --flake .;;
               "Darwin") darwin-rebuild switch --flake .;;
               *);;
           esac
