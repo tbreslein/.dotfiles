@@ -89,7 +89,7 @@
           toggle_moco() {
             if ! tmux has-session -t "moco" 2>/dev/null; then
               tmux new-session -ds "moco" -c "$HOME/work/repos/mocotrackingclient/"
-              tmux send-keys -t "moco" "poetry install; poetry run python moco_client.py" C-m
+              tmux send-keys -t "moco" "poetry install; AUTO_STOP_AND_NAG=False poetry run python moco_client.py" C-m
             else
               tmux kill-session -t "moco"
             fi
