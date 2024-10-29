@@ -24,7 +24,7 @@ in {
         package = pkgs.emptyDirectory;
         settings = {
           window = {
-            opacity = 0.9;
+            opacity = 0.94;
             blur = true;
             startup_mode = "Maximized";
             option_as_alt = "OnlyLeft";
@@ -32,7 +32,6 @@ in {
           font = {
             size = cfg.terminalFontSize;
             normal.family = (builtins.elemAt settings.fonts 0) + " Nerd Font";
-            # normal.family = "Hack Nerd Font";
           };
           colors = {
             primary = {
