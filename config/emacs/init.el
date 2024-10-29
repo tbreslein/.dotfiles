@@ -28,47 +28,6 @@
                          ("gnu"   . "http://elpa.gnu.org/packages/")
                          ("melpa" . "http://melpa.org/packages/")))
 
-;(defvar elpaca-installer-version 0.7)
-;(defvar elpaca-directory (expand-file-name "elpaca/" user-emacs-directory))
-;(defvar elpaca-builds-directory (expand-file-name "builds/" elpaca-directory))
-;(defvar elpaca-repos-directory (expand-file-name "repos/" elpaca-directory))
-;(defvar elpaca-order '(elpaca :repo "https://github.com/progfolio/elpaca.git"
-;                              :ref nil :depth 1
-;                              :files (:defaults "elpaca-test.el" (:exclude "extensions"))
-;                              :build (:not elpaca--activate-package)))
-;(let* ((repo  (expand-file-name "elpaca/" elpaca-repos-directory))
-;       (build (expand-file-name "elpaca/" elpaca-builds-directory))
-;       (order (cdr elpaca-order))
-;       (default-directory repo))
-;  (add-to-list 'load-path (if (file-exists-p build) build repo))
-;  (unless (file-exists-p repo)
-;    (make-directory repo t)
-;    (when (< emacs-major-version 28) (require 'subr-x))
-;    (condition-case-unless-debug err
-;        (if-let ((buffer (pop-to-buffer-same-window "*elpaca-bootstrap*"))
-;                 ((zerop (apply #'call-process `("git" nil ,buffer t "clone"
-;                                                 ,@(when-let ((depth (plist-get order :depth)))
-;                                                     (list (format "--depth=%d" depth) "--no-single-branch"))
-;                                                 ,(plist-get order :repo) ,repo))))
-;                 ((zerop (call-process "git" nil buffer t "checkout"
-;                                       (or (plist-get order :ref) "--"))))
-;                 (emacs (concat invocation-directory invocation-name))
-;                 ((zerop (call-process emacs nil buffer nil "-Q" "-L" "." "--batch"
-;                                       "--eval" "(byte-recompile-directory \".\" 0 'force)")))
-;                 ((require 'elpaca))
-;                 ((elpaca-generate-autoloads "elpaca" repo)))
-;            (progn (message "%s" (buffer-string)) (kill-buffer buffer))
-;          (error "%s" (with-current-buffer buffer (buffer-string))))
-;      ((error) (warn "%s" err) (delete-directory repo 'recursive))))
-;  (unless (require 'elpaca-autoloads nil t)
-;    (require 'elpaca)
-;    (elpaca-generate-autoloads "elpaca" repo)
-;    (load "./elpaca-autoloads")))
-;(add-hook 'after-init-hook #'elpaca-process-queues)
-;(elpaca `(,@elpaca-order))
-;(elpaca elpaca-use-package (elpaca-use-package-mode))
-;(setq use-package-always-ensure t)
-
 ;; EMACS SETTINGS
 (setq custom-file "~/.emacs.d/custom.el")
 (ignore-errors (load custom-file)) ;; It may not yet exist.
@@ -109,6 +68,7 @@
   ;;(setq backup-directory-alist '(("." . "~/.emacs.d/backups")))
   (setq tab-width 4)
   (setq indent-tabs-mode nil)
+  (setq tab-always-indent 'complete)
   (setq use-dialog-box nil)
   (setq scroll-step 1)
   (setq scroll-conservatively 10000)
@@ -128,7 +88,6 @@
         ring-bell-function #'ignore))
 
 
-
 ;; EXEC-PATH / ENVRC / NIX
 (use-package exec-path-from-shell
   :straight t
@@ -143,11 +102,17 @@
   :hook (after-init . envrc-global-mode))
 
 ;; EVIL MODE
+(use-package undo-fu
+  :straight t)
+(use-package drag-stuff
+  :straight t)
 (use-package evil
   :straight t
   :demand t
+  :after undo-fu
   :init
   (setq evil-want-keybinding nil)
+  (setq evil-undo-system 'undo-fu)
   :config
   (setq evil-want-C-d-scroll t)
   (setq evil-want-C-u-scroll t)
@@ -161,6 +126,8 @@
   (evil-global-set-key 'visual (kbd "C-u") (lambda () (interactive) (evil-scroll-up 0) (recenter)))
   (evil-global-set-key 'normal (kbd "n") (lambda () (interactive) (evil-search-next) (recenter)))
   (evil-global-set-key 'normal (kbd "N") (lambda () (interactive) (evil-search-previous) (recenter)))
+  (evil-global-set-key 'visual (kbd "J") (lambda () (interactive) (drag-stuff-down 1) (evil-indent)))
+  (evil-global-set-key 'visual (kbd "K") (lambda () (interactive) (drag-stuff-up 1) (evil-indent)))
   ;; (evil-global-set-key 'visual (kbd "J") (concat ":m '>+1" (kbd "RET") "gv=gv"))
   ;; (evil-global-set-key 'visual (kbd "K") (concat ":m '<-2" (kbd "RET") "gv=gv"))
   ;; (evil-global-set-key 'normal (kbd "J") (concat ":m +1" (kbd "RET") "=="))
@@ -187,6 +154,27 @@
   :straight t
   :after evil
   :config
+  (evil-define-operator +evil-join-a (beg end)
+    "Join the selected lines.
+This advice improves on `evil-join' by removing comment delimiters when joining
+commented lines, by using `fill-region-as-paragraph'.
+From https://github.com/emacs-evil/evil/issues/606"
+    :motion evil-line
+    (let* ((count (count-lines beg end))
+	   (count (if (> count 1) (1- count) count))
+	   (fixup-mark (make-marker)))
+      (dotimes (var count)
+	(if (and (bolp) (eolp))
+	    (join-line 1)
+	  (let* ((end (line-beginning-position 3))
+		 (fill-column (1+ (- end beg))))
+	    (set-marker fixup-mark (line-end-position))
+	    (fill-region-as-paragraph beg end nil t)
+	    (goto-char fixup-mark)
+	    (fixup-whitespace))))
+      (set-marker fixup-mark nil)))
+
+  (evil-global-set-key 'normal (kbd "J") '+evil-join-a)
   (evil-commentary-mode))
 
 ;; NAVIGATION
@@ -275,6 +263,62 @@
 ;;   (add-hook 'project-find-functions #'project-root-override))
 
 
+;; LSP / COMPLETION
+(use-package vertico
+  :straight t
+  :hook
+  (after-init . vertico-mode)
+  :custom
+  (vertico-count 10)
+  (vertico-resize nil)
+  (vertico-cycle nil))
+
+(use-package marginalia
+  :straight t
+  :after vertico
+  :config
+  (marginalia-mode 1))
+
+(use-package orderless
+  :straight t
+  :after vertico
+  :custom (completion-styles '(flex basic)))
+
+(use-package corfu
+  :straight t
+  :after vertico
+  :custom
+  (corfu-cycle t)
+  (corfu-auto t)
+  (corfu-auto-prefix 2)
+  (corfu-echo-delay 0.1)
+  (corfu-popupinfo-delay 0.1)
+  (corfu-preview-current nil)
+  :bind (:map corfu-map ("RET" . nil))
+  :config
+  (evil-define-key 'insert 'corfu-map (kbd "C-j") 'corfu-next)
+  (evil-define-key 'insert 'corfu-map (kbd "C-k") 'corfu-previous)
+  (evil-define-key 'insert 'corfu-map (kbd "C-l") 'corfu-insert)
+  (evil-define-key 'insert 'corfu-map (kbd "C-h") 'corfu-insert-separator)
+  (corfu-popupinfo-mode)
+  (global-corfu-mode))
+
+(use-package cape
+  :straight t
+  ;:after corfu
+  :init
+  (add-to-list 'completion-at-point-functions #'cape-file)
+  (add-to-list 'completion-at-point-functions #'cape-dabbrev)
+  :config
+  (advice-add 'pcomplete-completions-at-point :around #'cape-wrap-silent)
+  (advice-add 'pcomplete-completions-at-point :around #'cape-wrap-purify))
+
+(use-package corfu-terminal
+  :straight t
+  :config
+  (unless (display-graphic-p) (corfu-terminal-mode +1)))
+
+
 ;; LANGUAGE MAJOR MODES
 (use-package nix-mode
   :straight t
@@ -305,14 +349,8 @@
   :hook
   (after-init . hl-todo-mode))
 
-;(elpaca (magit :branch "main" :pre-build ("make" "info")))
-;(elpaca (forge :branch "main"))
-;(elpaca (ghub :branch "main"))
-;(elpaca (transient :branch "main"))
-;(elpaca (with-editor :branch "main"))
 (use-package magit
   :straight t
-  ;:ensure nil
   :init
   (when (eq system-type 'darwin)
     (setq with-editor-emacsclient-executable "/run/current-system/sw/bin/emacsclient"))
@@ -334,6 +372,18 @@
   :straight t
   :config
   (load-theme 'kanagawa-dragon t))
+
+(use-package doom-modeline
+  :straight (:build t)
+  :defer t
+  :init
+  (doom-modeline-mode 1)
+  (setq find-file-visit-truename t)
+  :config
+  (setq doom-modeline-height 15)
+  (setq doom-modeline-env-version t)
+  (setq doom-modeline-buffer-file-name-style 'truncate-upto-project))
+
 
 (use-package treesit
   :ensure nil
