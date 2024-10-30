@@ -29,7 +29,7 @@
         VISUAL = EDITOR;
         BROWSER = "brave";
       };
-      fonts = ["Iosevka" "IosevkaTerm" "Hack"];
+      fonts = ["MartianMono" "GeistMono" "Iosevka" "Hack"];
       colors = kanagawa-dragon;
       # normal:
       #   black:   '#0d0c0c'

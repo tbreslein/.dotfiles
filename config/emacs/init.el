@@ -1,32 +1,28 @@
 ;;; config -- Summary
 ;;; Commentary:
 ;; TODO:
-;; - ido (/ orderless?)
-;; - flymake
-;; - lspce
-;; - corfu? with corfu/terminal?
+;; - org-mode
+;; - dape
+;; - c/c++ config
+;; - zig config
+;; - lua
+;; - elixir
+;; - uiua
 
 ;;; Code:
 ;; PACKAGE MANAGEMENT
-(defvar bootstrap-version)
-(let ((bootstrap-file
-       (expand-file-name
-        "straight/repos/straight.el/bootstrap.el"
-        (or (bound-and-true-p straight-base-dir)
-            user-emacs-directory)))
-      (bootstrap-version 7))
-  (unless (file-exists-p bootstrap-file)
-    (with-current-buffer
-        (url-retrieve-synchronously
-         "https://raw.githubusercontent.com/radian-software/straight.el/develop/install.el"
-         'silent 'inhibit-cookies)
-      (goto-char (point-max))
-      (eval-print-last-sexp)))
-  (load bootstrap-file nil 'nomessage))
-(straight-use-package 'use-package)
+(require 'package)
 (setq package-archives '(("org"   . "http://orgmode.org/elpa/")
                          ("gnu"   . "http://elpa.gnu.org/packages/")
+			 ("nongnu" . "https://elpa.nongnu.org/nongnu/")
                          ("melpa" . "http://melpa.org/packages/")))
+
+;; Actually get “package” to work.
+(package-initialize)
+;; (package-refresh-contents)
+
+(require 'use-package)
+(setq use-package-always-ensure t)
 
 ;; EMACS SETTINGS
 (setq custom-file "~/.emacs.d/custom.el")
@@ -65,12 +61,13 @@
   (setq inhibit-startup-screen t)
   (setq display-line-numbers-type 'visual)
   (setq make-backup-files nil)
-  ;;(setq backup-directory-alist '(("." . "~/.emacs.d/backups")))
+  (setq backup-directory-alist '(("." . "~/.emacs.d/backups")))
   (setq tab-width 4)
   (setq indent-tabs-mode nil)
   (setq tab-always-indent 'complete)
   (setq use-dialog-box nil)
   (setq scroll-step 1)
+  (setq scroll-margin 5)
   (setq scroll-conservatively 10000)
   (setq text-mode-ispell-word-completion nil) ;; use cape-dict instead
   (setq frame-title-format nil)
@@ -78,8 +75,10 @@
   (setq kept-old-versions 1000)
   (setq vc-make-backup-files t)
   (setq version-control t)
-  (setq line-height (if (eq system-type 'darwin) 180 110))
-  (set-face-attribute 'default nil :family "Iosevka Nerd Font" :height line-height)
+  (setopt display-fill-column-indicator-column 80)
+  (global-display-fill-column-indicator-mode +1)
+  (setq line-height (if (eq system-type 'darwin) 150 110))
+  (set-face-attribute 'default nil :family "MartianMono Nerd Font" :height line-height)
   (set-frame-parameter nil 'alpha 96)
   (defun skip-these-buffers (_window buffer _bury-or-kill)
     "Function for `switch-to-prev-buffer-skip'."
@@ -87,27 +86,26 @@
   (setq switch-to-prev-buffer-skip 'skip-these-buffers
         ring-bell-function #'ignore))
 
+(use-package compile
+  :ensure nil
+  :config
+  (setq compilation-scroll-output t))
 
 ;; EXEC-PATH / ENVRC / NIX
 (use-package exec-path-from-shell
-  :straight t
   :demand t)
 (when (memq window-system '(mac ns x))
   (exec-path-from-shell-initialize))
 
 (use-package envrc
-  :straight t
   :custom
   (envrc-show-summary-in-minibuffer nil)
   :hook (after-init . envrc-global-mode))
 
 ;; EVIL MODE
-(use-package undo-fu
-  :straight t)
-(use-package drag-stuff
-  :straight t)
+(use-package undo-fu)
+(use-package drag-stuff)
 (use-package evil
-  :straight t
   :demand t
   :after undo-fu
   :init
@@ -145,13 +143,11 @@
   (evil-mode))
 
 (use-package evil-collection
-  :straight t
   :after evil
   :config
   (evil-collection-init))
 
 (use-package evil-commentary
-  :straight t
   :after evil
   :config
   (evil-define-operator +evil-join-a (beg end)
@@ -179,7 +175,6 @@ From https://github.com/emacs-evil/evil/issues/606"
 
 ;; NAVIGATION
 (use-package projectile
-  :straight t
   :custom
   (projectile-project-search-path '(("~/code" . 1) ("~/.dotfiles" . 0) ("~/notes" . 0) ("~/work" . 1) ("~/work/repos" . 1)))
   (projectile-require-project-root nil)
@@ -229,43 +224,8 @@ From https://github.com/emacs-evil/evil/issues/606"
     "l" 'dired-find-file)
   (evil-global-set-key 'normal (kbd "-") 'dired-jump))
 
-
-;; EGLOT SOMEHOW NEEDS THIS TO CORRECTLY DETERMINE THE PROJECT ROOT
-;; ;; This SHOULD take care of the problem that project-root-override tries to solve,
-;; ;; but for some reason it does not work. I have no idea why, but I don't seem to
-;; ;; be the only one.
-;; (setq project-vc-extra-root-markers
-;;       '("Cargo.toml" "pyproject.toml"))
-
-;; (defun project-root-override (dir)
-;;   "Find DIR's project root by searching for a '.project.el' file.
-;;
-;; If this file exists, it marks the project root. For convenient compatibility
-;; with Projectile, '.projectile' is also considered a project root marker.
-;;
-;; https://blog.jmthornton.net/p/emacs-project-override"
-;;   (let ((root (or (locate-dominating-file dir ".project.el")
-;;                   (locate-dominating-file dir ".projectile")
-;;                   (locate-dominating-file dir "Cargo.toml")
-;;                   (locate-dominating-file dir "setup.py")
-;;                   (locate-dominating-file dir "requirements.txt")
-;;                   (locate-dominating-file dir "pyproject.toml")))
-;;         (backend (ignore-errors (vc-responsible-backend dir))))
-;;     (when root (if (version<= emacs-version "28")
-;;                    (cons 'vc root)
-;;                  (list 'vc backend root)))))
-;;
-;; ;; Note that we cannot use :hook here because `project-find-functions' doesn't
-;; ;; end in "-hook", and we can't use this in :init because it won't be defined
-;; ;; yet.
-;; (use-package project
-;;   :config
-;;   (add-hook 'project-find-functions #'project-root-override))
-
-
 ;; LSP / COMPLETION
 (use-package vertico
-  :straight t
   :hook
   (after-init . vertico-mode)
   :custom
@@ -274,18 +234,15 @@ From https://github.com/emacs-evil/evil/issues/606"
   (vertico-cycle nil))
 
 (use-package marginalia
-  :straight t
   :after vertico
   :config
   (marginalia-mode 1))
 
 (use-package orderless
-  :straight t
   :after vertico
   :custom (completion-styles '(flex basic)))
 
 (use-package corfu
-  :straight t
   :after vertico
   :custom
   (corfu-cycle t)
@@ -303,9 +260,12 @@ From https://github.com/emacs-evil/evil/issues/606"
   (corfu-popupinfo-mode)
   (global-corfu-mode))
 
+(use-package corfu-terminal
+  :config
+  (unless (display-graphic-p) (corfu-terminal-mode +1)))
+
 (use-package cape
-  :straight t
-  ;:after corfu
+  :after corfu
   :init
   (add-to-list 'completion-at-point-functions #'cape-file)
   (add-to-list 'completion-at-point-functions #'cape-dabbrev)
@@ -313,44 +273,108 @@ From https://github.com/emacs-evil/evil/issues/606"
   (advice-add 'pcomplete-completions-at-point :around #'cape-wrap-silent)
   (advice-add 'pcomplete-completions-at-point :around #'cape-wrap-purify))
 
-(use-package corfu-terminal
-  :straight t
+(use-package flymake
+  :ensure nil
   :config
-  (unless (display-graphic-p) (corfu-terminal-mode +1)))
+  (add-hook 'emacs-lisp-mode-hook 'flymake-mode)
+  (evil-define-key 'normal 'flymake-mode-map (kbd "]d") 'flymake-goto-next-error)
+  (evil-define-key 'normal 'flymake-mode-map (kbd "[d") 'flymake-goto-prev-error)
+  (evil-define-key 'normal 'flymake-mode-map (kbd "gd") 'flymake-show-project-diagnostics)
+  (flymake-mode 1))
 
+;; EGLOT SOMEHOW NEEDS THIS TO CORRECTLY DETERMINE THE PROJECT ROOT
+;; This SHOULD take care of the problem that project-root-override tries to solve,
+;; but for some reason it does not work. I have no idea why, but I don't seem to
+;; be the only one.
+;; (setq project-vc-extra-root-markers
+;;       '("Cargo.toml" "pyproject.toml"))
+
+(defun project-root-override (dir)
+  "Find DIR's project root by searching for a '.project.el' file.
+
+If this file exists, it marks the project root. For convenient compatibility
+with Projectile, '.projectile' is also considered a project root marker.
+
+https://blog.jmthornton.net/p/emacs-project-override"
+  (let ((root (or (locate-dominating-file dir ".project.el")
+                  (locate-dominating-file dir ".projectile")
+                  (locate-dominating-file dir "Cargo.toml")
+                  (locate-dominating-file dir "setup.py")
+                  (locate-dominating-file dir "requirements.txt")
+                  (locate-dominating-file dir "pyproject.toml")))
+        (backend (ignore-errors (vc-responsible-backend dir))))
+    (when root (if (version<= emacs-version "28")
+                   (cons 'vc root)
+                 (list 'vc backend root)))))
+
+;; Note that we cannot use :hook here because `project-find-functions' doesn't
+;; end in "-hook", and we can't use this in :init because it won't be defined
+;; yet.
+(use-package project
+  :ensure nil
+  :config
+  (add-hook 'project-find-functions #'project-root-override))
+
+(use-package eglot
+  :ensure nil
+  :hook
+  ((go-ts-mode
+    haskell-ts-mode
+    python-ts-mode
+    rust-ts-mode
+    zig-ts-mode
+    ) . eglot-ensure)
+  :config
+  (setq eglot-ignored-server-capabilities '(:inlayHintProvider :colorProvider))
+  (eglot-inlay-hints-mode -1))
+
+(use-package eglot-booster
+  :vc (:url "https://github.com/jdtsmith/eglot-booster")
+  :after eglot
+  :config (eglot-booster-mode))
+
+;; (use-package eldoc-box
+;;   :after eglot
+;;   :config
+;;   (evil-define-key 'insert 'corfu-map (kbd "C-f") 'eldoc-box-scroll-down)
+;;   (evil-define-key 'insert 'corfu-map (kbd "C-b") 'eldoc-box-scroll-up)
+;;   (setq eldoc-box-only-multi-line t)
+;;   (add-hook 'eglot-managed-mode-hook #'eldoc-box-hover-at-point-mode t))
+
+(use-package apheleia
+  :config
+  (setf (alist-get 'black apheleia-formatters)
+        '("poetry" "run" "black" "-"))
+  (setf (alist-get 'alejandra apheleia-formatters)
+        '("alejandra"))
+  (setf (alist-get 'nix-mode apheleia-mode-alist)
+        '(alejandra))
+  (apheleia-global-mode +1))
 
 ;; LANGUAGE MAJOR MODES
 (use-package nix-mode
-  :straight t
   :mode "\\.nix\\'")
 (use-package go-mode
-  :straight t
   :mode "\\.go\\'")
 (use-package haskell-mode
-  :straight t
   :mode "\\.hs\\'")
 (use-package rust-mode
-  :straight t
   :mode "\\.rs\\'"
   :custom
   (rust-mode-treesitter-derive t))
 (use-package cargo
-  :straight t
   :hook (rust-ts-mode . cargo-minor-mode)
   :config (evil-define-key 'normal 'cargo-mode-map (kbd "C-c") 'cargo-minor-mode-command-map))
 (use-package zig-mode
-  :straight t
   :mode "\\.zig\\'")
 
 
 ;; UI
 (use-package hl-todo
-  :straight t
   :hook
   (after-init . hl-todo-mode))
 
 (use-package magit
-  :straight t
   :init
   (when (eq system-type 'darwin)
     (setq with-editor-emacsclient-executable "/run/current-system/sw/bin/emacsclient"))
@@ -358,23 +382,23 @@ From https://github.com/emacs-evil/evil/issues/606"
   (evil-global-set-key 'normal (kbd "<leader>gg") 'magit))
 
 (use-package vterm
-  :straight t
   :custom
   (vterm-max-scrollback 20000)
   :config
   (evil-global-set-key 'normal (kbd "<leader>tt") 'vterm))
 
-(use-package writeroom-mode :straight t)
-;(use-package gruber-darker-theme
-;  :config
-;  (load-theme 'gruber-darker nil))
-(use-package kanagawa-themes
-  :straight t
+(use-package writeroom-mode
   :config
-  (load-theme 'kanagawa-dragon t))
+  (setq writeroom-width 140))
+
+(use-package gruber-darker-theme
+  :config
+  (load-theme 'gruber-darker nil))
+;; (use-package kanagawa-themes
+;;   :config
+;;   (load-theme 'kanagawa-dragon t))
 
 (use-package doom-modeline
-  :straight (:build t)
   :defer t
   :init
   (doom-modeline-mode 1)
@@ -382,8 +406,10 @@ From https://github.com/emacs-evil/evil/issues/606"
   :config
   (setq doom-modeline-height 15)
   (setq doom-modeline-env-version t)
-  (setq doom-modeline-buffer-file-name-style 'truncate-upto-project))
-
+  (setq doom-modeline-vcs-max-length 50)
+  (setq doom-modeline-env-version nil)
+  (setq doom-modeline-buffer-encoding nil)
+  (setq doom-modeline-buffer-file-name-style 'relative-from-project))
 
 (use-package treesit
   :ensure nil
@@ -472,12 +498,11 @@ From https://github.com/emacs-evil/evil/issues/606"
           (svelte "https://github.com/tree-sitter-grammars/tree-sitter-svelte")
           ))
   ;; :config
-  ;(mapc #'treesit-install-language-grammar (mapcar #'car treesit-language-source-alist))
+					;(mapc #'treesit-install-language-grammar (mapcar #'car treesit-language-source-alist))
   ;; (global-tree-sitter-mode)
   )
 
 (use-package treesit-auto
-  :straight t
   :custom
   (treesit-auto-install 'prompt)
   :config
