@@ -30,7 +30,34 @@
         BROWSER = "brave";
       };
       fonts = ["MartianMono" "GeistMono" "Iosevka" "Hack"];
-      colors = kanagawa-dragon;
+      colors = melange;
+      melange = rec {
+        primary = {
+          background = "292522";
+          foreground = "ece1d7";
+        };
+        normal = {
+          black = "34302c";
+          red = "bd8183";
+          green = "78997a";
+          yellow = "e49b5d";
+          blue = "7f91b2";
+          magenta = "b380b0";
+          cyan = "7b9695";
+          white = "c1a78e";
+        };
+        bright = {
+          black = "868462";
+          red = "d47766";
+          green = "85b695";
+          yellow = "ebc06d";
+          blue = "a3a9ce";
+          magenta = "cf9bc2";
+          cyan = "89b3b6";
+          white = "ece1d7";
+        };
+        dim = normal;
+      };
       kanagawa-dragon = rec {
         primary = {
           background = "181616";

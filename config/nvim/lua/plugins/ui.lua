@@ -1,28 +1,37 @@
 return {
-  -- {
-  --   "blazkowolf/gruber-darker.nvim",
-  --   lazy = false,
-  --   priority = 1000,
-  --   config = function()
-  --     vim.cmd.colorscheme("gruber-darker")
-  --   end,
-  -- },
-
   {
-    "rebelot/kanagawa.nvim",
+    "savq/melange-nvim",
     lazy = false,
     priority = 1000,
     config = function()
-      -- when making changes to this, remember to run :KanagawaCompile!
-      require("kanagawa").setup({
-        compile = true,
-        transparent = true,
-        dimInactive = true,
-        background = { dark = "dragon" },
+      local group = vim.api.nvim_create_augroup("OverrideMelange", {})
+      vim.api.nvim_create_autocmd("ColorScheme", {
+        pattern = "melange",
+        callback = function()
+          vim.api.nvim_set_hl(0, "Normal", { bg = "NONE" })
+        end,
+        group = group,
       })
-      vim.cmd.colorscheme("kanagawa-dragon")
+
+      vim.cmd.colorscheme("melange")
     end,
   },
+
+  -- {
+  --   "rebelot/kanagawa.nvim",
+  --   lazy = false,
+  --   priority = 1000,
+  --   config = function()
+  --     -- when making changes to this, remember to run :KanagawaCompile!
+  --     require("kanagawa").setup({
+  --       compile = true,
+  --       transparent = true,
+  --       dimInactive = true,
+  --       background = { dark = "dragon" },
+  --     })
+  --     vim.cmd.colorscheme("kanagawa-dragon")
+  --   end,
+  -- },
 
   -- {
   --   "sainnhe/gruvbox-material",
@@ -66,21 +75,6 @@ return {
       },
     },
   },
-
-  -- {
-  --   "tpope/vim-fugitive",
-  --   lazy = false, -- I need FugitiveStatusline for my statusline
-  --   -- keys = {
-  --   --   { "<leader>gg", ":Git<cr>4j", "Git" },
-  --   --   { "<leader>gpp", ":Git push<cr>", "Git push" },
-  --   --   { "<leader>gpu", ":Git push --set-upstream origin<cr>", "Git push -u" },
-  --   --   {
-  --   --     "<leader>gpf",
-  --   --     ":Git push --force-with-lease<cr>",
-  --   --     "Git push --force-with-lease",
-  --   --   },
-  --   -- },
-  -- },
 
   {
     "NeogitOrg/neogit",

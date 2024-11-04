@@ -5,7 +5,7 @@
     linux.enable = true;
     desktop = {
       enable = true;
-      terminalFontSize = 12;
+      terminalFontSize = 10;
     };
     dm.enable = true;
   };
