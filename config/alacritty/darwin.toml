@@ -1,0 +1,7 @@
+[font]
+size = 16
+
+[window]
+blur = true
+option_as_alt = "OnlyLeft"
+startup_mode = "Maximized"
