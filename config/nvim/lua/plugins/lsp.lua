@@ -3,7 +3,7 @@ return {
     "Saghen/blink.cmp",
     enabled = true,
     event = "VeryLazy",
-    version = "v0.5.0",
+    version = "v0.5.1",
     dependencies = {
       "neovim/nvim-lspconfig",
       "j-hui/fidget.nvim",
@@ -42,47 +42,22 @@ return {
           snippet_forward = "<Tab>",
           snippet_backward = "<S-Tab>",
         },
-
+        -- keymap = {
+        --   preset = "default",
+        --   ["<C-j>"] = { "select_next" },
+        --   ["<C-k>"] = { "select_prev" },
+        --   ["<C-l>"] = { "accept" },
+        --   ["<C-b>"] = { "scroll_documentation_up" },
+        --   ["<C-f>"] = { "scroll_documentation_down" },
+        --   ["<Tab>"] = { "snippet_forward" },
+        --   ["<S-Tab>"] = { "snippet_backward" },
+        -- },
         trigger = { signature_help = { enabled = true } },
         windows = {
           autocomplete = { draw = "reversed", border = "rounded" },
-          documentation = { border = "rounded" },
+          documentation = { auto_show = true, border = "rounded" },
           signature_help = { border = "rounded" },
         },
-        highlight = { use_nvim_cmp_as_default = true },
-
-        -- kind_icons = {
-        --   Text = "󰉿",
-        --   Method = "󰊕",
-        --   Function = "󰊕",
-        --   Constructor = "󰒓",
-        --
-        --   Field = "󰜢",
-        --   Variable = "󰆦",
-        --   Property = "󰖷",
-        --
-        --   Class = "󱡠",
-        --   Interface = "󱡠",
-        --   Struct = "󱡠",
-        --   Module = "󰅩",
-        --
-        --   Unit = "󰪚",
-        --   Value = "󰦨",
-        --   Enum = "󰦨",
-        --   EnumMember = "󰦨",
-        --
-        --   Keyword = "󰻾",
-        --   Constant = "󰏿",
-        --
-        --   Snippet = "󱄽",
-        --   Color = "󰏘",
-        --   File = "󰈔",
-        --   Reference = "󰬲",
-        --   Folder = "󰉋",
-        --   Event = "󱐋",
-        --   Operator = "󰪚",
-        --   TypeParameter = "󰬛",
-        -- },
       })
 
       local lspconfig = require("lspconfig")
