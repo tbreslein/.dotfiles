@@ -8,8 +8,7 @@
     enable = true;
     brews = [
       "coreutils"
-      "libtool"
-      "cmake"
+      "fish"
       {
         name = "syncthing";
         restart_service = true;
@@ -26,7 +25,6 @@
   };
   environment = {
     shells = [pkgs.bashInteractive pkgs.zsh];
-    systemPackages = [pkgs.emacs30];
   };
   fonts.packages = with pkgs; [
     (nerdfonts.override
@@ -41,10 +39,6 @@
     completion.enable = false;
   };
   services = {
-    emacs = {
-      enable = true;
-      package = pkgs.emacs30;
-    };
     nix-daemon.enable = true;
   };
   system = {

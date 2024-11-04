@@ -6,7 +6,6 @@
 }: {
   imports = [
     ./code
-    ./desktop
     ./dm
     ./linux
   ];
