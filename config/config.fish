@@ -25,6 +25,7 @@ set -gx BROWSER brave
 set -gx DOTFILES "$HOME/.dotfiles"
 set -gx MYCONFIG "$DOTFILES/config"
 set -gx DOTCONFIG "$HOME/.config"
+set -gx HOMEBREW_BUNDLE_FILE "$DOTFILES/pkgs/Brewfile"
 
 fish_add_path ~/.local/bin
 
@@ -76,7 +77,6 @@ function dm_ln
     set -a links "$MYCONFIG/tmux.conf:$DOTCONFIG/tmux/tmux.conf"
     set -a links "$MYCONFIG/starship.toml:$DOTCONFIG/starship.toml"
     set -a links "$MYCONFIG/direnv.toml:$DOTCONFIG/direnv/direnv.toml"
-    set -a links "$MYCONFIG/fastfetch.jsonc:$DOTCONFIG/fastfetch/config.jsonc"
     set -a links "$DOTFILES/scripts/tmux_sessionizer:$HOME/.local/bin/tmux_sessionizer"
 
     switch (uname)
@@ -104,7 +104,10 @@ end
 function dm_pkgs
     switch (uname)
         case Darwin
-            brew bundle --file="$HOME/.dotfiles/pkgs/Brewfile" --no-lock
+            if not brew bundle check
+                brew bundle --no-lock
+            end
+            brew bundle cleanup --force
         case Linux
             paru
     end

@@ -1,0 +1,5 @@
+
+pacstrap /mnt base base-devel $microcode btrfs-progs linux linux-firmware cryptsetup htop man-db neovim vim networkmanager openssh pacman-contrib pkgfile reflector sudo tmux fish git
+
+
+sudo pacman -S xorg-xwayland xorg xorg-server gnome gdm mesa libva-mesa-driver mesa-vdpau vulkan-radeon lib32-mesa lib32-libva-mesa-driver lib32-mesa-vdpau lib32-vulkan-radeon pipewire pipewire-alsa pipewire-pulse pipewire-jack pipewire-audio lib32-pipewire lib32-libpulse syncthing moreutils git less tree sed awk parallel p7zip texinfo valgrind discord noto-fonts noto-fonts-cjk noto-fonts-emoji noto-fonts-extra ttf-iosevka-nerd steam gamemode lib32-gamemode cmake gnome-tweaks gnome-browser-connector poppler ffmpegthumbnailer mediainfo imagemagick tar unzip wine-staging alacritty
