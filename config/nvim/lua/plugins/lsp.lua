@@ -27,31 +27,31 @@ return {
       require("fidget").setup({})
 
       require("blink.cmp").setup({
-        keymap = {
-          show = {},
-          hide = {},
-          accept = "<C-l>",
-          select_prev = "<C-k>",
-          select_next = "<C-j>",
-
-          show_documentation = {},
-          hide_documentation = {},
-          scroll_documentation_up = "<C-b>",
-          scroll_documentation_down = "<C-f>",
-
-          snippet_forward = "<Tab>",
-          snippet_backward = "<S-Tab>",
-        },
         -- keymap = {
-        --   preset = "default",
-        --   ["<C-j>"] = { "select_next" },
-        --   ["<C-k>"] = { "select_prev" },
-        --   ["<C-l>"] = { "accept" },
-        --   ["<C-b>"] = { "scroll_documentation_up" },
-        --   ["<C-f>"] = { "scroll_documentation_down" },
-        --   ["<Tab>"] = { "snippet_forward" },
-        --   ["<S-Tab>"] = { "snippet_backward" },
+        --   show = {},
+        --   hide = {},
+        --   accept = "<C-l>",
+        --   select_prev = "<C-k>",
+        --   select_next = "<C-j>",
+        --
+        --   show_documentation = {},
+        --   hide_documentation = {},
+        --   scroll_documentation_up = "<C-b>",
+        --   scroll_documentation_down = "<C-f>",
+        --
+        --   snippet_forward = "<Tab>",
+        --   snippet_backward = "<S-Tab>",
         -- },
+        keymap = {
+          preset = "default",
+          ["<C-j>"] = { "select_next" },
+          ["<C-k>"] = { "select_prev" },
+          ["<C-l>"] = { "accept" },
+          ["<C-b>"] = { "scroll_documentation_up" },
+          ["<C-f>"] = { "scroll_documentation_down" },
+          ["<Tab>"] = { "snippet_forward" },
+          ["<S-Tab>"] = { "snippet_backward" },
+        },
         trigger = { signature_help = { enabled = true } },
         windows = {
           autocomplete = { draw = "reversed", border = "rounded" },

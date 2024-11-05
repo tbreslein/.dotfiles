@@ -4,8 +4,9 @@ import = [
     "~/.config/alacritty/host.toml",
 ]
 
-# [font.normal]
+[font.normal]
 # family = "MartianMono Nerd Font"
+family = "GeistMono Nerd Font"
 
 [window]
 blur = true

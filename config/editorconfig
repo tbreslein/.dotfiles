@@ -1,0 +1,17 @@
+root = true
+
+[*]
+charset = utf-8
+indent_size = 4
+indent_style = space
+max_line_width = 80
+trim_trailing_whitespace = true
+
+[*.{json,js,jsx,ts,tsx,cjs,mjs,nix,cabal,hs,lua,yml,yaml,ml,mli,hl,md,mdx,html,astro}]
+indent_size = 2
+
+[CMakeLists.txt]
+indent_size = 2
+
+[{m,M}akefile]
+indent_style = tab

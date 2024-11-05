@@ -22,6 +22,7 @@ return {
           null_ls.builtins.diagnostics.cppcheck.with({
             extra_args = { "--force", "--check-level=exhaustive" },
           }),
+          null_ls.builtins.diagnostics.fish,
           null_ls.builtins.diagnostics.golangci_lint,
           null_ls.builtins.diagnostics.hadolint,
           null_ls.builtins.diagnostics.statix,
@@ -33,6 +34,7 @@ return {
           }),
           null_ls.builtins.formatting.clang_format,
           null_ls.builtins.formatting.cmake_format,
+          null_ls.builtins.formatting.fish_indent,
           null_ls.builtins.formatting.gofumpt,
           null_ls.builtins.formatting.prettier.with({
             prefer_local = "node_modules/.bin",
