@@ -27,6 +27,8 @@ set -gx MYCONFIG "$DOTFILES/config"
 set -gx DOTCONFIG "$HOME/.config"
 set -gx HOMEBREW_BUNDLE_FILE "$DOTFILES/pkgs/Brewfile"
 
+set dm_cache "$HOME/.local/cache/dm"
+
 fish_add_path ~/.local/bin
 
 function toggle_moco
@@ -109,11 +111,74 @@ function dm_pkgs
             end
             brew bundle cleanup --force
         case Linux
-            paru
+            set -l files
+            switch ($HOSTNAME)
+                case kain
+                    set -l arch_files \
+                        "$DOTFILES/pkgs/archfile-base" \
+                        "$DOTFILES/pkgs/archfile-gaming" \
+                        "$DOTFILES/pkgs/archfile-kain" \
+                        "$DOTFILES/pkgs/archfile-desktop"
+                    set -l aur_files \
+                        "$DOTFILES/pkgs/aurfile-gaming" \
+                        "$DOTFILES/pkgs/aurfile-desktop"
+
+                    _handle_pkgs (cat $arch_files | sort --unique) arch
+                    _handle_pkgs (cat $aur_files  | sort --unique) aur
+
+                    set -l pacman_install "$dm_cache/install_arch"
+                    set -l pacman_remove "$dm_cache/remove_arch"
+                    if test -s "$pacman_remove"
+                        sudo pacman -R (awk '{print $1}' "$pacman_remove")
+                    end
+                    sudo pacman -Syu
+                    if test -s "$pacman_install"
+                        sudo pacman --needed -S (awk '{print $1}' "$pacman_install")
+                    end
+                    mv "$dm_cache/want_arch" "$dm_cache/have_arch"
+
+                    set -l paru_install "$dm_cache/install_aur"
+                    set -l paru_remove "$dm_cache/remove_aur"
+                    if test -s "$paru_remove"
+                        paru -R (awk '{print $1}' "$paru_remove")
+                    end
+                    paru --aur -Syu
+                    if test -s "$paru_install"
+                        paru --aur --needed -S (awk '{print $1}' "$paru_install")
+                    end
+                    mv "$dm_cache/want_aur" "$dm_cache/have_aur"
+
+                    rm -f $dm_cache/install_*
+                    rm -f $dm_cache/remove_*
+            end
     end
     if command -v rustup &>/dev/null
         rustup update
     end
+end
+
+function _handle_pkgs
+    set -l want $argv[1]
+    set -l pkg_mgr $argv[2]
+    mkdir -p $dm_cache
+
+    set -l file_have "$dm_cache/have_$pkg_mgr"
+    touch $file_have
+
+    set -l file_install "$dm_cache/install_$pkg_mgr"
+    set -l file_remove "$dm_cache/remove_$pkg_mgr"
+    set -l file_want "$dm_cache/want_$pkg_mgr"
+
+    for f in $file_install $file_remove $file_want
+        touch $f
+        truncate -s0 $f
+    end
+
+    for x in $want
+        echo $x >>$file_want
+    end
+    comm -23 $file_want $file_have >$file_install
+    comm -13 $file_want $file_have >$file_remove
 end
 
 function dm_nvim

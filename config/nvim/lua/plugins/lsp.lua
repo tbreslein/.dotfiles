@@ -49,8 +49,8 @@ return {
           ["<C-l>"] = { "accept" },
           ["<C-b>"] = { "scroll_documentation_up" },
           ["<C-f>"] = { "scroll_documentation_down" },
-          ["<Tab>"] = { "snippet_forward" },
-          ["<S-Tab>"] = { "snippet_backward" },
+          ["<Tab>"] = { "snippet_forward", "fallback" },
+          ["<S-Tab>"] = { "snippet_backward", "fallback" },
         },
         trigger = { signature_help = { enabled = true } },
         windows = {
@@ -80,7 +80,7 @@ return {
       end
 
       vim.lsp.handlers["textDocument/hover"] =
-        vim.lsp.with(vim.lsp.handlers.hover, { border = "rounded" })
+          vim.lsp.with(vim.lsp.handlers.hover, { border = "rounded" })
 
       lspconfig.pyright.setup({
         capabilities = lsp_capabilities,
@@ -88,8 +88,8 @@ return {
           local env = vim.trim(
             vim.fn.system(
               'cd "'
-                .. (root_dir or ".")
-                .. '"; poetry env info --executable 2>/dev/null'
+              .. (root_dir or ".")
+              .. '"; poetry env info --executable 2>/dev/null'
             )
           )
           if string.len(env) > 0 then
