@@ -99,7 +99,6 @@ return {
       })
       lspconfig.lua_ls.setup({
         capabilities = lsp_capabilities,
-        cmd = { "lua-lsp" },
         settings = {
           Lua = {
             runtime = {

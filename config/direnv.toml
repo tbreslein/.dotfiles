@@ -1,0 +1,4 @@
+[global]
+warn_timout = 0
+load_dotenv = true
+hide_env_diff = true

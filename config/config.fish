@@ -75,6 +75,9 @@ function dm_ln
     set -a links "$MYCONFIG/nix.conf:$DOTCONFIG/nix/nix.conf"
     set -a links "$MYCONFIG/tmux.conf:$DOTCONFIG/tmux/tmux.conf"
     set -a links "$MYCONFIG/starship.toml:$DOTCONFIG/starship.toml"
+    set -a links "$MYCONFIG/direnv.toml:$DOTCONFIG/direnv/direnv.toml"
+    set -a links "$MYCONFIG/fastfetch.jsonc:$DOTCONFIG/fastfetch/config.jsonc"
+    set -a links "$DOTFILES/scripts/tmux_sessionizer:$HOME/.local/bin/tmux_sessionizer"
 
     switch (uname)
         case Darwin
@@ -152,5 +155,9 @@ end
 
 fzf --fish | source
 zoxide init fish | source
+
+function starship_transient_prompt_func
+    starship module character
+end
 starship init fish | source
 enable_transience
