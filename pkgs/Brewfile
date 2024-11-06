@@ -1,3 +1,5 @@
+tap "nikitabobko/tap"
+
 brew "bash"
 brew "fish"
 brew "direnv"
@@ -29,3 +31,4 @@ brew "starship"
 cask "font-geist-mono-nerd-font"
 cask "alacritty"
 cask "amethyst"
+cask "aerospace"
