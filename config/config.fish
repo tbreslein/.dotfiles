@@ -72,7 +72,7 @@ set valid_dm_commands ln pkgs nvim sync
 function dm_ln
     set -l links "$MYCONFIG/nvim:$DOTCONFIG/nvim"
     set -a links "$MYCONFIG/alacritty/alacritty.toml:$DOTCONFIG/alacritty/alacritty.toml"
-    set -a links "$MYCONFIG/alacritty/melange.toml:$DOTCONFIG/alacritty/colors.toml"
+    set -a links "$MYCONFIG/alacritty/gruvbox-material.toml:$DOTCONFIG/alacritty/colors.toml"
     set -a links "$MYCONFIG/config.fish:$DOTCONFIG/fish/config.fish"
     set -a links "$MYCONFIG/editorconfig:$HOME/.editorconfig"
     set -a links "$MYCONFIG/nix.conf:$DOTCONFIG/nix/nix.conf"
@@ -99,6 +99,9 @@ function dm_ln
             echo "INFO: creating link $foo"
             mkdir -p (path dirname $_target)
             ln -s $_src $_target
+        else if not test (readlink $_target) = $_src
+            echo "INFO: replacing link source for $_target to $_src"
+            ln -sf $_src $_target
         end
     end
 end
