@@ -67,6 +67,7 @@ end
 #    # git checkout $my_branch
 #end
 
+# all this dm nonsense is hopefully soon to be replaced by syke
 set valid_dm_commands ln pkgs nvim sync
 
 function dm_ln
