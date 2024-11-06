@@ -1,53 +1,37 @@
 return {
+
+  -- {
+  --   "savq/melange-nvim",
+  --   lazy = false,
+  --   priority = 1000,
+  --   config = function()
+  --     local group = vim.api.nvim_create_augroup("OverrideMelange", {})
+  --     vim.api.nvim_create_autocmd("ColorScheme", {
+  --       pattern = "melange",
+  --       callback = function()
+  --         vim.api.nvim_set_hl(0, "Normal", { bg = "NONE" })
+  --       end,
+  --       group = group,
+  --     })
+  --     vim.cmd.colorscheme("melange")
+  --   end,
+  -- },
+
   {
-    "savq/melange-nvim",
+    "sainnhe/gruvbox-material",
     lazy = false,
     priority = 1000,
     config = function()
-      local group = vim.api.nvim_create_augroup("OverrideMelange", {})
-      vim.api.nvim_create_autocmd("ColorScheme", {
-        pattern = "melange",
-        callback = function()
-          vim.api.nvim_set_hl(0, "Normal", { bg = "NONE" })
-        end,
-        group = group,
-      })
-
-      vim.cmd.colorscheme("melange")
+      vim.o.termguicolors = true
+      vim.g.gruvbox_material_enable_italic = true
+      vim.g.gruvbox_material_enable_bold = true
+      vim.g.gruvbox_material_better_performance = true
+      vim.g.gruvbox_material_ui_contrast = "high"
+      vim.g.gruvbox_material_diagnostic_virtual_text = "highlighted" -- or "colored"
+      vim.g.gruvbox_material_transparent_background = 2
+      vim.cmd.colorscheme("gruvbox-material")
     end,
   },
-
-  -- {
-  --   "rebelot/kanagawa.nvim",
-  --   lazy = false,
-  --   priority = 1000,
-  --   config = function()
-  --     -- when making changes to this, remember to run :KanagawaCompile!
-  --     require("kanagawa").setup({
-  --       compile = true,
-  --       transparent = true,
-  --       dimInactive = true,
-  --       background = { dark = "dragon" },
-  --     })
-  --     vim.cmd.colorscheme("kanagawa-dragon")
-  --   end,
-  -- },
-
-  -- {
-  --   "sainnhe/gruvbox-material",
-  --   lazy = false,
-  --   priority = 1000,
-  --   config = function()
-  --     vim.o.termguicolors = true
-  --     vim.g.gruvbox_material_enable_italic = true
-  --     vim.g.gruvbox_material_enable_bold = true
-  --     vim.g.gruvbox_material_better_performance = true
-  --     vim.g.gruvbox_material_ui_contrast = "high"
-  --     vim.g.gruvbox_material_diagnostic_virtual_text = "highlighted" -- or "colored"
-  --     vim.g.gruvbox_material_transparent_background = 2
-  --     vim.cmd.colorscheme("gruvbox-material")
-  --   end,
-  -- },
 
   {
     "nvim-lualine/lualine.nvim",
@@ -119,16 +103,6 @@ return {
       vim.cmd([[hi TreesitterContextBottom gui=underline]])
       vim.cmd([[hi TreesitterContext guibg=#363738]])
     end,
-  },
-
-  {
-    "akinsho/toggleterm.nvim",
-    event = "VeryLazy",
-    keys = {
-      { "<leader>tt", ":ToggleTerm size=20<cr>", "toggleterm split" },
-      { "<leader>te", ":TermExec cmd='!!'<cr>", "toggleterm !!" },
-    },
-    opts = {},
   },
 
   {

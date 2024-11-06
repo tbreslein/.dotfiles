@@ -138,4 +138,9 @@ return {
     },
     opts = { keymaps = { ["q"] = "actions.close" } },
   },
+
+  {
+    "aserowy/tmux.nvim",
+    opts = {},
+  },
 }
