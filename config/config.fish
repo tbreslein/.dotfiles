@@ -117,7 +117,7 @@ function dm_pkgs
             brew bundle cleanup --force
         case Linux
             set -l files
-            switch ($HOSTNAME)
+            switch (cat /etc/hostname)
                 case kain
                     set -l arch_files \
                         "$DOTFILES/pkgs/archfile-base" \
@@ -128,8 +128,8 @@ function dm_pkgs
                         "$DOTFILES/pkgs/aurfile-gaming" \
                         "$DOTFILES/pkgs/aurfile-desktop"
 
-                    _handle_pkgs (cat $arch_files | sort --unique) arch
-                    _handle_pkgs (cat $aur_files  | sort --unique) aur
+                    _handle_pkgs arch (cat $arch_files | sort --unique)
+                    _handle_pkgs aur (cat $aur_files  | sort --unique)
 
                     set -l pacman_install "$dm_cache/install_arch"
                     set -l pacman_remove "$dm_cache/remove_arch"
@@ -163,8 +163,10 @@ function dm_pkgs
 end
 
 function _handle_pkgs
-    set -l want $argv[1]
-    set -l pkg_mgr $argv[2]
+    set -l pkg_mgr $argv[1]
+    set -l want $argv[2..]
+    echo $pkg_mgr
+    echo $want
     mkdir -p $dm_cache
 
     set -l file_have "$dm_cache/have_$pkg_mgr"
