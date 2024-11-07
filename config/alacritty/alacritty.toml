@@ -9,5 +9,4 @@ import = [
 family = "GeistMono Nerd Font"
 
 [window]
-blur = true
 startup_mode = "Maximized"

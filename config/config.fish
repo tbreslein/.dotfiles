@@ -89,7 +89,7 @@ function dm_ln
         case Linux
             switch (cat /etc/hostname)
                 case kain
-                    set -a links "$MYCONFIG/alacritty/kain:$DOTCONFIG/alacritty/host.toml"
+                    set -a links "$MYCONFIG/alacritty/kain.toml:$DOTCONFIG/alacritty/host.toml"
                     set -a links "$MYCONFIG/hypr:$DOTCONFIG/hypr"
             end
     end

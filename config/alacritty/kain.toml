@@ -1,0 +1,7 @@
+[font]
+size = 19
+
+[window]
+blur = true
+opacity = 0.94
+option_as_alt = "OnlyLeft"
