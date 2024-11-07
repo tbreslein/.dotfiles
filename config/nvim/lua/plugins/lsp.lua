@@ -1,19 +1,10 @@
 return {
   {
-    "Saghen/blink.cmp",
-    enabled = true,
-    event = "VeryLazy",
-    version = "v0.5.1",
-    dependencies = {
-      "neovim/nvim-lspconfig",
-      "j-hui/fidget.nvim",
-    },
+    "rachartier/tiny-inline-diagnostic.nvim",
+    event = "LspAttach",
     config = function()
       vim.diagnostic.config({
-        virtual_text = {
-          prefix = "",
-          suffix = "",
-        },
+        virtual_text = false,
         update_in_insert = false,
         underline = true,
         severity_sort = true,
@@ -24,6 +15,19 @@ return {
           prefix = "",
         },
       })
+      require("tiny-inline-diagnostic").setup()
+    end,
+  },
+  {
+    "Saghen/blink.cmp",
+    enabled = true,
+    event = "VeryLazy",
+    version = "v0.5.1",
+    dependencies = {
+      "neovim/nvim-lspconfig",
+      "j-hui/fidget.nvim",
+    },
+    config = function()
       require("fidget").setup({})
 
       require("blink.cmp").setup({

@@ -25,6 +25,7 @@
   "telescope-fzy-native.nvim": { "branch": "master", "commit": "282f069504515eec762ab6d6c89903377252bf5b" },
   "telescope-live-grep-args.nvim": { "branch": "master", "commit": "649b662a8f476fd2c0289570764459e95ebaa3f3" },
   "telescope.nvim": { "branch": "master", "commit": "85922dde3767e01d42a08e750a773effbffaea3e" },
+  "tiny-inline-diagnostic.nvim": { "branch": "main", "commit": "d10c9fda7b8b7b81b2c6eb4c3909adfe9812c6bf" },
   "tmux.nvim": { "branch": "main", "commit": "307bad95a1274f7288aaee09694c25c8cbcd6f1a" },
   "zen-mode.nvim": { "branch": "main", "commit": "29b292bdc58b76a6c8f294c961a8bf92c5a6ebd6" }
 }
