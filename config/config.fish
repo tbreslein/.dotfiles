@@ -140,7 +140,7 @@ function dm_pkgs
                     if test -s "$pacman_install"
                         sudo pacman --needed -S (awk '{print $1}' "$pacman_install")
                     end
-                    mv "$dm_cache/want_arch" "$dm_cache/have_arch"
+                    mv -f "$dm_cache/want_arch" "$dm_cache/have_arch"
 
                     set -l paru_install "$dm_cache/install_aur"
                     set -l paru_remove "$dm_cache/remove_aur"
@@ -151,7 +151,7 @@ function dm_pkgs
                     if test -s "$paru_install"
                         paru --aur --needed -S (awk '{print $1}' "$paru_install")
                     end
-                    mv "$dm_cache/want_aur" "$dm_cache/have_aur"
+                    mv -f "$dm_cache/want_aur" "$dm_cache/have_aur"
 
                     rm -f $dm_cache/install_*
                     rm -f $dm_cache/remove_*
