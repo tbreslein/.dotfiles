@@ -166,8 +166,6 @@ end
 function _handle_pkgs
     set -l pkg_mgr $argv[1]
     set -l want $argv[2..]
-    echo $pkg_mgr
-    echo $want
     mkdir -p $dm_cache
 
     set -l file_have "$dm_cache/have_$pkg_mgr"
