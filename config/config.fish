@@ -85,6 +85,7 @@ function dm_ln
     switch (uname)
         case Darwin
             set -a links "$MYCONFIG/alacritty/darwin.toml:$DOTCONFIG/alacritty/host.toml"
+            set -a links "$MYCONFIG/aerospace.toml:$DOTCONFIG/aerospace/aerospace.toml"
         case Linux
             switch ($HOSTNAME)
                 case kain
