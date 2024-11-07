@@ -87,9 +87,10 @@ function dm_ln
             set -a links "$MYCONFIG/alacritty/darwin.toml:$DOTCONFIG/alacritty/host.toml"
             set -a links "$MYCONFIG/aerospace.toml:$DOTCONFIG/aerospace/aerospace.toml"
         case Linux
-            switch ($HOSTNAME)
+            switch (cat /etc/hostname)
                 case kain
                     set -a links "$MYCONFIG/alacritty/kain:$DOTCONFIG/alacritty/host.toml"
+                    set -a links "$MYCONFIG/hypr:$DOTCONFIG/hypr"
             end
     end
 
@@ -228,11 +229,17 @@ if test -e '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.fish'
     source '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.fish'
 end
 
-fzf --fish | source
-zoxide init fish | source
+if command -v fzf &>/dev/null
+    fzf --fish | source
+end
+if command -v zoxide &>/dev/null
+    zoxide init fish | source
+end
 
 function starship_transient_prompt_func
     starship module character
 end
-starship init fish | source
-enable_transience
+if command -v starship &>/dev/null
+    starship init fish | source
+    enable_transience
+end

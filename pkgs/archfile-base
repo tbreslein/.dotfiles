@@ -14,6 +14,10 @@ reflector
 sudo
 tmux
 fish
+eza
+ripgrep
+fd
+fzf
 git
 htop
 man-db

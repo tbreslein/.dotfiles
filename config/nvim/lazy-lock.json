@@ -4,7 +4,7 @@
   "fidget.nvim": { "branch": "main", "commit": "e2a175c2abe2d4f65357da1c98c59a5cfb2b543f" },
   "gruvbox-material": { "branch": "master", "commit": "b16dcd787db5ba9302b54ebeac186784c2aed29a" },
   "harpoon": { "branch": "harpoon2", "commit": "0378a6c428a0bed6a2781d459d7943843f374bce" },
-  "lazy.nvim": { "branch": "main", "commit": "b1134ab82ee4279e31f7ddf7e34b2a99eb9b7bc9" },
+  "lazy.nvim": { "branch": "main", "commit": "077102c5bfc578693f12377846d427f49bc50076" },
   "lualine.nvim": { "branch": "master", "commit": "ef3f2ee04140aeca037bdcabafab4339da4d5b5f" },
   "neogit": { "branch": "master", "commit": "3987b02e6eb309de87e405a555086d259a153c42" },
   "none-ls-extras.nvim": { "branch": "main", "commit": "f2bb002c8aa644d1f253772ff5d4e75e45ff7f4f" },
