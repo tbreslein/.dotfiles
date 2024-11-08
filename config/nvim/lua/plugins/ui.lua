@@ -42,8 +42,18 @@ return {
         section_separators = { left = "", right = "" },
       },
       sections = {
-        lualine_a = {},
-        lualine_b = { "filename" },
+        lualine_a = {
+          function()
+            return "󰣇 "
+          end,
+        },
+        lualine_b = {
+          {
+            "filename",
+            path = 3,
+            shorting_target = 80,
+          },
+        },
         lualine_c = { "progress", "location", "diagnostics" },
         lualine_x = { "diff" },
         lualine_y = { "branch" },
