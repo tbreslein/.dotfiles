@@ -50,7 +50,7 @@ return {
         lualine_b = {
           {
             "filename",
-            path = 3,
+            path = 1,
             shorting_target = 80,
           },
         },
