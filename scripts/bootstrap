@@ -1,0 +1,59 @@
+#!/usr/bin/env bash
+
+nmtui
+
+# config reflector
+sudo sed -i 's/^#--country.*$/--country Germany,France/' /etc/xdg/reflector/reflector.conf
+sudo sed -i 's/^--sort.*$/--sort rate/' /etc/xdg/reflector/reflector.conf
+if [[ $(systemctl is-enabled reflector.service) == "disabled" ]]; then
+    sudo systemctl enable reflector.service
+    sudo systemctl start reflector.service
+    sudo systemctl enable reflector.timer
+    sudo systemctl start reflector.timer
+fi
+
+# config pacman and paru
+sudo sed -i s/^#Color/Color/ /etc/pacman.conf
+sudo sed -i s/^#VerbosePkgLists/VerbosePkgLists/ /etc/pacman.conf
+sudo sed -i s/^#ParallelDownloads/ParallelDownloads/ /etc/pacman.conf
+sudo sed -i -n 'N;s/^#\[multilib\]\n#Include/\[multilib\]\nInclude/;P;D' /etc/pacman.conf
+sudo pacman -Syy
+
+if [[ $(systemctl is-enabled reflector.service) == "disabled" ]]; then
+    sudo systemctl enable paccache.timer
+    sudo systemctl start paccache.timer
+fi
+sudo pacman -S --needed git base-devel pacman-contrib syncthing
+if ! command -v paru 2 &>/dev/null; then
+    git clone https://aur.archlinux.org/paru.git /home/tommy/paru
+    pushd /home/tommy/paru
+    makepkg -si
+    popd
+    rm -fr /home/tommy/paru
+fi
+
+# install needed packages
+if [ ! -d /home/tommy/.dotfiles ]; then
+    git clone https://github.com/tbreslein/.dotfiles.git /home/tommy/.dotfiles
+fi
+# NOTE: this should install the packages in my dotfiles
+sudo pacman -S --needed greetd hyprland
+
+# config greetd
+if [[ $(systemctl is-enabled greetd) == "disabled" ]]; then
+    sudo systemctl enable greetd.service
+fi
+if ! grep -q '^\[initial_session\]$' /etc/greetd/config.toml; then
+    sudo tee -a /etc/greetd/config.toml <<'EOF'
+
+[initial_session]
+command = "Hyprland"
+user = "tommy"
+EOF
+fi
+
+if ! command -v nix 2 &>/dev/null; then
+    sh <(curl -L https://nixos.org/nix/install) --daemon
+fi
+
+systemctl enable --user syncthing.service

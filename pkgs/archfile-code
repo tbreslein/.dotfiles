@@ -1,0 +1,13 @@
+neovim
+gcc
+clang
+cmake
+meson
+ninja
+stylua
+luacheck
+lua-language-server
+bash-language-server
+marksman
+shfmt
+prettier

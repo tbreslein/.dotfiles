@@ -112,6 +112,9 @@ return {
       require("treesitter-context").setup({ multiline_threshold = 2 })
       vim.cmd([[hi TreesitterContextBottom gui=underline]])
       vim.cmd([[hi TreesitterContext guibg=#363738]])
+      vim.filetype.add({
+        pattern = { [".*/hypr/.*%.conf"] = "hyprlang" }
+      })
     end,
   },
 

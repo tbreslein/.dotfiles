@@ -5,9 +5,11 @@ hyprland
 hypridle
 hyprlock
 hyprpaper
+wlsunset
 greetd
 xdg-desktop-portal-hyprland
 nwg-displays
+nwg-look
 dunst
 waybar
 grim
@@ -17,6 +19,8 @@ wl-clipboard
 network-manager-applet
 qt5-wayland
 qt6-wayland
+qt5ct
+qt6ct
 pipewire
 pipewire-alsa
 pipewire-pulse
@@ -24,6 +28,7 @@ pipewire-jack
 pipewire-audio
 lib32-pipewire
 lib32-libpulse
+pavucontrol
 noto-fonts
 noto-fonts-cjk
 noto-fonts-emoji
@@ -35,3 +40,7 @@ mediainfo
 imagemagick
 alacritty
 starship
+blueman
+brightnessctl
+imv
+mpv

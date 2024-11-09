@@ -1,0 +1,249 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+readonly COLOR_RESET="\033[0m"
+readonly BRIGHT_RED="\033[1;31m"
+readonly BRIGHT_GREEN="\033[1;32m"
+readonly BRIGHT_YELLOW="\033[1;33m"
+readonly BRIGHT_BLUE="\033[1;34m"
+SUCCESS=0
+SUCCESS_SKIP=1
+SUCCESS_WARN=2
+FAIL=3
+cmd_code=$SUCCESS
+cmd_msg=""
+cmd_location=""
+
+readonly DOTFILES="$HOME/.dotfiles"
+readonly HOMEBREW_BUNDLE_FILE="$DOTFILES/pkgs/Brewfile"
+readonly DM_CACHE="$HOME/.local/cache/dm"
+mkdir -p $DM_CACHE
+
+pushd() {
+    command pushd "$@" >/dev/null
+}
+
+popd() {
+    command popd >/dev/null
+}
+__log() {
+    name="$1"
+    state="$2"
+    color="$3"
+    msg="$4"
+    echo -e "$color[ dm:$name ] $state |$COLOR_RESET $msg"
+}
+
+__info() {
+    if [ $# -gt 0 ]; then
+        name="$1"
+        msg="$2"
+    else
+        name="$cmd_location"
+        msg="$cmd_msg"
+    fi
+    __log "$name" "INFO" "$BRIGHT_BLUE" "$msg"
+}
+
+__warn() {
+    if [ $# -gt 0 ]; then
+        name="$1"
+        msg="$2"
+    else
+        name="$cmd_location"
+        msg="$cmd_msg"
+    fi
+    name="$cmd_location"
+    msg="$cmd_msg"
+    __log "$name" "WARN" "$BRIGHT_YELLOW" "$msg"
+}
+
+__fail() {
+    if [ $# -gt 0 ]; then
+        name="$1"
+        msg="$2"
+    else
+        name="$cmd_location"
+        msg="$cmd_msg"
+    fi
+    name="$cmd_location"
+    msg="$cmd_msg"
+    __log "$name" "FAIL" "$BRIGHT_RED" "$msg"
+}
+
+__success() {
+    if [ $# -gt 0 ]; then
+        name="$1"
+        msg="$2"
+    else
+        name="$cmd_location"
+        msg="$cmd_msg"
+    fi
+    __log "$name" "SUCCESS" "$BRIGHT_GREEN" "$msg"
+}
+
+__handle_err() {
+    case "$cmd_code" in
+    "$SUCCESS_SKIP") __success ;;
+    "$SUCCESS_WARN") __warn ;;
+    "$FAIL")
+        __fail
+        exit "$cmd_code"
+        ;;
+    esac
+
+    cmd_code=$SUCCESS
+    cmd_msg=""
+    cmd_location=""
+}
+
+dm_nix() {
+    name="nix"
+    __info "$name" "starting"
+
+    pushd "$DOTFILES"
+    nix-store --gc
+    nix-store --optimise
+
+    __success "$name" "finished"
+    popd
+}
+
+dm_pkgs() {
+    name="pkgs"
+    __info "$name" "starting"
+    case $(uname -s) in
+    Linux)
+        local arch_pkg_files=()
+        local aur_pkg_files=()
+        local roles=("base" $(cat /etc/hostname))
+        case $(cat /etc/hostname) in
+        kain)
+            local roles+=("gaming" "desktop" "code")
+            for r in ${roles[@]}; do
+                local archfile="$DOTFILES/pkgs/archfile-$r"
+                local aurfile="$DOTFILES/pkgs/aurfile-$r"
+                [ -f $archfile ] && arch_pkg_files+=($archfile)
+                [ -f $aurfile ] && aur_pkg_files+=($aurfile)
+            done
+            _handle_pkgs arch "$(cat ${arch_pkg_files[@]} | sort --unique)"
+            _handle_pkgs aur "$(cat ${aur_pkg_files[@]} | sort --unique)"
+
+            local pacman_install="${DM_CACHE}/install_arch"
+            local pacman_remove="${DM_CACHE}/remove_arch"
+
+            if [ -s $pacman_remove ]; then
+                sudo pacman -R $(awk '{print $1}' $pacman_remove)
+            fi
+            sudo pacman -Syu
+            if [ -s $pacman_install ]; then
+                sudo pacman --needed -S $(awk '{print $1}' $pacman_install)
+            fi
+            mv -f "${DM_CACHE}/want_arch" "${DM_CACHE}/have_arch"
+
+            local paru_install="${DM_CACHE}/install_aur"
+            local paru_remove="${DM_CACHE}/remove_aur"
+
+            if [ -s $paru_remove ]; then
+                paru -R $(awk '{print $1}' $paru_remove)
+            fi
+            paru --aur -Syu
+            if [ -s $paru_install ]; then
+                paru --aur --needed -S $(awk '{print $1}' $paru_install)
+            fi
+            mv -f "${DM_CACHE}/want_aur" "${DM_CACHE}/have_aur"
+
+            rm -f "${DM_CACHE}/install_*"
+            rm -f "${DM_CACHE}/remove_*"
+            ;;
+        esac
+        ;;
+    Darwin)
+        if ! brew bundle check; then
+            brew bundle --no-lock
+        fi
+        ;;
+    esac
+
+    if command -v rustup &>/dev/null; then
+        __info "$name" "running rustup"
+        rustup update
+    fi
+
+    __success "$name" "finished"
+}
+
+_handle_pkgs() {
+    local pkg_mgr=$1
+    local want=$2
+
+    local file_have="${DM_CACHE}/have_${pkg_mgr}"
+    touch $file_have
+
+    local file_install="${DM_CACHE}/install_${pkg_mgr}"
+    local file_remove="${DM_CACHE}/remove_${pkg_mgr}"
+    local file_want="${DM_CACHE}/want_${pkg_mgr}"
+
+    for f in $file_install $file_remove $file_want; do
+        touch $f
+        truncate -s0 $f
+    done
+
+    for x in $want; do
+        echo $x >>$file_want
+    done
+    comm -23 $file_want $file_have >$file_install
+    comm -13 $file_want $file_have >$file_remove
+}
+
+dm_nvim() {
+    name="nvim"
+    __info "$name" "starting"
+    if command -v nvim &>/dev/null; then
+        nvim --headless "+Lazy! sync" "+TSUpdateSync" +qa
+    fi
+    __success "$name" "finished"
+}
+
+dm_sync() {
+    __info "sync" "starting"
+
+    IFS=' ' read -ra __commands <<<"$VALID_COMMANDS"
+    for c in "${__commands[@]}"; do
+        [[ $c == "sync" ]] && continue
+        eval "dm_$c"
+        __handle_err
+    done
+
+    __success "sync" "finished"
+}
+
+__main() {
+    pushd "$DOTFILES"
+    git pull || true
+    popd
+    for c in "${COMMANDS[@]}"; do
+        if [[ ! "$VALID_COMMANDS" =~ [[:space:]]$c[[:space:]] ]]; then
+            cmd_code=$FAIL
+            cmd_location="main"
+            cmd_msg="$c is not a valid dm command; valid commands:$VALID_COMMANDS"
+        fi
+    done
+    __handle_err
+    mkdir -p ~/.config ~/.local/bin ~/.cache/dm
+    for c in "${COMMANDS[@]}"; do
+        eval "dm_$c"
+        __handle_err
+    done
+    __handle_err
+}
+
+COMMANDS=()
+VALID_COMMANDS=" nix pkgs nvim sync "
+if [ $# -gt 0 ]; then
+    read -ra COMMANDS <<<"$@"
+else
+    COMMANDS=("sync")
+fi
+__main

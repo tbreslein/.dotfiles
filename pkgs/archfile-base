@@ -19,9 +19,9 @@ ripgrep
 fd
 fzf
 git
+git-delta
 htop
 man-db
-neovim
 syncthing
 moreutils
 less
@@ -37,3 +37,5 @@ tar
 unzip
 tealdeer
 wikiman
+direnv
+jq
