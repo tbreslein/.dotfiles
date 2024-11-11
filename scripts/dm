@@ -110,6 +110,74 @@ dm_nix() {
     popd
 }
 
+dm_ln() {
+    name="ln"
+    __info "$name" "starting"
+    local myconfig="$DOTFILES/config"
+    local myscripts="$DOTFILES/scripts"
+    local dotconfig="$HOME/.config"
+    local localbin="$HOME/.local/bin"
+    local links=(
+        "$myconfig/nvim:$dotconfig/nvim"
+        "$myconfig/alacritty/alacritty.toml:$dotconfig/alacritty/alacritty.toml"
+        "$myconfig/alacritty/gruvbox-material.toml:$dotconfig/alacritty/colors.toml"
+        "$myconfig/editorconfig:$HOME/.editorconfig"
+        "$myconfig/nix.conf:$dotconfig/nix/nix.conf"
+        "$myconfig/tmux.conf:$dotconfig/tmux/tmux.conf"
+        "$myconfig/starship.toml:$dotconfig/starship.toml"
+        "$myconfig/direnv.toml:$dotconfig/direnv/direnv.toml"
+        "$myconfig/luacheckrc:$HOME/.luacheckrc"
+        "$myconfig/bash/bash_logout:$HOME/.bash_logout"
+        "$myconfig/bash/bash_profile:$HOME/.profile"
+        "$myconfig/bash/bashrc:$HOME/.bashrc"
+        "$myconfig/bash/inputrc:$HOME/.inputrc"
+        "$myconfig/git:$dotconfig/git"
+        "$myscripts/tmux_sessionizer:$localbin/tmux_sessionizer"
+        "$myscripts/dm:$localbin/dm"
+    )
+
+    case $(uname -s) in
+    Darwin)
+        links+=(
+            "$myconfig/alacritty/darwin.toml:$dotconfig/alacritty/host.toml"
+            "$myconfig/aerospace.toml:$dotconfig/aerospace/aerospace.toml"
+        )
+        ;;
+    Linux)
+        links+=(
+            "$myconfig/alacritty/$(cat /etc/hostname).toml:$dotconfig/alacritty/host.toml"
+            "$myconfig/hypr/hyprland.conf:$dotconfig/hypr/hyprland.conf"
+            "$myconfig/hypr/hyprlock.conf:$dotconfig/hypr/hyprlock.conf"
+            "$myconfig/hypr/hypridle.conf:$dotconfig/hypr/hypridle.conf"
+            "$myconfig/hypr/hyprpaper.conf:$dotconfig/hypr/hyprpaper.conf"
+            "$myconfig/waybar:$dotconfig/waybar"
+            "$myconfig/dunstrc:$dotconfig/dunst/dunstrc"
+            "$myconfig/electron:$dotconfig/electron"
+            "$myconfig/electron13:$dotconfig/electron13"
+            "$myconfig/electron-flags.conf:$dotconfig/electron-flags.conf"
+            "$myconfig/electron13-flags.conf:$dotconfig/electron13-flags.conf"
+        )
+        ;;
+    esac
+    oldIFS=$IFS
+    IFS=':'
+    for l in "${links[@]}"; do
+        local foo=($l)
+        local _src="${foo[0]}"
+        local _target="${foo[1]}"
+        if [[ ! -L $_target ]]; then
+            __info "$name" "creating symlink ${foo[0]} -> ${foo[1]}"
+            mkdir -p $(dirname "$_target")
+            ln -s $_src $_target
+        elif [[ ! $(readlink $_target) == "$_src" ]]; then
+            __info "$name" "updating symlink ${foo[0]} -> ${foo[1]}"
+            ln -sf $_src $_target
+        fi
+    done
+    IFS=$oldIFS
+    __success "$name" "finished"
+}
+
 dm_pkgs() {
     name="pkgs"
     __info "$name" "starting"
@@ -240,7 +308,7 @@ __main() {
 }
 
 COMMANDS=()
-VALID_COMMANDS=" nix pkgs nvim sync "
+VALID_COMMANDS=" nix ln pkgs nvim sync "
 if [ $# -gt 0 ]; then
     read -ra COMMANDS <<<"$@"
 else
