@@ -1,10 +1,6 @@
 mesa
-libva-mesa-driver
-mesa-vdpau
-vulkan-radeon
-vkd3d
 lib32-mesa
-lib32-libva-mesa-driver
-lib32-mesa-vdpau
+vulkan-radeon
 lib32-vulkan-radeon
+vkd3d
 lib32-vkd3d
