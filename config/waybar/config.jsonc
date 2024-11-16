@@ -42,6 +42,7 @@
     "format-icons": {
       "default": [""],
     },
+    "on-click": "pavucontrol",
   },
   "custom/logout": {
     "format": "󰐥 ",
