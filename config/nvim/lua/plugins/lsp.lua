@@ -57,7 +57,6 @@ return {
         "bashls",
         "rust_analyzer",
         "dockerls",
-        "gopls",
         "marksman",
         "ts_ls",
         "ruff",
@@ -65,14 +64,13 @@ return {
         "cmake",
         "nixd",
         "zls",
-        "ols",
       }
       for _, s in ipairs(lsp_servers) do
         lspconfig[s].setup({ capabilities = lsp_capabilities })
       end
 
       vim.lsp.handlers["textDocument/hover"] =
-        vim.lsp.with(vim.lsp.handlers.hover, { border = "rounded" })
+          vim.lsp.with(vim.lsp.handlers.hover, { border = "rounded" })
 
       lspconfig.pyright.setup({
         capabilities = lsp_capabilities,
@@ -80,8 +78,8 @@ return {
           local env = vim.trim(
             vim.fn.system(
               'cd "'
-                .. (root_dir or ".")
-                .. '"; poetry env info --executable 2>/dev/null'
+              .. (root_dir or ".")
+              .. '"; poetry env info --executable 2>/dev/null'
             )
           )
           if string.len(env) > 0 then
