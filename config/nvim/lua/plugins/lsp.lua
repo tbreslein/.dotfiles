@@ -1,28 +1,9 @@
 return {
   {
-    "rachartier/tiny-inline-diagnostic.nvim",
-    event = "LspAttach",
-    config = function()
-      vim.diagnostic.config({
-        virtual_text = false,
-        update_in_insert = false,
-        underline = true,
-        severity_sort = true,
-        float = {
-          border = "rounded",
-          source = true,
-          header = "",
-          prefix = "",
-        },
-      })
-      require("tiny-inline-diagnostic").setup()
-    end,
-  },
-  {
     "Saghen/blink.cmp",
     enabled = true,
     event = "VeryLazy",
-    version = "v0.5.1",
+    version = "v0.*",
     dependencies = {
       "neovim/nvim-lspconfig",
       "j-hui/fidget.nvim",
@@ -31,21 +12,6 @@ return {
       require("fidget").setup({})
 
       require("blink.cmp").setup({
-        -- keymap = {
-        --   show = {},
-        --   hide = {},
-        --   accept = "<C-l>",
-        --   select_prev = "<C-k>",
-        --   select_next = "<C-j>",
-        --
-        --   show_documentation = {},
-        --   hide_documentation = {},
-        --   scroll_documentation_up = "<C-b>",
-        --   scroll_documentation_down = "<C-f>",
-        --
-        --   snippet_forward = "<Tab>",
-        --   snippet_backward = "<S-Tab>",
-        -- },
         keymap = {
           preset = "default",
           ["<C-j>"] = { "select_next" },
@@ -59,11 +25,16 @@ return {
         trigger = { signature_help = { enabled = true } },
         windows = {
           autocomplete = { draw = "reversed", border = "rounded" },
-          documentation = { auto_show = true, border = "rounded" },
+          documentation = {
+            auto_show = true,
+            border = "rounded",
+            max_height = 20,
+          },
           signature_help = { border = "rounded" },
         },
       })
 
+      local lsp_capabilities = vim.lsp.protocol.make_client_capabilities()
       local lspconfig = require("lspconfig")
       local lsp_servers = {
         "bashls",
@@ -84,7 +55,7 @@ return {
       end
 
       vim.lsp.handlers["textDocument/hover"] =
-          vim.lsp.with(vim.lsp.handlers.hover, { border = "rounded" })
+        vim.lsp.with(vim.lsp.handlers.hover, { border = "rounded" })
 
       lspconfig.pyright.setup({
         capabilities = lsp_capabilities,
@@ -92,8 +63,8 @@ return {
           local env = vim.trim(
             vim.fn.system(
               'cd "'
-              .. (root_dir or ".")
-              .. '"; poetry env info --executable 2>/dev/null'
+                .. (root_dir or ".")
+                .. '"; poetry env info --executable 2>/dev/null'
             )
           )
           if string.len(env) > 0 then
