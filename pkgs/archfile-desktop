@@ -16,6 +16,7 @@ grim
 slurp
 satty
 wl-clipboard
+cliphist
 network-manager-applet
 qt5-wayland
 qt6-wayland
