@@ -150,6 +150,7 @@ dm_ln() {
             "$myconfig/hypr/hyprlock.conf:$dotconfig/hypr/hyprlock.conf"
             "$myconfig/hypr/hypridle.conf:$dotconfig/hypr/hypridle.conf"
             "$myconfig/hypr/hyprpaper.conf:$dotconfig/hypr/hyprpaper.conf"
+            "$myconfig/tofi:$dotconfig/tofi/config"
             "$myconfig/waybar:$dotconfig/waybar"
             "$myconfig/dunstrc:$dotconfig/dunst/dunstrc"
             "$myconfig/electron:$dotconfig/electron"
