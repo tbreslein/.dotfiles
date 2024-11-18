@@ -67,19 +67,9 @@ fi
 if command -v fzf 2 &>/dev/null; then
     eval "$(fzf --bash)"
 fi
-# if command -v starship 2 &>/dev/null; then
-#     eval "$(starship init bash)"
-# fi
+if command -v starship 2 &>/dev/null; then
+    eval "$(starship init bash)"
+fi
 if command -v zoxide 2 &>/dev/null; then
     eval "$(zoxide init bash)"
 fi
-
-ps_color() {
-    if [[ $? != 0 ]]; then
-        echo '\e[1;31m'
-    else
-        echo '\e[1;33m'
-    fi
-}
-
-PS1='\e[1;34m\W \e[1;33mλ\e[m '
