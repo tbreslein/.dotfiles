@@ -1,7 +1,9 @@
 tap "nikitabobko/tap"
+tap "homebrew/services"
 
 brew "bash"
-brew "fish"
+brew "bash-completion@2"
+brew "shfmt"
 brew "direnv"
 brew "coreutils"
 brew "neovim"

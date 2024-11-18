@@ -1,4 +1,10 @@
 local home = os.getenv("HOME")
+local hostname_file = io.open("/etc/hostname", "r")
+local hostname = ""
+if hostname_file ~= nil then
+  hostname = hostname_file.read()
+  hostname_file:close()
+end
 
 return {
   symlinks = {

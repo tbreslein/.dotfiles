@@ -229,8 +229,8 @@ dm_pkgs() {
         esac
         ;;
     Darwin)
-        if ! brew bundle check; then
-            brew bundle --no-lock
+        if ! brew bundle check --file "$HOMEBREW_BUNDLE_FILE"; then
+            brew bundle --no-lock --file "$HOMEBREW_BUNDLE_FILE"
         fi
         ;;
     esac

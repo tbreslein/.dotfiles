@@ -10,7 +10,6 @@ export PATH=~/bin/:$PATH
 export EDITOR="nvim"
 export VISUAL="nvim"
 export BROWSER="brave"
-export PAGER="nvim +Man!"
 
 [[ -f ~/.bashrc ]] && . ~/.bashrc
 
