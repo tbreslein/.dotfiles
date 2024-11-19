@@ -25,6 +25,7 @@ vim.opt.fileencoding = "utf-8"
 vim.opt.clipboard:append({ "unnamed", "unnamedplus" })
 vim.opt.inccommand = "split"
 vim.opt.autoread = true
+vim.opt.laststatus = 0
 if vim.loop.os_uname().sysname == "Darwin" then
   vim.fn.setenv("CC", "gcc-14")
   vim.fn.setenv("CXX", "g++-14")
@@ -41,7 +42,12 @@ vim.api.nvim_create_autocmd("FileType", {
   pattern = { "fugitive", "git", "help", "lspinfo", "man", "query", "vim" },
   callback = function(event)
     vim.bo[event.buf].buflisted = false
-    vim.keymap.set("n", "q", "<cmd>close<cr>", { buffer = event.buf, silent = true })
+    vim.keymap.set(
+      "n",
+      "q",
+      "<cmd>close<cr>",
+      { buffer = event.buf, silent = true }
+    )
   end,
 })
 vim.api.nvim_create_autocmd({ "BufWritePost" }, {

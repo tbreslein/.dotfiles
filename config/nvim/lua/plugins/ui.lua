@@ -34,41 +34,49 @@ return {
   },
 
   {
-    "nvim-lualine/lualine.nvim",
-    lazy = false,
-    opts = {
-      options = {
-        component_separators = { left = "", right = "" },
-        section_separators = { left = "", right = "" },
-      },
-      sections = {
-        lualine_a = {
-          function()
-            return "󰣇 "
-          end,
-        },
-        lualine_b = {
-          {
-            "filename",
-            path = 1,
-            shorting_target = 80,
-          },
-        },
-        lualine_c = { "progress", "location", "diagnostics" },
-        lualine_x = { "diff" },
-        lualine_y = { "branch" },
-        lualine_z = {},
-      },
-      inactive_sections = {
-        lualine_a = {},
-        lualine_b = {},
-        lualine_c = { "filename", "location" },
-        lualine_x = {},
-        lualine_y = {},
-        lualine_z = {},
-      },
+    "Bekaboo/dropbar.nvim",
+    dependencies = {
+      "nvim-telescope/telescope-fzf-native.nvim",
+      build = "make",
     },
   },
+
+  -- {
+  --   "nvim-lualine/lualine.nvim",
+  --   lazy = false,
+  --   opts = {
+  --     options = {
+  --       component_separators = { left = "", right = "" },
+  --       section_separators = { left = "", right = "" },
+  --     },
+  --     sections = {
+  --       lualine_a = {
+  --         function()
+  --           return "󰣇 "
+  --         end,
+  --       },
+  --       lualine_b = {
+  --         {
+  --           "filename",
+  --           path = 1,
+  --           shorting_target = 80,
+  --         },
+  --       },
+  --       lualine_c = { "progress", "location", "diagnostics" },
+  --       lualine_x = { "diff" },
+  --       lualine_y = { "branch" },
+  --       lualine_z = {},
+  --     },
+  --     inactive_sections = {
+  --       lualine_a = {},
+  --       lualine_b = {},
+  --       lualine_c = { "filename", "location" },
+  --       lualine_x = {},
+  --       lualine_y = {},
+  --       lualine_z = {},
+  --     },
+  --   },
+  -- },
 
   {
     "NeogitOrg/neogit",
@@ -113,7 +121,7 @@ return {
       vim.cmd([[hi TreesitterContextBottom gui=underline]])
       vim.cmd([[hi TreesitterContext guibg=#363738]])
       vim.filetype.add({
-        pattern = { [".*/hypr/.*%.conf"] = "hyprlang" }
+        pattern = { [".*/hypr/.*%.conf"] = "hyprlang" },
       })
     end,
   },

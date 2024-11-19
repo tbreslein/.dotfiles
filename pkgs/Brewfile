@@ -3,6 +3,7 @@ tap "homebrew/services"
 
 brew "bash"
 brew "bash-completion@2"
+brew "gcc@14"
 brew "shfmt"
 brew "direnv"
 brew "coreutils"
