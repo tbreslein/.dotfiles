@@ -29,7 +29,6 @@ brew "tealdeer"
 brew "stylua"
 brew "luacheck"
 brew "lua-language-server"
-brew "starship"
 
 cask "font-geist-mono-nerd-font"
 cask "alacritty"
