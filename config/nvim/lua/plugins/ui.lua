@@ -33,13 +33,7 @@ return {
     end,
   },
 
-  {
-    "Bekaboo/dropbar.nvim",
-    dependencies = {
-      "nvim-telescope/telescope-fzf-native.nvim",
-      build = "make",
-    },
-  },
+  "Bekaboo/dropbar.nvim",
 
   -- {
   --   "nvim-lualine/lualine.nvim",
