@@ -82,4 +82,4 @@ ps_color() {
     fi
 }
 
-PS1='\n\e[1;34m\W \e[1;33mλ\e[m '
+PS1='\n\e[1;34m\w \e[1;33mλ\e[m '
