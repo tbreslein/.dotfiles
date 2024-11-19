@@ -33,11 +33,11 @@ local symlinks_strs = {
 
 if hostname == "kain" then
   symlinks_strs[#symlinks_strs + 1] = myconfig
-    .. "/alacritty/"
-    .. hostname
-    .. ".toml:"
-    .. userconfig
-    .. "/alacritty/host.toml"
+      .. "/alacritty/"
+      .. hostname
+      .. ".toml:"
+      .. userconfig
+      .. "/alacritty/host.toml"
   symlinks_strs[#symlinks_strs + 1] = myconfig .. "tofi:" .. userconfig .. "/tofi/config"
   symlinks_strs[#symlinks_strs + 1] = myconfig .. "dunstrc:" .. userconfig .. "/dunst/dunstrc"
   local direct_links = {
