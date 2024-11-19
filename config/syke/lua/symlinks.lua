@@ -19,7 +19,6 @@ local symlinks_strs = {
   myconfig .. "/editorconfig:" .. home .. "/.editorconfig",
   myconfig .. "/nix.conf:" .. userconfig .. "/nix/nix.conf",
   myconfig .. "/tmux.conf:" .. userconfig .. "/tmux/tmux.conf",
-  myconfig .. "/starship.toml:" .. userconfig .. "/starship.toml",
   myconfig .. "/direnv.toml:" .. userconfig .. "/direnv/direnv.toml",
   myconfig .. "/git:" .. userconfig .. "/git",
   myconfig .. "/luacheckrc:" .. home .. "/.luacheckrc",
@@ -28,7 +27,12 @@ local symlinks_strs = {
   myconfig .. "/bash/bashrc:" .. home .. "/.bashrc",
   myconfig .. "/bash/inputrc:" .. home .. "/.inputrc",
   myscripts .. "/tmux_sessionizer:" .. localbin .. "/tmux_sessionizer",
+  myscripts .. "/git_status:" .. localbin .. "/git_status",
   myscripts .. "/dm:" .. localbin .. "/dm",
+}
+
+local absent_symlinks = {
+  userconfig .. "/starship.toml",
 }
 
 if hostname == "kain" then
@@ -70,6 +74,13 @@ for _, sym_str in ipairs(symlinks_strs) do
   symlinks[#symlinks + 1] = {
     source = t[1],
     target = t[2],
+  }
+end
+
+for _, sym_str in ipairs(absent_symlinks) do
+  symlinks[#symlinks + 1] = {
+    target = sym_str,
+    absent = true,
   }
 end
 

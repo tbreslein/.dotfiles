@@ -1,1 +1,49 @@
 #!/usr/bin/env bash
+
+#           _err_msg=""
+#           _git_prompt=""
+#           _prompt_command() {
+#             _RET=$?
+#             _err_msg=""
+#             [ $_RET -gt 0 ] && _err_msg="''${_RET} "
+#             _git_prompt=""
+#             if git rev-parse > /dev/null 2>&1; then
+#               _git_prompt=" $(git rev-parse --abbrev-ref HEAD) "
+#               if [ $(git status --porcelain=v1 | wc -l) -gt 0 ]; then
+#                 _git_prompt="''${_git_prompt}!"
+#               fi
+#               status_uno=$(git status -uno)
+#               if echo "$status_uno" | grep -q "Your branch is behind"; then
+#                 _git_prompt="''${_git_prompt}v"
+#               fi
+#               if echo "$status_uno" | grep -q "Your branch is ahead"; then
+#                 _git_prompt="''${_git_prompt}^"
+#               fi
+#               if echo "$status_uno" | grep -q "Your branch and '.*' have diverged"; then
+#                 _git_prompt="''${_git_prompt}v^"
+#               fi
+#               _git_prompt="''${_git_prompt} "
+#             fi
+#           }
+#           PROMPT_COMMAND=_prompt_command
+#           PS1="\n\[\033[1;32m\]\u@\h\[\033[0m\] | \[\033[1;34m\]\w\[\033[0m\] | \[\033[1;36m\]\''${_git_prompt}\[\033[0m\]\n\[\033[1;31m\]\''${_err_msg}\[\033[0m\]$ "
+
+if git rev-parse >/dev/null 2>&1; then
+    result=" $(git rev-parse --abbrev-ref HEAD) "
+    if [ $(git status --porcelain=v1 | wc -l) -gt 0 ]; then
+        result="${result}!"
+    fi
+    status_uno=$(git status -uno)
+    if echo "$status_uno" | grep -q "Your branch is behind"; then
+        result="${result}"
+    fi
+    if echo "$status_uno" | grep -q "Your branch is ahead"; then
+        result="${result}"
+    fi
+    if echo "$status_uno" | grep -q "Your branch and '.*' have diverged"; then
+        result="${result}"
+    fi
+    echo "$result"
+else
+    echo ""
+fi
