@@ -1,22 +1,5 @@
 return {
 
-  -- {
-  --   "savq/melange-nvim",
-  --   lazy = false,
-  --   priority = 1000,
-  --   config = function()
-  --     local group = vim.api.nvim_create_augroup("OverrideMelange", {})
-  --     vim.api.nvim_create_autocmd("ColorScheme", {
-  --       pattern = "melange",
-  --       callback = function()
-  --         vim.api.nvim_set_hl(0, "Normal", { bg = "NONE" })
-  --       end,
-  --       group = group,
-  --     })
-  --     vim.cmd.colorscheme("melange")
-  --   end,
-  -- },
-
   {
     "sainnhe/gruvbox-material",
     lazy = false,
@@ -73,29 +56,6 @@ return {
   -- },
 
   {
-    "NeogitOrg/neogit",
-    dependencies = {
-      "nvim-lua/plenary.nvim",
-      "sindrets/diffview.nvim",
-      "nvim-telescope/telescope.nvim",
-    },
-    keys = { { "<leader>gg", ":Neogit<cr>", "Neogit" } },
-    opts = {
-      integrations = {
-        telescope = true,
-        diffview = true,
-      },
-      commit_editor = {
-        staged_diff_split_kind = "split_above",
-        spell_check = false,
-      },
-      mappings = {
-        popup = { ["p"] = "PushPopup", ["F"] = "PullPopup" },
-      },
-    },
-  },
-
-  {
     "nvim-treesitter/nvim-treesitter",
     build = ":TSUpdate",
     dependencies = { "nvim-treesitter/nvim-treesitter-context" },
@@ -135,26 +95,6 @@ return {
       },
     },
     opts = {},
-  },
-
-  {
-    "folke/zen-mode.nvim",
-    event = "VeryLazy",
-    keys = {
-      {
-        "<leader>zz",
-        function()
-          require("zen-mode").toggle()
-        end,
-        "zen-mode toggle",
-      },
-    },
-    opts = {
-      plugins = {
-        alacritty = { enabled = true, font = "28" },
-        tmux = { enabled = true },
-      },
-    },
   },
 
   {

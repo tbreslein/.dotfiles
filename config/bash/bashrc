@@ -6,6 +6,7 @@ shopt -s autocd
 
 alias g="git"
 alias gg="git status"
+alias lg="lazygit"
 alias v="nvim"
 alias ls='eza --icons=always'
 alias la='ls -aa'
