@@ -32,6 +32,7 @@ brew "luacheck"
 brew "lua-language-server"
 
 cask "font-geist-mono-nerd-font"
+cask "anki"
 cask "alacritty"
 cask "aerospace"
 cask "brave-browser"
