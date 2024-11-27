@@ -104,6 +104,23 @@ return {
     },
     config = function()
       require("telescope").setup({
+        defaults = {
+          layout_strategy = "vertical",
+          layout_config = {
+            horizontal = {
+              size = {
+                width = "90%",
+                height = "60%",
+              },
+            },
+            vertical = {
+              size = {
+                width = "90%",
+                height = "90%",
+              },
+            },
+          },
+        },
         extensions = {
           fzy_native = {
             override_generic_sorter = false,
