@@ -63,6 +63,7 @@ return {
         "clangd",
         "cmake",
         "nixd",
+        "ocamllsp",
         "zls",
       }
       for _, s in ipairs(lsp_servers) do
