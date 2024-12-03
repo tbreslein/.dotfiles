@@ -47,7 +47,6 @@ return {
       {
         "<leader>dt",
         function()
-          local ft = vim.bo.filetype
           if vim.bo.filetype == "python" then
             require("dap-python").test_method()
           elseif vim.bo.filetype == "go" then
@@ -59,7 +58,6 @@ return {
     },
     config = function()
       local dap, dapui = require("dap"), require("dapui")
-
       dapui.setup({
         layouts = {
           {
@@ -120,7 +118,10 @@ return {
         type = "server",
         port = "13000",
         executable = {
-          command = vim.fn.expand("$HOME/Downloads/extension/adapter/codelldb"),
+          -- command = vim.fn.expand("$HOME/Downloads/extension/adapter/codelldb"),
+          command = vim.fn.expand(
+            "$HOME/.local/bin/codelldb/extension/adapter/codelldb"
+          ),
           args = { "--port", "13000" },
         },
       }
