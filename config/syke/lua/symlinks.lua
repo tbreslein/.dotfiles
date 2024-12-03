@@ -20,19 +20,20 @@ local symlinks_strs = {
   myconfig .. "/nix.conf:" .. userconfig .. "/nix/nix.conf",
   myconfig .. "/tmux.conf:" .. userconfig .. "/tmux/tmux.conf",
   myconfig .. "/direnv.toml:" .. userconfig .. "/direnv/direnv.toml",
+  myconfig .. "/starship.toml:" .. userconfig .. "/starship.toml",
+  myconfig .. "/config.fish:" .. userconfig .. "/fish/config.fish",
   myconfig .. "/git:" .. userconfig .. "/git",
   myconfig .. "/luacheckrc:" .. home .. "/.luacheckrc",
-  myconfig .. "/bash/bash_logout:" .. home .. "/.bash_logout",
-  myconfig .. "/bash/bash_profile:" .. home .. "/.profile",
-  myconfig .. "/bash/bashrc:" .. home .. "/.bashrc",
-  myconfig .. "/bash/inputrc:" .. home .. "/.inputrc",
   myscripts .. "/tmux_sessionizer:" .. localbin .. "/tmux_sessionizer",
   myscripts .. "/git_status:" .. localbin .. "/git_status",
   myscripts .. "/dm:" .. localbin .. "/dm",
 }
 
 local absent_symlinks = {
-  userconfig .. "/starship.toml",
+  myconfig .. "/bash/bash_logout:" .. home .. "/.bash_logout",
+  myconfig .. "/bash/bash_profile:" .. home .. "/.profile",
+  myconfig .. "/bash/bashrc:" .. home .. "/.bashrc",
+  myconfig .. "/bash/inputrc:" .. home .. "/.inputrc",
 }
 
 if hostname == "kain" then

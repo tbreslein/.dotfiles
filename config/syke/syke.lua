@@ -12,15 +12,7 @@ return {
   },
   shell = {
     -- {
-    --   cmd = { "ls", "/Users/tommy" },
-    --   hook = { when = "before", what = "ln" },
-    -- },
-    -- {
-    --   cmd = { "ls", "/Users/tommy/.dotfiles" },
-    --   hook = { when = "after", what = "repos" },
-    -- },
-    -- {
-    --   cmd = { "nvim", "--version" },
+    --   cmd = { "nvim", "--headless", [[+Lazy! sync]], [[+TSUpdateSync]], "+qa" },
     --   hook = { when = "after", what = "main" },
     -- },
   },
