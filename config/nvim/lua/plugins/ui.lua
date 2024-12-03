@@ -79,6 +79,7 @@ return {
       })
     end,
   },
+  "Apeiros-46B/uiua.vim",
 
   {
     "stevearc/quicker.nvim",

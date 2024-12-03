@@ -22,19 +22,28 @@ return {
           ["<Tab>"] = { "snippet_forward", "fallback" },
           ["<S-Tab>"] = { "snippet_backward", "fallback" },
         },
-        trigger = { signature_help = { enabled = true } },
-        windows = {
-          autocomplete = { draw = "reversed", border = "rounded" },
+        completion = {
+          list = {
+            max_items = 200,
+          },
           documentation = {
             auto_show = true,
-            border = "rounded",
-            max_height = 20,
+            auto_show_delay_ms = 500,
+            window = {
+              min_width = 10,
+              max_width = 60,
+              max_height = 20,
+              border = "padded",
+            },
           },
-          signature_help = { border = "rounded" },
+        },
+
+        signature = {
+          enabled = true,
         },
       })
 
-      local lsp_capabilities = vim.lsp.protocol.make_client_capabilities()
+      local lsp_capabilities = require("blink.cmp").get_lsp_capabilities()
       lsp_capabilities.textDocument.completion.completionItem = {
         documentationFormat = { "markdown", "plaintext" },
         snippetSupport = true,
@@ -71,7 +80,7 @@ return {
       end
 
       vim.lsp.handlers["textDocument/hover"] =
-        vim.lsp.with(vim.lsp.handlers.hover, { border = "rounded" })
+          vim.lsp.with(vim.lsp.handlers.hover, { border = "rounded" })
 
       lspconfig.pyright.setup({
         capabilities = lsp_capabilities,
@@ -79,8 +88,8 @@ return {
           local env = vim.trim(
             vim.fn.system(
               'cd "'
-                .. (root_dir or ".")
-                .. '"; poetry env info --executable 2>/dev/null'
+              .. (root_dir or ".")
+              .. '"; poetry env info --executable 2>/dev/null'
             )
           )
           if string.len(env) > 0 then
