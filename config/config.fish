@@ -6,6 +6,7 @@ if status is-interactive
     alias m="make"
     alias v="nvim"
     alias g="git"
+    alias lg="lazygit"
     alias gg="git status -s"
     alias GG="git status"
     alias ls="eza --icons=always"
