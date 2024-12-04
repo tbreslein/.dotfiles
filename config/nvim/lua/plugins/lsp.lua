@@ -26,6 +26,7 @@ return {
           list = {
             max_items = 200,
           },
+          menu = { border = "single" },
           documentation = {
             auto_show = true,
             auto_show_delay_ms = 500,
@@ -33,7 +34,7 @@ return {
               min_width = 10,
               max_width = 60,
               max_height = 20,
-              border = "padded",
+              border = "single",
             },
           },
         },
@@ -80,7 +81,7 @@ return {
       end
 
       vim.lsp.handlers["textDocument/hover"] =
-          vim.lsp.with(vim.lsp.handlers.hover, { border = "rounded" })
+        vim.lsp.with(vim.lsp.handlers.hover, { border = "single" })
 
       lspconfig.pyright.setup({
         capabilities = lsp_capabilities,
@@ -88,8 +89,8 @@ return {
           local env = vim.trim(
             vim.fn.system(
               'cd "'
-              .. (root_dir or ".")
-              .. '"; poetry env info --executable 2>/dev/null'
+                .. (root_dir or ".")
+                .. '"; poetry env info --executable 2>/dev/null'
             )
           )
           if string.len(env) > 0 then
