@@ -2,7 +2,7 @@ local home = os.getenv("HOME")
 local hostname_file = io.open("/etc/hostname", "r")
 local hostname = ""
 if hostname_file ~= nil then
-  hostname = hostname_file.read("*l")
+  hostname = hostname_file:read("*l")
   hostname_file:close()
 end
 local uname = io.popen("uname -s", "r"):read("*l")
@@ -38,11 +38,11 @@ local absent_symlinks = {
 
 if hostname == "kain" then
   symlinks_strs[#symlinks_strs + 1] = myconfig
-      .. "/alacritty/"
-      .. hostname
-      .. ".toml:"
-      .. userconfig
-      .. "/alacritty/host.toml"
+    .. "/alacritty/"
+    .. hostname
+    .. ".toml:"
+    .. userconfig
+    .. "/alacritty/host.toml"
   symlinks_strs[#symlinks_strs + 1] = myconfig .. "tofi:" .. userconfig .. "/tofi/config"
   symlinks_strs[#symlinks_strs + 1] = myconfig .. "dunstrc:" .. userconfig .. "/dunst/dunstrc"
   local direct_links = {
