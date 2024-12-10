@@ -88,3 +88,6 @@ if command -v starship &>/dev/null
     starship init fish | source
     enable_transience
 end
+if command -v direnv &>/dev/null
+    direnv hook fish | source
+end
