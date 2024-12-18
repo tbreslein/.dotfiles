@@ -159,16 +159,16 @@ local plugins = {
 
   {
     "sschleemilch/slimline.nvim",
-    -- lazy = "VeryLazy",
     event = "VeryLazy",
     opts = {
-      style = "fg", -- or "fg". Whether highlights should be applied to bg or fg of components
+      style = "fg",
       components = {
         left = {},
         center = {},
         right = {
           "path",
           "diagnostics",
+          "progress",
         },
       },
       icons = {
