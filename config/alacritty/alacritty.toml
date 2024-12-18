@@ -5,8 +5,8 @@ import = [
 ]
 
 [font.normal]
-# family = "MartianMono Nerd Font"
-family = "GeistMono Nerd Font"
+# family = "GeistMono Nerd Font"
+family = "ShureTechMono Nerd Font"
 
 [window]
 startup_mode = "Maximized"
