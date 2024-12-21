@@ -207,7 +207,7 @@ local plugins = {
     },
   },
 
-  { "aserowy/tmux.nvim",   event = "UIEnter", opts = {} },
+  { "aserowy/tmux.nvim",         event = "UIEnter", opts = {} },
 
   {
     "echasnovski/mini.nvim",
@@ -313,7 +313,7 @@ local plugins = {
 
       mason_lspconfig.setup({
         ensure_installed = {
-          "asm-lsp",
+          "asm_lsp",
           "bashls",
           "neocmake",
           "dockerls",
@@ -394,7 +394,8 @@ local plugins = {
       })
     end,
   },
-  { "mrcjkb/rustaceanvim", lazy = false,      dependencies = { "mfussenegger/nvim-dap" } },
+  { "mrcjkb/rustaceanvim",       lazy = false,      dependencies = { "mfussenegger/nvim-dap" } },
+  { "mrcjkb/haskell-tools.nvim", lazy = false },
 
   {
     "williamboman/mason.nvim",
@@ -463,6 +464,26 @@ local plugins = {
           end
         end,
       })
+    end,
+  },
+
+  {
+    "folke/snacks.nvim",
+    priority = 1000,
+    lazy = false,
+    config = function()
+      local snacks = require("snacks")
+      snacks.setup({
+        indent = { enabled = true },
+        lazygit = { enabled = true },
+        notifier = { enabled = true },
+        terminal = { enabled = true },
+        zen = { enabled = true },
+      })
+      map("n", "<leader>zz", snacks.zen.zen)
+      map("n", "<leader>tt", snacks.terminal.toggle)
+      map("n", "<leader>nh", snacks.notifier.get_history)
+      map("n", "<leader>gg", snacks.lazygit.open)
     end,
   },
 }
