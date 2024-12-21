@@ -84,3 +84,4 @@ ps_color() {
 }
 
 PS1='\n\e[1;34m\w \e[1;33mλ\e[m '
+. "$HOME/.cargo/env"

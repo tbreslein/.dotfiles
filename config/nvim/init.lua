@@ -51,7 +51,6 @@ vim.opt.wildmenu = true
 vim.opt.wildoptions:append("fuzzy")
 vim.opt.pumheight = 10
 vim.opt.updatetime = 400
-vim.opt.cmdheight = 0
 vim.g.border_style = "single"
 vim.opt.statusline = "%#Normal#" .. "%="
 vim.diagnostic.config({
@@ -131,8 +130,6 @@ map("n", "j", "v:count == 0 ? 'gj' : 'j'", "", { expr = true })
 map("n", "k", "v:count == 0 ? 'gk' : 'k'", "", { expr = true })
 map("n", "]c", ":cnext<cr>", "")
 map("n", "[c", ":cprev<cr>", "")
--- map("n", "<m-j>", "<c-w>-", "")
--- map("n", "<m-k>", "<c-w>+", "")
 
 local lazy_path = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.uv.fs_stat(lazy_path) then
@@ -162,23 +159,8 @@ local plugins = {
     event = "VeryLazy",
     opts = {
       style = "fg",
-      components = {
-        left = {},
-        center = {},
-        right = {
-          "path",
-          "diagnostics",
-          "progress",
-        },
-      },
-      icons = {
-        diagnostics = {
-          ERROR = "✘ ",
-          WARN = " ",
-          HINT = "󱐮 ",
-          INFO = "◉ ",
-        },
-      },
+      components = { left = { "diagnostics" }, center = { "path" }, right = { "progress" } },
+      icons = { diagnostics = { ERROR = "✘ ", WARN = " ", HINT = "󱐮 ", INFO = "◉ " } },
     },
   },
 
@@ -187,6 +169,7 @@ local plugins = {
     cmd = { "TSInstall", "TSBufEnable", "TSBufDisable", "TSModuleInfo" },
     build = ":TSUpdate",
     event = { "BufReadPost", "BufNewFile" },
+    dependencies = { "nvim-treesitter/nvim-treesitter-context" },
     config = function()
       require("nvim-treesitter.configs").setup({
         ensure_installed = {
@@ -210,6 +193,9 @@ local plugins = {
         highlight = { enable = true, use_languagetree = true },
         indent = { enable = true },
       })
+      require("treesitter-context").setup({ multiline_threshold = 2 })
+      vim.cmd([[hi TreesitterContextBottom gui=underline]])
+      vim.cmd([[hi TreesitterContext guibg=#363738]])
     end,
   },
 
@@ -238,6 +224,19 @@ local plugins = {
       require("mini.pick").setup()
       map("n", "<leader>ff", ":Pick files<cr>")
       map("n", "<leader>fs", ":Pick grep_live<cr>")
+      local hipatterns = require("mini.hipatterns")
+      hipatterns.setup({
+        highlighters = {
+          fixme = { pattern = "%f[%w]()FIXME()%f[%W]", group = "MiniHipatternsFixme" },
+          hack = { pattern = "%f[%w]()HACK()%f[%W]", group = "MiniHipatternsHack" },
+          todo = { pattern = "%f[%w]()TODO()%f[%W]", group = "MiniHipatternsTodo" },
+          note = { pattern = "%f[%w]()NOTE()%f[%W]", group = "MiniHipatternsNote" },
+          perf = { pattern = "%f[%w]()PERF()%f[%W]", group = "MiniHipatternsNote" },
+          warn = { pattern = "%f[%w]()WARN()%f[%W]", group = "MiniHipatternsFixme" },
+          hex_color = hipatterns.gen_highlighter.hex_color(),
+        },
+      })
+      require("mini.trailspace").setup()
     end,
   },
 
@@ -245,7 +244,6 @@ local plugins = {
     "stevearc/oil.nvim",
     keys = { { "-", "<cmd>Oil<cr>", "oil" } },
     opts = {},
-    -- opts = { keymaps = { ["q"] = "actions.close" } },
   },
 
   {
@@ -258,10 +256,11 @@ local plugins = {
       "folke/lazydev.nvim",
       "rafamadriz/friendly-snippets",
       "j-hui/fidget.nvim",
+      "williamboman/mason-lspconfig.nvim",
+      "williamboman/mason.nvim",
     },
     config = function()
       require("fidget").setup({})
-
       require("blink.cmp").setup({
         keymap = {
           preset = "default",
@@ -274,9 +273,7 @@ local plugins = {
           ["<S-Tab>"] = { "snippet_backward", "fallback" },
         },
         completion = {
-          list = {
-            max_items = 200,
-          },
+          list = { max_items = 200 },
           menu = { border = vim.g.border_style },
           documentation = {
             auto_show = true,
@@ -289,10 +286,7 @@ local plugins = {
             },
           },
         },
-
-        signature = {
-          enabled = true,
-        },
+        signature = { enabled = true },
       })
 
       local lsp_capabilities = require("blink.cmp").get_lsp_capabilities()
@@ -313,22 +307,50 @@ local plugins = {
           },
         },
       }
+
       local lspconfig = require("lspconfig")
-      -- local lsp_servers = {
-      --   "bashls",
-      --   "dockerls",
-      --   "marksman",
-      --   "ts_ls",
-      --   "ruff",
-      --   "clangd",
-      --   "cmake",
-      --   "nixd",
-      --   "ocamllsp",
-      --   "zls",
-      -- }
-      -- for _, s in ipairs(lsp_servers) do
-      --   lspconfig[s].setup({ capabilities = lsp_capabilities })
-      -- end
+      local mason_lspconfig = require("mason-lspconfig")
+
+      mason_lspconfig.setup({
+        ensure_installed = {
+          "asm-lsp",
+          "bashls",
+          "neocmake",
+          "dockerls",
+          "lua_ls",
+          "marksman",
+          "nil_ls",
+          "ruff",
+          "ts_ls",
+          "astro",
+        },
+      })
+      lspconfig["clangd"].setup({ capabilities = lsp_capabilities })
+      lspconfig["zls"].setup({ capabilities = lsp_capabilities })
+      lspconfig["ocamllsp"].setup({ capabilities = lsp_capabilities })
+
+      mason_lspconfig.setup_handlers({
+        function(server_name) -- default handler
+          lspconfig[server_name].setup({ capabilities = lsp_capabilities })
+        end,
+        ["lua_ls"] = function()
+          lspconfig.lua_ls.setup({
+            capabilities = lsp_capabilities,
+            settings = {
+              Lua = {
+                runtime = { version = "LuaJIT", path = vim.split(package.path, ";") },
+                diagnostics = { globals = { "vim" } },
+                workspace = {
+                  library = {
+                    [vim.fn.expand("$VIMRUNTIME/lua")] = true,
+                    [vim.fn.expand("$VIMRUNTIME/lua/vim/lsp")] = true,
+                  },
+                },
+              },
+            },
+          })
+        end,
+      })
 
       vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, { border = vim.g.border_style })
 
@@ -341,24 +363,6 @@ local plugins = {
             config.settings.python.pythonPath = env
           end
         end,
-      })
-      lspconfig.lua_ls.setup({
-        capabilities = lsp_capabilities,
-        settings = {
-          Lua = {
-            runtime = {
-              version = "LuaJIT",
-              path = vim.split(package.path, ";"),
-            },
-            diagnostics = { globals = { "vim" } },
-            workspace = {
-              library = {
-                [vim.fn.expand("$VIMRUNTIME/lua")] = true,
-                [vim.fn.expand("$VIMRUNTIME/lua/vim/lsp")] = true,
-              },
-            },
-          },
-        },
       })
       map("n", "gl", vim.diagnostic.open_float)
       map("n", "]d", vim.diagnostic.goto_next)
@@ -393,35 +397,58 @@ local plugins = {
   { "mrcjkb/rustaceanvim", lazy = false,      dependencies = { "mfussenegger/nvim-dap" } },
 
   {
-    "nvimtools/none-ls.nvim",
-    event = "VeryLazy",
-    dependencies = { "nvimtools/none-ls-extras.nvim", "nvim-lua/plenary.nvim" },
+    "williamboman/mason.nvim",
+    dependencies = {
+      "WhoIsSethDaniel/mason-tool-installer.nvim",
+      "jay-babu/mason-null-ls.nvim",
+      "nvimtools/none-ls.nvim",
+      "nvimtools/none-ls-extras.nvim",
+      "nvim-lua/plenary.nvim",
+    },
+    lazy = false,
     config = function()
+      require("mason").setup()
+      require("mason-null-ls").setup({
+        ensure_installed = {
+          "asmfmt",
+          "cmake_lint",
+          "cmake_format",
+          "clang_format",
+          "hadolint",
+          "shellcheck",
+          "shellharden",
+          "luacheck",
+          "stylua",
+          "yamllint",
+          "nixpkgs_fmt",
+          "ormolu",
+        },
+        handlers = {},
+      })
+      require("mason-tool-installer").setup({
+        ensure_installed = {
+          "codelldb",
+        },
+      })
+
       local null_ls = require("null-ls")
       local augroup = vim.api.nvim_create_augroup("LspFormatting", {})
       null_ls.setup({
         sources = {
-          -- this is needed so blink does not freak out when there's nothing to
-          -- display
-          null_ls.builtins.completion.tags,
-
-          null_ls.builtins.code_actions.statix,
+          -- null_ls.builtins.code_actions.statix,
+          -- null_ls.builtins.diagnostics.statix,
+          --
+          -- null_ls.builtins.formatting.alejandra,
+          -- null_ls.builtins.formatting.clang_format,
+          -- null_ls.builtins.formatting.ocamlformat,
+          -- null_ls.builtins.formatting.shfmt,
           require("none-ls.code_actions.eslint").with({ prefer_local = "node_modules/.bin" }),
           require("none-ls.diagnostics.eslint").with({ prefer_local = "node_modules/.bin" }),
           null_ls.builtins.diagnostics.cppcheck.with({ extra_args = { "--force", "--check-level=exhaustive" } }),
-          null_ls.builtins.diagnostics.hadolint,
-          null_ls.builtins.diagnostics.statix,
-
-          null_ls.builtins.formatting.alejandra,
           null_ls.builtins.formatting.black.with({
             prefer_local = ".venv/bin",
           }),
-          null_ls.builtins.formatting.clang_format,
-          null_ls.builtins.formatting.cmake_format,
           null_ls.builtins.formatting.prettier.with({ prefer_local = "node_modules/.bin" }),
-          null_ls.builtins.formatting.ocamlformat,
-          null_ls.builtins.formatting.shfmt,
-          null_ls.builtins.formatting.stylua,
         },
         on_attach = function(client, bufnr)
           if client.supports_method("textDocument/formatting") then
@@ -438,24 +465,9 @@ local plugins = {
       })
     end,
   },
-
-  {
-    "williamboman/mason.nvim",
-    dependencies = { "WhoIsSethDaniel/mason-tool-installer.nvim" },
-    lazy = false,
-    config = function()
-      require("mason").setup()
-      require("mason-tool-installer").setup({
-        ensure_installed = {
-          "codelldb",
-        },
-      })
-    end,
-  },
 }
 
 require("lazy").setup(plugins, {
-  concurrency = 4,
   defaults = { lazy = true },
   performance = {
     cache = { enabled = true },
