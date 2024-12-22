@@ -25,6 +25,7 @@ brew "lazygit"
 brew "zoxide"
 brew "tealdeer"
 brew "luarocks"
+brew "go"
 
 cask "font-geist-mono-nerd-font"
 cask "anki"

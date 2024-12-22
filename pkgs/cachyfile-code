@@ -12,3 +12,6 @@ bash-language-server
 marksman
 shfmt
 prettier
+npm
+luarocks
+go

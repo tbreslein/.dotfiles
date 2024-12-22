@@ -15,7 +15,11 @@ local localbin = home .. "/.local/bin"
 local symlinks_strs = {
   myconfig .. "/nvim:" .. userconfig .. "/nvim",
   myconfig .. "/alacritty/alacritty.toml:" .. userconfig .. "/alacritty/alacritty.toml",
-  myconfig .. "/alacritty/gruvbox-material.toml:" .. userconfig .. "/alacritty/colors.toml",
+  -- myconfig .. "/alacritty/gruvbox-material.toml:" .. userconfig .. "/alacritty/colors.toml",
+  myconfig
+    .. "/alacritty/kanagawa-paper.toml:"
+    .. userconfig
+    .. "/alacritty/colors.toml",
   myconfig .. "/editorconfig:" .. home .. "/.editorconfig",
   myconfig .. "/nix.conf:" .. userconfig .. "/nix/nix.conf",
   myconfig .. "/tmux.conf:" .. userconfig .. "/tmux/tmux.conf",

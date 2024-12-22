@@ -30,6 +30,7 @@ set -gx HOMEBREW_BUNDLE_FILE "$DOTFILES/pkgs/Brewfile"
 set dm_cache "$HOME/.local/cache/dm"
 
 fish_add_path ~/.local/bin
+fish_add_path ~/.cargo/bin
 
 function toggle_moco
     if not tmux has-session -t moco 2>/dev/null
