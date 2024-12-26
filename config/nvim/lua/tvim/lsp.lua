@@ -61,7 +61,7 @@ later(function()
         "documentation",
         "detail",
         "additionalTextEdits",
-      }
+      },
     },
   }
 
@@ -161,6 +161,14 @@ later(function()
       -- gra: code actions to qflist
       -- grn: lsp rename
       -- c-s: signature_help
+    end,
+  })
+
+  vim.api.nvim_create_autocmd("FileType", {
+    pattern = { "*.rs" },
+    callback = function(event)
+      vim.bo[event.buf].buflisted = false
+      Map("n", "q", "<cmd>close<cr>", { buffer = event.buf })
     end,
   })
 end)
