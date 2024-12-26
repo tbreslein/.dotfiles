@@ -44,6 +44,12 @@ later(function()
       },
     },
     signature = { enabled = true },
+    sources = {
+      default = { "lsp", "path", "snippets", "buffer", "markdown" },
+      providers = {
+        markdown = { name = "RenderMarkdown", module = "render-markdown.integ.blink" },
+      },
+    },
   })
 
   local lsp_capabilities = blink.get_lsp_capabilities()
@@ -164,11 +170,10 @@ later(function()
     end,
   })
 
-  vim.api.nvim_create_autocmd("FileType", {
+  vim.api.nvim_create_autocmd("BufWritePre", {
     pattern = { "*.rs" },
-    callback = function(event)
-      vim.bo[event.buf].buflisted = false
-      Map("n", "q", "<cmd>close<cr>", { buffer = event.buf })
+    callback = function()
+      vim.lsp.buf.format({ async = false })
     end,
   })
 end)

@@ -66,6 +66,7 @@ later(function()
   })
 
   add("MeanderingProgrammer/render-markdown.nvim")
+  require("render-markdown").setup({ latex = { enabled = false } })
 
   local hipatterns = require("mini.hipatterns")
   hipatterns.setup({
