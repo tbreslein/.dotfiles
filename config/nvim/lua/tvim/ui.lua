@@ -12,7 +12,7 @@ now(function()
   -- vim.api.nvim_set_hl(0, "NormalFloat", { bg = "#1d2021" })
 
   add("sho-87/kanagawa-paper.nvim")
-  require("kanagawa-paper").setup({})
+  require("kanagawa-paper").setup({ transparent = true })
   vim.cmd.colorscheme("kanagawa-paper")
 
   package.preload["nvim-web-devicons"] = function()

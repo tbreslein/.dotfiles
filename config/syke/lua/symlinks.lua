@@ -20,6 +20,7 @@ local symlinks_strs = {
     .. "/alacritty/kanagawa-paper.toml:"
     .. userconfig
     .. "/alacritty/colors.toml",
+  myconfig .. "/ghostty/config:" .. userconfig .. "/ghostty/config",
   myconfig .. "/editorconfig:" .. home .. "/.editorconfig",
   myconfig .. "/nix.conf:" .. userconfig .. "/nix/nix.conf",
   myconfig .. "/tmux.conf:" .. userconfig .. "/tmux/tmux.conf",
@@ -47,6 +48,7 @@ if hostname == "kain" then
     .. ".toml:"
     .. userconfig
     .. "/alacritty/host.toml"
+  symlinks_strs[#symlinks_strs + 1] = myconfig .. "/ghostty/" .. hostname .. ":" .. userconfig .. "/ghostty/host"
   symlinks_strs[#symlinks_strs + 1] = myconfig .. "tofi:" .. userconfig .. "/tofi/config"
   symlinks_strs[#symlinks_strs + 1] = myconfig .. "dunstrc:" .. userconfig .. "/dunst/dunstrc"
   local direct_links = {
@@ -67,6 +69,7 @@ end
 
 if uname == "Darwin" then
   symlinks_strs[#symlinks_strs + 1] = myconfig .. "/alacritty/darwin.toml:" .. userconfig .. "/alacritty/host.toml"
+  symlinks_strs[#symlinks_strs + 1] = myconfig .. "/ghostty/macos" .. ":" .. userconfig .. "/ghostty/host"
   symlinks_strs[#symlinks_strs + 1] = myconfig .. "/aerospace.toml:" .. userconfig .. "/aerospace/aerospace.toml"
 end
 
