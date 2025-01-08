@@ -10,6 +10,10 @@ return {
       remote = "git@github.com:tbreslein/syke.git",
       path = home .. "/code/syke",
     },
+    {
+      remote = "git@github.com:tbreslein/fibis.git",
+      path = home .. "/code/fibis",
+    },
   },
   shell = {
     -- {
