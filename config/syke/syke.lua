@@ -16,9 +16,12 @@ return {
     },
   },
   shell = {
+    {
+      cmd = { "ls", "/" },
+      hook = { when = "after", what = "main" },
+    },
     -- {
     --   cmd = { "nvim", "--headless", [[+Lazy! sync]], [[+TSUpdateSync]], "+qa" },
-    --   hook = { when = "after", what = "main" },
     -- },
   },
 }

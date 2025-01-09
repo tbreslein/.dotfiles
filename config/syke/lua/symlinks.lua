@@ -12,81 +12,45 @@ local userconfig = home .. "/.config"
 local myscripts = home .. "/.dotfiles/scripts"
 local localbin = home .. "/.local/bin"
 
-local symlinks_strs = {
-  myconfig .. "/nvim:" .. userconfig .. "/nvim",
-  myconfig .. "/alacritty/alacritty.toml:" .. userconfig .. "/alacritty/alacritty.toml",
-  -- myconfig .. "/alacritty/gruvbox-material.toml:" .. userconfig .. "/alacritty/colors.toml",
-  myconfig
-    .. "/alacritty/kanagawa-paper.toml:"
-    .. userconfig
-    .. "/alacritty/colors.toml",
-  myconfig .. "/editorconfig:" .. home .. "/.editorconfig",
-  myconfig .. "/nix.conf:" .. userconfig .. "/nix/nix.conf",
-  myconfig .. "/tmux.conf:" .. userconfig .. "/tmux/tmux.conf",
-  myconfig .. "/direnv.toml:" .. userconfig .. "/direnv/direnv.toml",
-  myconfig .. "/starship.toml:" .. userconfig .. "/starship.toml",
-  myconfig .. "/config.fish:" .. userconfig .. "/fish/config.fish",
-  myconfig .. "/git:" .. userconfig .. "/git",
-  myconfig .. "/luacheckrc:" .. home .. "/.luacheckrc",
-  myscripts .. "/tmux_sessionizer:" .. localbin .. "/tmux_sessionizer",
-  myscripts .. "/git_status:" .. localbin .. "/git_status",
-  myscripts .. "/dm:" .. localbin .. "/dm",
+local symlinks = {
+  { source = myconfig .. "/nvim", target = userconfig .. "/nvim" },
+  { source = myconfig .. "/alacritty/alacritty.toml", target = userconfig .. "/alacritty/alacritty.toml" },
+  { source = myconfig .. "/alacritty/kanagawa-paper.toml", target = userconfig .. "/alacritty/colors.toml" },
+  { source = myconfig .. "/editorconfig", target = home .. "/.editorconfig" },
+  { source = myconfig .. "/nix.conf", target = userconfig .. "/nix/nix.conf" },
+  { source = myconfig .. "/tmux.conf", target = userconfig .. "/tmux/tmux.conf" },
+  { source = myconfig .. "/direnv.toml", target = userconfig .. "/direnv/direnv.toml" },
+  { source = myconfig .. "/direnv.toml", target = userconfig .. "/direnv/direnv.toml" },
+  { source = myconfig .. "/starship.toml", target = userconfig .. "/starship.toml" },
+  { source = myconfig .. "/config.fish", target = userconfig .. "/fish/config.fish" },
+  { source = myconfig .. "/git", target = userconfig .. "/git" },
+  { source = myconfig .. "/luacheckrc", target = home .. "/.luacheckrc" },
+  { source = myscripts .. "/tmux_sessionizer", target = localbin .. "/tmux_sessionizer" },
+  { source = myscripts .. "/git_status", target = localbin .. "/git_status" },
+  { source = myscripts .. "/dm", target = localbin .. "/dm" },
 }
 
-local absent_symlinks = {
-  myconfig .. "/bash/bash_logout:" .. home .. "/.bash_logout",
-  myconfig .. "/bash/bash_profile:" .. home .. "/.profile",
-  myconfig .. "/bash/bashrc:" .. home .. "/.bashrc",
-  myconfig .. "/bash/inputrc:" .. home .. "/.inputrc",
-}
-
+local host_symlinks = {}
 if hostname == "kain" then
-  symlinks_strs[#symlinks_strs + 1] = myconfig
-    .. "/alacritty/"
-    .. hostname
-    .. ".toml:"
-    .. userconfig
-    .. "/alacritty/host.toml"
-  symlinks_strs[#symlinks_strs + 1] = myconfig .. "tofi:" .. userconfig .. "/tofi/config"
-  symlinks_strs[#symlinks_strs + 1] = myconfig .. "dunstrc:" .. userconfig .. "/dunst/dunstrc"
-  local direct_links = {
-    "/hypr/hyprland.conf",
-    "/hypr/hyprlock.conf",
-    "/hypr/hypridle.conf",
-    "/hypr/hyprpaper.conf",
-    "/waybar",
-    "/electron",
-    "/electron13",
-    "/electron-flags.conf",
-    "/electron13-flags.conf",
+  host_symlinks = {
+    { source = myconfig .. "/alacritty/" .. hostname .. ".toml", target = userconfig .. "/alacritty/host.toml" },
+    { source = myconfig .. "/electron", target = userconfig .. "/electron" },
+    { source = myconfig .. "/electron13", target = userconfig .. "/electron13" },
+    { source = myconfig .. "/electron-flags.conf", target = userconfig .. "/electron-flags.conf" },
+    { source = myconfig .. "/electron13-flags.conf", target = userconfig .. "/electron13-flags.conf" },
   }
-  for _, x in ipairs(direct_links) do
-    symlinks_strs[#symlinks_strs + 1] = myconfig .. x .. ":" .. userconfig .. x
-  end
-end
-
-if uname == "Darwin" then
-  symlinks_strs[#symlinks_strs + 1] = myconfig .. "/alacritty/darwin.toml:" .. userconfig .. "/alacritty/host.toml"
-  symlinks_strs[#symlinks_strs + 1] = myconfig .. "/aerospace.toml:" .. userconfig .. "/aerospace/aerospace.toml"
-end
-
-local symlinks = {}
-for _, sym_str in ipairs(symlinks_strs) do
-  local t = {}
-  for str in string.gmatch(sym_str, "([^:]+)") do
-    table.insert(t, str)
-  end
-  symlinks[#symlinks + 1] = {
-    source = t[1],
-    target = t[2],
-  }
-end
-
-for _, sym_str in ipairs(absent_symlinks) do
-  symlinks[#symlinks + 1] = {
-    target = sym_str,
-    absent = true,
+elseif uname == "Darwin" then
+  host_symlinks = {
+    { source = myconfig .. "/alacritty/darwin.toml", target = userconfig .. "/alacritty/host.toml" },
+    { source = myconfig .. "/aerospace.toml", target = userconfig .. "/aerospace/aerospace.toml" },
   }
 end
 
 return symlinks
+
+-- if uname == "Darwin" then
+--   symlinks_strs[#symlinks_strs + 1] = myconfig .. "/alacritty/darwin.toml:" .. userconfig .. "/alacritty/host.toml"
+--   symlinks_strs[#symlinks_strs + 1] = myconfig .. "/aerospace.toml:" .. userconfig .. "/aerospace/aerospace.toml"
+-- end
+--
+-- return symlinks
