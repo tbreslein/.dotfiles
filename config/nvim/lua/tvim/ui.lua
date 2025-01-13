@@ -1,19 +1,19 @@
 now(function()
-  -- add("sainnhe/gruvbox-material")
-  -- vim.g.gruvbox_material_enable_italic = true
-  -- vim.g.gruvbox_material_enable_bold = true
-  -- vim.g.gruvbox_material_better_performance = true
-  -- vim.g.gruvbox_material_ui_contrast = "high"
-  -- vim.g.gruvbox_material_diagnostic_virtual_text = "highlighted"
-  -- vim.g.gruvbox_material_transparent_background = 2
-  -- vim.g.gruvbox_material_dim_inactive_windows = 1
-  -- -- vim.g.gruvbox_material_float_style = "dim"
-  -- vim.cmd.colorscheme("gruvbox-material")
-  -- vim.api.nvim_set_hl(0, "NormalFloat", { bg = "#1d2021" })
+  add("sainnhe/gruvbox-material")
+  vim.g.gruvbox_material_enable_italic = true
+  vim.g.gruvbox_material_enable_bold = true
+  vim.g.gruvbox_material_better_performance = true
+  vim.g.gruvbox_material_ui_contrast = "high"
+  vim.g.gruvbox_material_diagnostic_virtual_text = "highlighted"
+  vim.g.gruvbox_material_transparent_background = 2
+  vim.g.gruvbox_material_dim_inactive_windows = 1
+  -- vim.g.gruvbox_material_float_style = "dim"
+  vim.cmd.colorscheme("gruvbox-material")
+  vim.api.nvim_set_hl(0, "NormalFloat", { bg = "#1d2021" })
 
-  add("sho-87/kanagawa-paper.nvim")
-  require("kanagawa-paper").setup({ transparent = true })
-  vim.cmd.colorscheme("kanagawa-paper")
+  -- add("sho-87/kanagawa-paper.nvim")
+  -- require("kanagawa-paper").setup({ transparent = true })
+  -- vim.cmd.colorscheme("kanagawa-paper")
 
   package.preload["nvim-web-devicons"] = function()
     package.loaded["nvim-web-devicons"] = {}
@@ -58,11 +58,20 @@ later(function()
   require("treesitter-context").setup({ multiline_threshold = 2 })
   vim.cmd([[hi TreesitterContextBottom gui=underline]])
 
-  add("sschleemilch/slimline.nvim")
-  require("slimline").setup({
-    style = "fg",
-    components = { left = { "diagnostics" }, center = { "path" }, right = { "progress" } },
-    icons = { diagnostics = { ERROR = "✘ ", WARN = " ", HINT = "󱐮 ", INFO = "◉ " } },
+  add("nvim-lualine/lualine.nvim")
+  require("lualine").setup({
+    options = {
+      component_separators = { left = "", right = "" },
+      section_separators = { left = "", right = "" },
+    },
+    sections = {
+      lualine_a = {},
+      lualine_b = { { "filename", path = 3 } },
+      lualine_c = { { "diagnostics", symbols = { error = "✘ ", warn = " ", hint = "󱐮 ", info = "◉ " } } },
+      lualine_x = { "progress" },
+      lualine_y = { "location" },
+      lualine_z = {},
+    },
   })
 
   add("MeanderingProgrammer/render-markdown.nvim")

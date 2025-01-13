@@ -13,13 +13,14 @@ local myscripts = home .. "/.dotfiles/scripts"
 local localbin = home .. "/.local/bin"
 
 local symlinks = {
+  { source = myconfig .. "/syke", target = userconfig .. "/syke" },
   { source = myconfig .. "/nvim", target = userconfig .. "/nvim" },
   { source = myconfig .. "/alacritty/alacritty.toml", target = userconfig .. "/alacritty/alacritty.toml" },
-  { source = myconfig .. "/alacritty/kanagawa-paper.toml", target = userconfig .. "/alacritty/colors.toml" },
+  -- { source = myconfig .. "/alacritty/kanagawa-paper.toml", target = userconfig .. "/alacritty/colors.toml" },
+  { source = myconfig .. "/alacritty/gruvbox-material.toml", target = userconfig .. "/alacritty/colors.toml" },
   { source = myconfig .. "/editorconfig", target = home .. "/.editorconfig" },
   { source = myconfig .. "/nix.conf", target = userconfig .. "/nix/nix.conf" },
   { source = myconfig .. "/tmux.conf", target = userconfig .. "/tmux/tmux.conf" },
-  { source = myconfig .. "/direnv.toml", target = userconfig .. "/direnv/direnv.toml" },
   { source = myconfig .. "/direnv.toml", target = userconfig .. "/direnv/direnv.toml" },
   { source = myconfig .. "/starship.toml", target = userconfig .. "/starship.toml" },
   { source = myconfig .. "/config.fish", target = userconfig .. "/fish/config.fish" },
@@ -42,15 +43,13 @@ if hostname == "kain" then
 elseif uname == "Darwin" then
   host_symlinks = {
     { source = myconfig .. "/alacritty/darwin.toml", target = userconfig .. "/alacritty/host.toml" },
+    { source = myconfig .. "/alacritty/darwin.toml", target = userconfig .. "/alacritty/host.toml" },
     { source = myconfig .. "/aerospace.toml", target = userconfig .. "/aerospace/aerospace.toml" },
   }
 end
 
-return symlinks
+for _, sl in ipairs(host_symlinks) do
+  symlinks[#symlinks + 1] = sl
+end
 
--- if uname == "Darwin" then
---   symlinks_strs[#symlinks_strs + 1] = myconfig .. "/alacritty/darwin.toml:" .. userconfig .. "/alacritty/host.toml"
---   symlinks_strs[#symlinks_strs + 1] = myconfig .. "/aerospace.toml:" .. userconfig .. "/aerospace/aerospace.toml"
--- end
---
--- return symlinks
+return symlinks

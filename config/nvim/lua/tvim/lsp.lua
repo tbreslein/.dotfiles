@@ -9,7 +9,8 @@ later(function()
   add({
     source = "saghen/blink.cmp",
     depends = { "rafamadriz/friendly-snippets" },
-    checkout = "v0.8.1",
+    -- checkout = "v0.8.1",
+    checkout = "v0.10.0",
   })
 
   local lspconfig = require("lspconfig")
