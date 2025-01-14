@@ -1,15 +1,14 @@
 later(function()
   add("neovim/nvim-lspconfig")
   add({ source = "mrcjkb/rustaceanvim", depends = { "mfussenegger/nvim-dap" } })
+  vim.g.rustaceanvim = { tools = { enable_clippy = false } }
   add("mrcjkb/haskell-tools.nvim")
-
   add("williamboman/mason.nvim")
   add("williamboman/mason-lspconfig.nvim")
 
   add({
     source = "saghen/blink.cmp",
     depends = { "rafamadriz/friendly-snippets" },
-    -- checkout = "v0.8.1",
     checkout = "v0.10.0",
   })
 
