@@ -1,19 +1,16 @@
 now(function()
   add("sainnhe/gruvbox-material")
-  vim.g.gruvbox_material_enable_italic = true
-  vim.g.gruvbox_material_enable_bold = true
-  vim.g.gruvbox_material_better_performance = true
+  vim.g.gruvbox_material_enable_italic = 1
+  vim.g.gruvbox_material_enable_bold = 1
+  vim.g.gruvbox_material_better_performance = 1
   vim.g.gruvbox_material_ui_contrast = "high"
   vim.g.gruvbox_material_diagnostic_virtual_text = "highlighted"
   vim.g.gruvbox_material_transparent_background = 2
   vim.g.gruvbox_material_dim_inactive_windows = 1
-  -- vim.g.gruvbox_material_float_style = "dim"
+  vim.g.gruvbox_material_float_style = "dim"
   vim.cmd.colorscheme("gruvbox-material")
-  vim.api.nvim_set_hl(0, "NormalFloat", { bg = "#1d2021" })
-
-  -- add("sho-87/kanagawa-paper.nvim")
-  -- require("kanagawa-paper").setup({ transparent = true })
-  -- vim.cmd.colorscheme("kanagawa-paper")
+  -- vim.api.nvim_set_hl(0, "NormalFloat", { bg = "#1d2021" })
+  -- vim.api.nvim_set_hl(0, "NormalFloat", { bg = nil })
 
   package.preload["nvim-web-devicons"] = function()
     package.loaded["nvim-web-devicons"] = {}
@@ -97,6 +94,29 @@ later(function()
     indent = { enabled = true },
     lazygit = { enabled = true },
     notifier = { enabled = true },
+    picker = {
+      enabled = true,
+      layout = {
+        layout = {
+          backdrop = false,
+          row = 1,
+          width = 0.8,
+          min_width = 80,
+          height = 0.8,
+          border = "none",
+          box = "vertical",
+          { win = "preview", height = 0.5, border = "single" },
+          {
+            box = "vertical",
+            border = "single",
+            title = "{source} {live}",
+            title_pos = "center",
+            { win = "input", height = 1, border = "bottom" },
+            { win = "list", border = "none" },
+          },
+        },
+      },
+    },
     terminal = { enabled = true },
     zen = { enabled = true },
   })
