@@ -2,19 +2,16 @@ later(function()
   add("aserowy/tmux.nvim")
   require("tmux").setup()
 
-  -- require("mini.pick").setup({
-  --   window = {
-  --     config = {
-  --       width = vim.o.columns,
-  --     },
-  --   },
-  -- })
-  -- Map("n", "<leader>ff", ":Pick files<cr>")
-  -- Map("n", "<leader>fs", ":Pick grep_live<cr>")
-
-  Map("n", "<leader>ff", Snacks.picker.files)
-  Map("n", "<leader>fg", Snacks.picker.git_files)
-  Map("n", "<leader>fs", Snacks.picker.grep)
+  add("ibhagwan/fzf-lua")
+  local fzflua = require("fzf-lua")
+  fzflua.setup({
+    winopts = {
+      border = vim.g.borderstyle,
+      preview = { layout = "vertical" },
+    },
+  })
+  Map("n", "<leader>ff", fzflua.files)
+  Map("n", "<leader>fs", fzflua.live_grep)
 
   require("mini.files").setup()
   Map("n", "<leader>fp", MiniFiles.open)

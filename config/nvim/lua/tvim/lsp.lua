@@ -30,7 +30,8 @@ later(function()
       ["<S-Tab>"] = { "snippet_backward", "fallback" },
     },
     completion = {
-      list = { max_items = 200 },
+      accept = { auto_brackets = { enabled = false } },
+      list = { max_items = 200, selection = { auto_insert = false } },
       menu = { border = vim.g.border_style },
       documentation = {
         auto_show = true,

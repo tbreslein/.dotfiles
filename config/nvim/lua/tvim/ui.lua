@@ -1,22 +1,42 @@
 now(function()
-  add("sainnhe/gruvbox-material")
-  vim.g.gruvbox_material_enable_italic = 1
-  vim.g.gruvbox_material_enable_bold = 1
-  vim.g.gruvbox_material_better_performance = 1
-  vim.g.gruvbox_material_ui_contrast = "high"
-  vim.g.gruvbox_material_diagnostic_virtual_text = "highlighted"
-  vim.g.gruvbox_material_transparent_background = 2
-  vim.g.gruvbox_material_dim_inactive_windows = 1
-  vim.g.gruvbox_material_float_style = "dim"
-  vim.cmd.colorscheme("gruvbox-material")
+  -- add("sainnhe/gruvbox-material")
+  -- vim.g.gruvbox_material_enable_italic = 1
+  -- vim.g.gruvbox_material_enable_bold = 1
+  -- vim.g.gruvbox_material_better_performance = 1
+  -- vim.g.gruvbox_material_ui_contrast = "high"
+  -- vim.g.gruvbox_material_diagnostic_virtual_text = "highlighted"
+  -- vim.g.gruvbox_material_transparent_background = 2
+  -- vim.g.gruvbox_material_dim_inactive_windows = 1
+  -- vim.g.gruvbox_material_float_style = "dim"
+  -- vim.cmd.colorscheme("gruvbox-material")
   -- vim.api.nvim_set_hl(0, "NormalFloat", { bg = "#1d2021" })
   -- vim.api.nvim_set_hl(0, "NormalFloat", { bg = nil })
+
+  add("slugbyte/lackluster.nvim")
+  require("lackluster").setup({ tweak_syntax = { comment = "#444444" } })
+  vim.cmd.colorscheme("lackluster-hack")
 
   package.preload["nvim-web-devicons"] = function()
     package.loaded["nvim-web-devicons"] = {}
     require("mini.icons").mock_nvim_web_devicons()
     return package.loaded["nvim-web-devicons"]
   end
+
+  add("nvim-lualine/lualine.nvim")
+  require("lualine").setup({
+    options = {
+      component_separators = { left = "", right = "" },
+      section_separators = { left = "", right = "" },
+    },
+    sections = {
+      lualine_a = {},
+      lualine_b = { { "filename", path = 3 } },
+      lualine_c = { { "diagnostics", symbols = { error = "✘ ", warn = " ", hint = "󱐮 ", info = "◉ " } } },
+      lualine_x = { "progress" },
+      lualine_y = { "location" },
+      lualine_z = {},
+    },
+  })
 end)
 
 later(function()
@@ -55,22 +75,6 @@ later(function()
   require("treesitter-context").setup({ multiline_threshold = 2 })
   vim.cmd([[hi TreesitterContextBottom gui=underline]])
 
-  add("nvim-lualine/lualine.nvim")
-  require("lualine").setup({
-    options = {
-      component_separators = { left = "", right = "" },
-      section_separators = { left = "", right = "" },
-    },
-    sections = {
-      lualine_a = {},
-      lualine_b = { { "filename", path = 3 } },
-      lualine_c = { { "diagnostics", symbols = { error = "✘ ", warn = " ", hint = "󱐮 ", info = "◉ " } } },
-      lualine_x = { "progress" },
-      lualine_y = { "location" },
-      lualine_z = {},
-    },
-  })
-
   add("MeanderingProgrammer/render-markdown.nvim")
   require("render-markdown").setup({ latex = { enabled = false } })
 
@@ -92,7 +96,6 @@ later(function()
   local snacks = require("snacks")
   snacks.setup({
     indent = { enabled = true },
-    lazygit = { enabled = true },
     notifier = { enabled = true },
     picker = {
       enabled = true,
@@ -123,7 +126,6 @@ later(function()
   Map("n", "<leader>zz", snacks.zen.zen)
   Map("n", "<leader>tt", snacks.terminal.toggle)
   Map("n", "<leader>nh", snacks.notifier.show_history)
-  Map("n", "<leader>gg", snacks.lazygit.open)
 
   -- snacks lsp progress
   local progress = vim.defaulttable()
