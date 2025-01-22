@@ -9,6 +9,7 @@ later(function()
       border = vim.g.borderstyle,
       preview = { layout = "vertical" },
     },
+    fzf_opts = { ["--layout"] = false },
   })
   Map("n", "<leader>ff", fzflua.files)
   Map("n", "<leader>fs", fzflua.live_grep)
