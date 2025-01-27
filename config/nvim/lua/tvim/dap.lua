@@ -20,28 +20,7 @@ later(function()
   })
 
   local dap, dapui = require("dap"), require("dapui")
-  dapui.setup({
-    layouts = {
-      {
-        elements = {
-          { id = "scopes", size = 0.5 },
-          { id = "breakpoints", size = 0.5 },
-          { id = "stacks", size = 0.5 },
-          { id = "watches", size = 0.5 },
-        },
-        position = "left",
-        size = 40,
-      },
-      {
-        elements = {
-          { id = "repl", size = 0.5 },
-          { id = "console", size = 0.5 },
-        },
-        position = "bottom",
-        size = 10,
-      },
-    },
-  })
+  dapui.setup()
 
   dap.listeners.before.attach.dapui_config = function()
     dapui.open()
@@ -57,7 +36,7 @@ later(function()
   end
 
   require("dap-python").setup("python")
-  require("dap-go").setup({})
+  require("dap-go").setup()
 
   Map("n", "<leader>dt", function()
     dapui.toggle()
