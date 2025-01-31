@@ -12,10 +12,6 @@ now(function()
   vim.api.nvim_set_hl(0, "NormalFloat", { bg = "#1d2021" })
   vim.api.nvim_set_hl(0, "NormalFloat", { bg = nil })
 
-  -- add("slugbyte/lackluster.nvim")
-  -- require("lackluster").setup({ tweak_syntax = { comment = "#444444" } })
-  -- vim.cmd.colorscheme("lackluster-hack")
-
   package.preload["nvim-web-devicons"] = function()
     package.loaded["nvim-web-devicons"] = {}
     require("mini.icons").mock_nvim_web_devicons()
