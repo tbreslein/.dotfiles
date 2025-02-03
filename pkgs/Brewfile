@@ -28,6 +28,7 @@ brew "luarocks"
 brew "go"
 
 cask "font-shure-tech-mono-nerd-font"
+cask "font-hack-nerd-font"
 cask "anki"
 cask "alacritty"
 cask "aerospace"
