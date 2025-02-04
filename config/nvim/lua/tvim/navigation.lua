@@ -15,7 +15,9 @@ later(function()
   Map("n", "<leader>fs", fzflua.live_grep)
 
   require("mini.files").setup()
-  Map("n", "<leader>fp", MiniFiles.open)
+  Map("n", "<leader>fp", function()
+    MiniFiles.open(vim.api.nvim_buf_get_name(0))
+  end)
 
   add({
     source = "ThePrimeagen/harpoon",
