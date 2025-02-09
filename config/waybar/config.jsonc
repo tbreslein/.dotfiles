@@ -3,7 +3,7 @@
   "position": "top",
   "modules-left": ["hyprland/workspaces", "hyprland/window"],
   "modules-center": [],
-  "modules-right": ["battery", "pulseaudio", "tray", "custom/logout"],
+  "modules-right": ["battery", "pulseaudio", "tray", "custom/notification", "custom/logout"],
   "hyprland/window": {
     "format": "{}",
     "rewrite": {
@@ -27,17 +27,17 @@
       "normal": 50,
       "warning": 30,
       "critical": 15,
-      "format": "{icon}   {capacity}%",
-      "format-good": "{icon}   {capacity}%",
+      "format": "{icon}   {capacity}%|",
+      "format-good": "{icon}   {capacity}%|",
       "format-full": "   {capacity}%",
       "format-icons": ["", "", "", "", ""],
       "interval": 30,
     },
   },
   "pulseaudio": {
-    "format": "{icon}  {volume}%  ",
-    "format-bluetooth": "  {volume}%  ",
-    "format-muted": "婢  Mute  ",
+    "format": "{icon}  {volume}%|",
+    "format-bluetooth": "  {volume}%|",
+    "format-muted": "婢  Mute|",
     "interval": 60,
     "format-icons": {
       "default": [""],
@@ -47,5 +47,25 @@
   "custom/logout": {
     "format": "󰐥 ",
     "on-click": "wlogout",
+  },
+  "custom/notification": {
+    "tooltip": false,
+    "format": "{icon}",
+    "format-icons": {
+      "notification": "<span foreground='red'><sup></sup></span>",
+      "none": "",
+      "dnd-notification": "<span foreground='red'><sup></sup></span>",
+      "dnd-none": "",
+      "inhibited-notification": "<span foreground='red'><sup></sup></span>",
+      "inhibited-none": "",
+      "dnd-inhibited-notification": "<span foreground='red'><sup></sup></span>",
+      "dnd-inhibited-none": ""
+    },
+    "return-type": "json",
+    "exec-if": "which swaync-client",
+    "exec": "swaync-client -swb",
+    "on-click": "swaync-client -t -sw",
+    "on-click-right": "swaync-client -d -sw",
+    "escape": true
   },
 }

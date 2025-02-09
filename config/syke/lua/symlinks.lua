@@ -42,7 +42,7 @@ if hostname == "kain" then
     { source = myconfig .. "/electron-flags.conf", target = userconfig .. "/electron-flags.conf" },
     { source = myconfig .. "/electron13-flags.conf", target = userconfig .. "/electron13-flags.conf" },
     { source = myconfig .. "/waybar", target = userconfig .. "/waybar" },
-    { source = myconfig .. "/dunstrc", target = userconfig .. "/dunst/dunstrc" },
+    { source = myconfig .. "/swaync", target = userconfig .. "/swaync" },
     { source = myconfig .. "/hypr", target = userconfig .. "/hypr" },
     { source = myconfig .. "/tofi", target = userconfig .. "/tofi/config" },
     { source = myscripts .. "/wbrave", target = localbin .. "/wbrave" },
