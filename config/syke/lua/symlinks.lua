@@ -43,6 +43,7 @@ if hostname == "kain" then
     { source = myconfig .. "/electron13-flags.conf", target = userconfig .. "/electron13-flags.conf" },
     { source = myconfig .. "/waybar", target = userconfig .. "/waybar" },
     { source = myconfig .. "/tofi", target = userconfig .. "/tofi" },
+    { source = myscripts .. "/wbrave", target = localbin .. "/wbrave" },
   }
 elseif uname == "Darwin" then
   host_symlinks = {

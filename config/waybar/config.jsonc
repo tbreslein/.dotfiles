@@ -2,7 +2,7 @@
   "layer": "top",
   "position": "top",
   "modules-left": ["hyprland/workspaces", "hyprland/window"],
-  "modules-center": ["clock"],
+  "modules-center": [],
   "modules-right": ["battery", "pulseaudio", "tray", "custom/logout"],
   "hyprland/window": {
     "format": "{}",

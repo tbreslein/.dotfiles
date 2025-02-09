@@ -1,6 +1,7 @@
 * {
-  font-family: "Geist Mono Nerd Font";
-  font-size: 16px;
+  font-family: "Hack Nerd Font";
+  font-size: 20px;
+  /*margin-left: 10px;*/
 }
 
 window#waybar {
