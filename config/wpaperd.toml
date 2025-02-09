@@ -1,0 +1,6 @@
+[default]
+mode = "fit"
+duration = "1d"
+
+[any]
+path = "/home/tommy/wallpapers/gruvbox/"

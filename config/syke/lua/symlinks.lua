@@ -45,6 +45,7 @@ if hostname == "kain" then
     { source = myconfig .. "/swaync", target = userconfig .. "/swaync" },
     { source = myconfig .. "/hypr", target = userconfig .. "/hypr" },
     { source = myconfig .. "/tofi", target = userconfig .. "/tofi/config" },
+    { source = myconfig .. "/wpaperd.toml", target = userconfig .. "/wpaperd/config.toml" },
     { source = myscripts .. "/wbrave", target = localbin .. "/wbrave" },
   }
 elseif uname == "Darwin" then
