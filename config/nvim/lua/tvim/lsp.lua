@@ -80,7 +80,7 @@ later(function()
       "dockerls",
       "lua_ls",
       "marksman",
-      "nil_ls",
+      "rnix",
       "ruff",
       "ts_ls",
       "astro",

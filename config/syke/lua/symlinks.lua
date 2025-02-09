@@ -22,7 +22,10 @@ local symlinks = {
   { source = myconfig .. "/tmux.conf", target = userconfig .. "/tmux/tmux.conf" },
   { source = myconfig .. "/direnv.toml", target = userconfig .. "/direnv/direnv.toml" },
   { source = myconfig .. "/starship.toml", target = userconfig .. "/starship.toml" },
-  { source = myconfig .. "/config.fish", target = userconfig .. "/fish/config.fish" },
+  { source = myconfig .. "/bash/bashrc", target = home .. "/.bashrc" },
+  { source = myconfig .. "/bash/bash_logout", target = home .. "/.bash_logout" },
+  { source = myconfig .. "/bash/bash_profile", target = home .. "/.bash_profile" },
+  { source = myconfig .. "/bash/inputrc", target = home .. "/.inputrc" },
   { source = myconfig .. "/git", target = userconfig .. "/git" },
   { source = myconfig .. "/luacheckrc", target = home .. "/.luacheckrc" },
   { source = myscripts .. "/tmux_sessionizer", target = localbin .. "/tmux_sessionizer" },
@@ -38,6 +41,8 @@ if hostname == "kain" then
     { source = myconfig .. "/electron13", target = userconfig .. "/electron13" },
     { source = myconfig .. "/electron-flags.conf", target = userconfig .. "/electron-flags.conf" },
     { source = myconfig .. "/electron13-flags.conf", target = userconfig .. "/electron13-flags.conf" },
+    { source = myconfig .. "/waybar", target = userconfig .. "/waybar" },
+    { source = myconfig .. "/tofi", target = userconfig .. "/tofi" },
   }
 elseif uname == "Darwin" then
   host_symlinks = {
