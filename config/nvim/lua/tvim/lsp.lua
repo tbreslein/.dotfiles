@@ -84,6 +84,7 @@ later(function()
       "ruff",
       "ts_ls",
       "astro",
+      "gopls",
     },
   })
   lspconfig.clangd.setup({ capabilities = lsp_capabilities })

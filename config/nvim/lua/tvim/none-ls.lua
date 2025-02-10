@@ -15,6 +15,8 @@ later(function()
       "cmake_lint",
       "cmake_format",
       "clang_format",
+      "golangci-lint",
+      "gofumpt",
       "hadolint",
       "shellcheck",
       "shellharden",
