@@ -1,0 +1,10 @@
+neovim
+lazygit
+valgrind
+gcc
+clang
+cmake
+meson
+ninja
+npm
+go
