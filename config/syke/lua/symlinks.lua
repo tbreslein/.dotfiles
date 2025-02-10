@@ -51,7 +51,6 @@ if hostname == "kain" then
 elseif uname == "Darwin" then
   host_symlinks = {
     { source = myconfig .. "/alacritty/darwin.toml", target = userconfig .. "/alacritty/host.toml" },
-    { source = myconfig .. "/aerospace.toml", target = userconfig .. "/aerospace/aerospace.toml" },
   }
 end
 
