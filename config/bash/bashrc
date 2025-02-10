@@ -3,6 +3,8 @@
 
 stty -ixon # disable c-s and c-q
 shopt -s autocd
+shopt -s histappend
+PROMPT_COMMAND="history -a;$PROMPT_COMMAND"
 
 alias g="git"
 alias gg="git status"
