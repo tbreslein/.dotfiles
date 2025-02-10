@@ -34,9 +34,9 @@ toggle_moco() {
 
 twork() {
     if [ "$TMUX" != "" ]; then
-        pushd "$HOME/work"
+        pushd "$HOME/work" || exit
         toggle_moco
-        popd
+        popd || exit
         if ! tmux has-session -t work; then
             tmux new-session -ds "work" -c "$HOME/work"
         fi
@@ -76,3 +76,4 @@ fi
 if command -v zoxide 2 &>/dev/null; then
     eval "$(zoxide init bash)"
 fi
+[ -r /usr/share/bash-completion/bash_completion   ] && . /usr/share/bash-completion/bash_completion
