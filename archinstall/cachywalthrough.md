@@ -1,0 +1,5 @@
+- install gaming meta package
+- configure /etc/paru.conf (bottomup and news)
+- configure /boot/loader/loader.conf (set timeout to 0)
+- install gnome-browser-connector
+- install nix

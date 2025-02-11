@@ -1,0 +1,12 @@
+go
+rust
+luarocks
+neovim-nightly-bin
+lazygit
+valgrind
+gcc
+clang
+cmake
+meson
+ninja
+npm
