@@ -76,4 +76,4 @@ fi
 if command -v zoxide 2 &>/dev/null; then
     eval "$(zoxide init bash)"
 fi
-[ -r /usr/share/bash-completion/bash_completion   ] && . /usr/share/bash-completion/bash_completion
+[[ -f /usr/share/bash-completion/bash_completion ]] && source /usr/share/bash-completion/bash_completion || true
