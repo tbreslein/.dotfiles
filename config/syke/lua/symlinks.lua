@@ -15,6 +15,8 @@ local localbin = home .. "/.local/bin"
 local symlinks = {
   { source = myconfig .. "/syke", target = userconfig .. "/syke" },
   { source = myconfig .. "/nvim", target = userconfig .. "/nvim" },
+  { source = myconfig .. "/emacs/init.el", target = home .. "/.emacs.d/init.el" },
+  { source = myconfig .. "/emacs/early-init.el", target = home .. "/.emacs.d/early-init.el" },
   { source = myconfig .. "/alacritty/alacritty.toml", target = userconfig .. "/alacritty/alacritty.toml" },
   { source = myconfig .. "/alacritty/gruvbox-material.toml", target = userconfig .. "/alacritty/colors.toml" },
   { source = myconfig .. "/editorconfig", target = home .. "/.editorconfig" },
@@ -41,12 +43,6 @@ if hostname == "kain" then
     { source = myconfig .. "/electron13", target = userconfig .. "/electron13" },
     { source = myconfig .. "/electron-flags.conf", target = userconfig .. "/electron-flags.conf" },
     { source = myconfig .. "/electron13-flags.conf", target = userconfig .. "/electron13-flags.conf" },
-    -- { source = myconfig .. "/waybar", target = userconfig .. "/waybar" },
-    -- { source = myconfig .. "/swaync", target = userconfig .. "/swaync" },
-    -- { source = myconfig .. "/hypr", target = userconfig .. "/hypr" },
-    -- { source = myconfig .. "/tofi", target = userconfig .. "/tofi/config" },
-    -- { source = myconfig .. "/wpaperd.toml", target = userconfig .. "/wpaperd/config.toml" },
-    -- { source = myscripts .. "/wbrave", target = localbin .. "/wbrave" },
   }
 elseif uname == "Darwin" then
   host_symlinks = {
