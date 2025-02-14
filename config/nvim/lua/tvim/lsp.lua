@@ -1,7 +1,8 @@
 later(function()
   add("neovim/nvim-lspconfig")
   add({ source = "mrcjkb/rustaceanvim", depends = { "mfussenegger/nvim-dap" } })
-  vim.g.rustaceanvim = { tools = { enable_clippy = false } }
+  -- vim.g.rustaceanvim = { tools = { enable_clippy = false } }
+  vim.g.rustaceanvim = { server = { default_settings = { ["rust-analyzer"] = { check = { command = "check" } } } } }
   add("mrcjkb/haskell-tools.nvim")
   add("williamboman/mason.nvim")
   add("williamboman/mason-lspconfig.nvim")
