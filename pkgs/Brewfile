@@ -31,5 +31,6 @@ brew "emacs-plus@30"
 
 #cask "font-hack-nerd-font"
 cask "anki"
+cask "amethyst"
 cask "alacritty"
 cask "balenaetcher"
