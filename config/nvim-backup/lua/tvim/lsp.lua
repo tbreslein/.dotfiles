@@ -135,7 +135,7 @@ later(function()
     },
   })
 
-  lspconfig.pyright.setup({
+  lspconfig.basedpyright.setup({
     capabilities = lsp_capabilities,
     on_new_config = function(config, root_dir)
       local env = vim.trim(vim.fn.system('cd "' .. (root_dir or ".") .. '"; poetry env info --executable 2>/dev/null'))
