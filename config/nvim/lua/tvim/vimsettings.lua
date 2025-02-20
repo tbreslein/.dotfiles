@@ -1,32 +1,24 @@
-local g = vim.g
-local opt = vim.opt
-
 now(function()
-  opt.guicursor = ""
-  opt.number = true
-  opt.relativenumber = true
-  opt.colorcolumn = "80"
-  opt.signcolumn = "yes"
-  opt.cursorline = true
-  opt.cursorlineopt = "number"
-  opt.termguicolors = true
-  opt.swapfile = false
-  opt.backup = false
-  opt.undodir = os.getenv("HOME") .. "/.local/share/vim/undodir"
-  opt.undofile = true
-  opt.autoread = true
-  opt.clipboard:append({ "unnamed", "unnamedplus" })
-  opt.completeopt = { "menuone", "noselect", "noinsert" }
-  opt.fileencoding = "utf-8"
-  g.winblend = 0
-  g.borderstyle = "single"
-  opt.laststatus = 3
-  opt.cmdheight = 1
-
-  g.loaded_node_provider = 0
-  g.loaded_python3_provider = 0
-  g.loaded_perl_provider = 0
-  g.loaded_ruby_provider = 0
+  vim.opt.guicursor = ""
+  vim.opt.number = true
+  vim.opt.relativenumber = true
+  vim.opt.colorcolumn = "80"
+  vim.opt.signcolumn = "yes"
+  vim.opt.cursorline = true
+  vim.opt.cursorlineopt = "number"
+  vim.opt.termguicolors = true
+  vim.opt.swapfile = false
+  vim.opt.backup = false
+  vim.opt.undodir = os.getenv("HOME") .. "/.local/share/vim/undodir"
+  vim.opt.undofile = true
+  vim.opt.autoread = true
+  vim.opt.clipboard:append({ "unnamed", "unnamedplus" })
+  vim.opt.completeopt = { "menuone", "noselect", "noinsert" }
+  vim.opt.fileencoding = "utf-8"
+  vim.g.winblend = 0
+  vim.g.borderstyle = "single"
+  vim.opt.laststatus = 3
+  vim.opt.cmdheight = 1
 
   local shada = vim.o.shada
   vim.o.shada = ""
@@ -71,8 +63,6 @@ now(function()
   Map("n", "<c-u>", "<c-u>zz")
   Map("v", "<", "<gv")
   Map("v", ">", ">gv")
-  Map("v", "J", ":m '>+1<cr>gv=gv")
-  Map("v", "K", ":m '<-2<cr>gv=gv")
   Map("n", "j", "v:count == 0 ? 'gj' : 'j'", { expr = true })
   Map("n", "k", "v:count == 0 ? 'gk' : 'k'", { expr = true })
   Map("n", "]c", ":cnext<cr>")
@@ -80,26 +70,26 @@ now(function()
 end)
 
 later(function()
-  opt.confirm = false
-  opt.equalalways = false
-  opt.splitbelow = true
-  opt.splitright = true
-  opt.timeout = false
-  opt.scrolloff = 5
-  opt.sidescrolloff = 3
-  opt.shiftwidth = 2
-  opt.smartindent = true
-  opt.tabstop = 2
-  opt.expandtab = true
-  opt.breakindent = true
-  opt.linebreak = true
-  opt.fillchars:append({ eob = " " })
-  opt.shortmess:append("aIF")
-  opt.ignorecase = true
-  opt.smartcase = true
-  opt.mouse = "a"
-  opt.wildmenu = true
-  opt.wildoptions:append("fuzzy")
-  opt.pumheight = 10
-  opt.updatetime = 400
+  vim.opt.confirm = false
+  vim.opt.equalalways = false
+  vim.opt.splitbelow = true
+  vim.opt.splitright = true
+  vim.opt.timeout = false
+  vim.opt.scrolloff = 5
+  vim.opt.sidescrolloff = 3
+  vim.opt.shiftwidth = 2
+  vim.opt.smartindent = true
+  vim.opt.tabstop = 2
+  vim.opt.expandtab = true
+  vim.opt.breakindent = true
+  vim.opt.linebreak = true
+  vim.opt.fillchars:append({ eob = " " })
+  vim.opt.shortmess:append("aIF")
+  vim.opt.ignorecase = true
+  vim.opt.smartcase = true
+  vim.opt.mouse = "a"
+  vim.opt.wildmenu = true
+  vim.opt.wildoptions:append("fuzzy")
+  vim.opt.pumheight = 10
+  vim.opt.updatetime = 400
 end)

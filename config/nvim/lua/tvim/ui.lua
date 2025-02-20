@@ -9,8 +9,6 @@ now(function()
   vim.g.gruvbox_material_dim_inactive_windows = 1
   vim.g.gruvbox_material_float_style = "dim"
   vim.cmd.colorscheme("gruvbox-material")
-  vim.api.nvim_set_hl(0, "NormalFloat", { bg = "#1d2021" })
-  vim.api.nvim_set_hl(0, "NormalFloat", { bg = nil })
 
   package.preload["nvim-web-devicons"] = function()
     package.loaded["nvim-web-devicons"] = {}
@@ -92,36 +90,20 @@ later(function()
   local snacks = require("snacks")
   snacks.setup({
     indent = { enabled = true },
+    rename = { enabled = true },
     notifier = { enabled = true },
-    picker = {
-      enabled = true,
-      layout = {
-        layout = {
-          backdrop = false,
-          row = 1,
-          width = 0.8,
-          min_width = 80,
-          height = 0.8,
-          border = "none",
-          box = "vertical",
-          { win = "preview", height = 0.5, border = "single" },
-          {
-            box = "vertical",
-            border = "single",
-            title = "{source} {live}",
-            title_pos = "center",
-            { win = "input", height = 1, border = "bottom" },
-            { win = "list", border = "none" },
-          },
-        },
-      },
-    },
-    terminal = { enabled = true },
     zen = { enabled = true },
   })
   Map("n", "<leader>zz", snacks.zen.zen)
-  Map("n", "<leader>tt", snacks.terminal.toggle)
   Map("n", "<leader>nh", snacks.notifier.show_history)
+
+  -- LSP integrated rename in mini.files
+  vim.api.nvim_create_autocmd("User", {
+    pattern = "MiniFilesActionRename",
+    callback = function(event)
+      snacks.rename.on_rename_file(event.data.from, event.data.to)
+    end,
+  })
 
   -- snacks lsp progress
   local progress = vim.defaulttable()
