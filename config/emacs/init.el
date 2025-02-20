@@ -37,6 +37,10 @@
       (eval-print-last-sexp)))
   (load bootstrap-file nil 'nomessage))
 (straight-use-package 'use-package)
+(setq package-archives '(("melpa" . "https://melpa.org/packages/") ;; Sets default package repositories
+                         ("org" . "https://orgmode.org/elpa/")
+                         ("elpa" . "https://elpa.gnu.org/packages/")
+                         ("nongnu" . "https://elpa.nongnu.org/nongnu/"))) ;; For Eat Terminal
 
 ;; EMACS SETTINGS
 (setq custom-file "~/.emacs.d/custom.el")
@@ -48,7 +52,7 @@
   (tool-bar-mode -1)
   (menu-bar-mode -1)
   (tooltip-mode -1)
-  (electric-indent-mode -1)
+  ;; (electric-indent-mode -1)
   (save-place-mode 1)
   (scroll-bar-mode -1)
   (global-hl-line-mode 1)
@@ -83,14 +87,9 @@
 
   :config
   ;; Performance Hacks
-  ;; Emacs is an Elisp interpreter, and when running programs or packages,
-  ;; it can occasionally experience pauses due to garbage collection.
-  ;; By increasing the garbage collection threshold, we reduce these pauses
-  ;; during heavy operations, leading to smoother performance.
-  (setq gc-cons-threshold #x40000000)
-
-  ;; Set the maximum output size for reading process output, allowing for larger data transfers.
+  (setq gc-cons-threshold (* 2 1000 1000))
   (setq read-process-output-max (* 1024 1024 4))
+
   (setq ring-bell-function #'ignore)
   (setq inhibit-startup-screen t)
   (setq display-line-numbers-type 'visual)
@@ -114,6 +113,7 @@
   (setq auto-window-vscroll nil)
   (setopt display-fill-column-indicator-column 80)
   (global-display-fill-column-indicator-mode +1)
+  (blink-cursor-mode -1)
   (set-face-attribute 'default nil :family "Hack Nerd Font" :height (if (eq system-type 'darwin) 170 110))
   (set-frame-parameter nil 'alpha 96)
   (defun skip-these-buffers (_window buffer _bury-or-kill)
@@ -126,6 +126,14 @@
   :ensure nil
   :config
   (setq compilation-scroll-output t))
+
+(use-package eat
+  :straight t
+  :hook ('eshell-load-hook #'eat-eshell-mode))
+
+(use-package magit
+  :straight t
+  :commands magit-status)
 
 ;; EXEC-PATH / ENVRC / NIX
 (use-package exec-path-from-shell :straight t :demand t)
@@ -149,6 +157,7 @@
   (setq evil-want-keybinding nil)
   (setq evil-undo-system 'undo-fu)
   :config
+  (evil-set-initial-state 'eat-mode 'insert) ;; Set initial state in eat terminal to insert mode
   (setq evil-want-C-d-scroll t)
   (setq evil-want-C-u-scroll t)
   (setq evil-split-window-below t)
@@ -204,7 +213,6 @@ From https://github.com/emacs-evil/evil/issues/606"
 	    (goto-char fixup-mark)
 	    (fixup-whitespace))))
       (set-marker fixup-mark nil)))
-
   (evil-global-set-key 'normal (kbd "J") '+evil-join-a)
   (evil-commentary-mode))
 
@@ -213,20 +221,23 @@ From https://github.com/emacs-evil/evil/issues/606"
   :config
   (load-theme 'gruber-darker nil))
 
-;; (use-package doom-modeline
-;;   :straight t
-;;   :defer t
-;;   :init
-;;   (doom-modeline-mode 1)
-;;   (setq find-file-visit-truename t)
-;;   :config
-;;   (setq doom-modeline-enable-word-count nil)
-;;   (setq doom-modeline-height 15)
-;;   (setq doom-modeline-env-version t)
-;;   (setq doom-modeline-vcs-max-length 50)
-;;   (setq doom-modeline-env-version nil)
-;;   (setq doom-modeline-buffer-encoding nil)
-;;   (setq doom-modeline-buffer-file-name-style 'relative-from-project))
+(use-package doom-modeline
+  :straight t
+  :defer t
+  :init
+  (doom-modeline-mode 1)
+  (setq find-file-visit-truename t)
+  :config
+  (setq doom-modeline-enable-word-count nil)
+  (setq doom-modeline-height 15)
+  (setq doom-modeline-lsp t)
+  (setq doom-modeline-lsp-icon t)
+  (setq doom-modeline-env-version t)
+  (setq doom-modeline-vcs-max-length 50)
+  (setq doom-modeline-env-version nil)
+  (setq doom-modeline-buffer-encoding nil)
+  (setq doom-modeline-buffer-file-name-style 'relative-from-project))
+;; (use-package mood-line :straight t :config (mood-line-mode))
 
 ;; NAVIGATION
 (use-package projectile
@@ -314,38 +325,38 @@ From https://github.com/emacs-evil/evil/issues/606"
 ;; This SHOULD take care of the problem that project-root-override tries to solve,
 ;; but for some reason it does not work. I have no idea why, but I don't seem to
 ;; be the only one.
-(setq project-vc-extra-root-markers
-      '("Cargo.toml" "pyproject.toml"))
+;; (setq project-vc-extra-root-markers
+;;       '("Cargo.toml" "pyproject.toml"))
 
-;; (defun project-root-override (dir)
-;;   "Find DIR's project root by searching for a '.project.el' file.
+(defun project-root-override (dir)
+  "Find DIR's project root by searching for a '.project.el' file.
 
-;; If this file exists, it marks the project root. For convenient compatibility
-;; with Projectile, '.projectile' is also considered a project root marker.
+If this file exists, it marks the project root. For convenient compatibility
+with Projectile, '.projectile' is also considered a project root marker.
 
-;; https://blog.jmthornton.net/p/emacs-project-override"
-;;   (let ((root (or (locate-dominating-file dir ".project.el")
-;;                   (locate-dominating-file dir ".projectile")
-;;                   (locate-dominating-file dir "Cargo.toml")
-;;                   (locate-dominating-file dir "setup.py")
-;;                   (locate-dominating-file dir "requirements.txt")
-;;                   (locate-dominating-file dir "pyproject.toml")))
-;;         (backend (ignore-errors (vc-responsible-backend dir))))
-;;     (when root (if (version<= emacs-version "28")
-;;                    (cons 'vc root)
-;;                  (list 'vc backend root)))))
+https://blog.jmthornton.net/p/emacs-project-override"
+  (let ((root (or (locate-dominating-file dir ".project.el")
+                  (locate-dominating-file dir ".projectile")
+                  (locate-dominating-file dir "Cargo.toml")
+                  (locate-dominating-file dir "setup.py")
+                  (locate-dominating-file dir "requirements.txt")
+                  (locate-dominating-file dir "pyproject.toml")))
+        (backend (ignore-errors (vc-responsible-backend dir))))
+    (when root (if (version<= emacs-version "28")
+                   (cons 'vc root)
+                 (list 'vc backend root)))))
 
-;; ;; Note that we cannot use :hook here because `project-find-functions' doesn't
-;; ;; end in "-hook", and we can't use this in :init because it won't be defined
-;; ;; yet.
-;; (use-package project
-;;   :ensure nil
-;;   :config
-;;   (add-hook 'project-find-functions #'project-root-override))
+;; Note that we cannot use :hook here because `project-find-functions' doesn't
+;; end in "-hook", and we can't use this in :init because it won't be defined
+;; yet.
+(use-package project
+  :ensure nil
+  :config
+  (add-hook 'project-find-functions #'project-root-override))
 
 (use-package corfu
   :straight t
-  :after vertico
+  ;; :after vertico
   :custom
   (corfu-cycle t)
   (corfu-auto t)
@@ -375,6 +386,12 @@ From https://github.com/emacs-evil/evil/issues/606"
                           completion-category-overrides nil
                           completion-category-defaults nil)))
   (global-corfu-mode))
+
+(use-package cape
+  :straight t
+  :after corfu
+  :init
+  (add-to-list 'completion-at-point-functions #'cape-file))
 
 (use-package eglot
   :ensure nil
@@ -410,3 +427,5 @@ From https://github.com/emacs-evil/evil/issues/606"
   :config
   (treesit-auto-add-to-auto-mode-alist 'all)
   (global-treesit-auto-mode))
+
+;;; init.el ends here
