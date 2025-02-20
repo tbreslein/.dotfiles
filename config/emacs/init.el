@@ -114,7 +114,7 @@
   (setq auto-window-vscroll nil)
   (setopt display-fill-column-indicator-column 80)
   (global-display-fill-column-indicator-mode +1)
-  (set-face-attribute 'default nil :family "Hack Nerd Font" :height (if (eq system-type 'darwin) 150 110))
+  (set-face-attribute 'default nil :family "Hack Nerd Font" :height (if (eq system-type 'darwin) 170 110))
   (set-frame-parameter nil 'alpha 96)
   (defun skip-these-buffers (_window buffer _bury-or-kill)
     "Function for `switch-to-prev-buffer-skip'."
@@ -282,44 +282,6 @@ From https://github.com/emacs-evil/evil/issues/606"
   :config
   (marginalia-mode 1))
 
-(use-package corfu
-  :straight t
-  :after vertico
-  :custom
-  (corfu-cycle t)
-  (corfu-auto t)
-  (corfu-auto-prefix 2)
-  (corfu-echo-delay 0.1)
-  (corfu-popupinfo-delay 0.1)
-  (corfu-preview-current nil)
-  :bind (:map corfu-map ("RET" . nil))
-  :config
-  (evil-define-key 'insert 'corfu-map (kbd "C-j") 'corfu-next)
-  (evil-define-key 'insert 'corfu-map (kbd "C-k") 'corfu-previous)
-  (evil-define-key 'insert 'corfu-map (kbd "C-l") 'corfu-insert)
-  (evil-define-key 'insert 'corfu-map (kbd "C-h") 'corfu-insert-separator)
-  (corfu-popupinfo-mode)
-
-  (defun orderless-fast-dispatch (word index total)
-    (and (= index 0) (= total 1) (length< word 4)
-	 (cons 'orderless-literal-prefix word)))
-
-  (orderless-define-completion-style orderless-fast
-    (orderless-style-dispatchers '(orderless-fast-dispatch))
-    (orderless-matching-styles '(orderless-literal orderless-regexp)))
-
-  (setq corfu-auto        t
-	corfu-auto-delay  0  ;; TOO SMALL - NOT RECOMMENDED
-	corfu-auto-prefix 0) ;; TOO SMALL - NOT RECOMMENDED
-
-  (add-hook 'corfu-mode-hook
-            (lambda ()
-              (setq-local completion-styles '(orderless-fast basic)
-                          completion-category-overrides nil
-                          completion-category-defaults nil)))
-
-  (global-corfu-mode))
-
 (use-package flymake
   :ensure nil
   :config
@@ -341,83 +303,78 @@ From https://github.com/emacs-evil/evil/issues/606"
   (apheleia-global-mode +1))
 
 (use-package markdown-mode :straight t)
-(use-package yasnippet :straight t)
+(use-package yasnippet :straight t :config (yas-global-mode 1))
 (use-package rust-mode
   :straight t
   :mode "\\.rs\\'"
   :custom
   (rust-mode-treesitter-derive t))
 
-;; (straight-use-package
-;;  `(lspce :type git :host github :repo "zbelial/lspce"
-;;          :files (:defaults ,(pcase system-type
-;;                               ('gnu/linux "lspce-module.so")
-;;                               ('darwin "lspce-module.dylib")))
-;;          :pre-build ,(pcase system-type
-;;                        ('gnu/linux '(("~/.cargo/bin/cargo" "build" "--release") ("cp" "./target/release/liblspce_module.so" "./lspce-module.so")))
-;;                        ('darwin '(("~/.cargo/bin/cargo" "build" "--release") ("cp" "./target/release/liblspce_module.dylib" "./lspce-module.dylib"))))))
-
-;; (use-package lspce
-;;   ;; :load-path "/path/to/lspce"
-;;   :hook ((rust-ts-mode) . lspce-mode)
-;;   :config (progn
-;;             (setq lspce-send-changes-idle-time 0.1)
-;;             (setq lspce-show-log-level-in-modeline t) ;; show log level in mode line
-
-;;             ;; You should call this first if you want lspce to write logs
-;;             (lspce-set-log-file "~/tmp/lspce.log")
-
-;;             ;; By default, lspce will not write log out to anywhere. 
-;;             ;; To enable logging, you can add the following line
-;;             ;; (lspce-enable-logging)
-;;             ;; You can enable/disable logging on the fly by calling `lspce-enable-logging' or `lspce-disable-logging'.
-
-;;             ;; enable lspce in particular buffers
-;;             ;; (add-hook 'rust-ts-mode 'lspce-mode)
-
-;;             ;; modify `lspce-server-programs' to add or change a lsp server, see document
-;;             ;; of `lspce-lsp-type-function' to understand how to get buffer's lsp type.
-;;             ;; Bellow is what I use
-;;             (setq lspce-server-programs `(("rust"  "rust-analyzer" "" lspce-ra-initializationOptions)
-;;                                           ("python" "pylsp" "" )
-;;                                           ("C" "clangd" "--all-scopes-completion --clang-tidy --enable-config --header-insertion-decorators=0")
-;;                                           ("java" "java" lspce-jdtls-cmd-args lspce-jdtls-initializationOptions)
-;;                                           ))
-;;             )
-;;   )
-
 ;; EGLOT SOMEHOW NEEDS THIS TO CORRECTLY DETERMINE THE PROJECT ROOT
 ;; This SHOULD take care of the problem that project-root-override tries to solve,
 ;; but for some reason it does not work. I have no idea why, but I don't seem to
 ;; be the only one.
-;; (setq project-vc-extra-root-markers
-;;       '("Cargo.toml" "pyproject.toml"))
+(setq project-vc-extra-root-markers
+      '("Cargo.toml" "pyproject.toml"))
 
-(defun project-root-override (dir)
-  "Find DIR's project root by searching for a '.project.el' file.
+;; (defun project-root-override (dir)
+;;   "Find DIR's project root by searching for a '.project.el' file.
 
-If this file exists, it marks the project root. For convenient compatibility
-with Projectile, '.projectile' is also considered a project root marker.
+;; If this file exists, it marks the project root. For convenient compatibility
+;; with Projectile, '.projectile' is also considered a project root marker.
 
-https://blog.jmthornton.net/p/emacs-project-override"
-  (let ((root (or (locate-dominating-file dir ".project.el")
-                  (locate-dominating-file dir ".projectile")
-                  (locate-dominating-file dir "Cargo.toml")
-                  (locate-dominating-file dir "setup.py")
-                  (locate-dominating-file dir "requirements.txt")
-                  (locate-dominating-file dir "pyproject.toml")))
-        (backend (ignore-errors (vc-responsible-backend dir))))
-    (when root (if (version<= emacs-version "28")
-                   (cons 'vc root)
-                 (list 'vc backend root)))))
+;; https://blog.jmthornton.net/p/emacs-project-override"
+;;   (let ((root (or (locate-dominating-file dir ".project.el")
+;;                   (locate-dominating-file dir ".projectile")
+;;                   (locate-dominating-file dir "Cargo.toml")
+;;                   (locate-dominating-file dir "setup.py")
+;;                   (locate-dominating-file dir "requirements.txt")
+;;                   (locate-dominating-file dir "pyproject.toml")))
+;;         (backend (ignore-errors (vc-responsible-backend dir))))
+;;     (when root (if (version<= emacs-version "28")
+;;                    (cons 'vc root)
+;;                  (list 'vc backend root)))))
 
-;; Note that we cannot use :hook here because `project-find-functions' doesn't
-;; end in "-hook", and we can't use this in :init because it won't be defined
-;; yet.
-(use-package project
-  :ensure nil
+;; ;; Note that we cannot use :hook here because `project-find-functions' doesn't
+;; ;; end in "-hook", and we can't use this in :init because it won't be defined
+;; ;; yet.
+;; (use-package project
+;;   :ensure nil
+;;   :config
+;;   (add-hook 'project-find-functions #'project-root-override))
+
+(use-package corfu
+  :straight t
+  :after vertico
+  :custom
+  (corfu-cycle t)
+  (corfu-auto t)
+  (corfu-auto-prefix 2)
+  (corfu-echo-delay 0.1)
+  (corfu-popupinfo-delay 0.1)
+  (corfu-preview-current nil)
+  :bind (:map corfu-map ("RET" . nil))
   :config
-  (add-hook 'project-find-functions #'project-root-override))
+  (evil-define-key 'insert 'corfu-map (kbd "C-j") 'corfu-next)
+  (evil-define-key 'insert 'corfu-map (kbd "C-k") 'corfu-previous)
+  (evil-define-key 'insert 'corfu-map (kbd "C-l") 'corfu-insert)
+  (evil-define-key 'insert 'corfu-map (kbd "C-h") 'corfu-insert-separator)
+  (corfu-popupinfo-mode)
+  (defun orderless-fast-dispatch (word index total)
+    (and (= index 0) (= total 1) (length< word 4)
+	 (cons 'orderless-literal-prefix word)))
+  (orderless-define-completion-style orderless-fast
+    (orderless-style-dispatchers '(orderless-fast-dispatch))
+    (orderless-matching-styles '(orderless-literal orderless-regexp)))
+  (setq corfu-auto        t
+	corfu-auto-delay  0  ;; TOO SMALL - NOT RECOMMENDED
+	corfu-auto-prefix 0) ;; TOO SMALL - NOT RECOMMENDED
+  (add-hook 'corfu-mode-hook
+            (lambda ()
+              (setq-local completion-styles '(orderless-fast basic)
+                          completion-category-overrides nil
+                          completion-category-defaults nil)))
+  (global-corfu-mode))
 
 (use-package eglot
   :ensure nil
@@ -430,25 +387,21 @@ https://blog.jmthornton.net/p/emacs-project-override"
   ;;   ) . eglot-ensure)
   ((python-ts-mode
     rust-ts-mode
+    zig-ts-mode
+    haskell-ts-mode
+    go-ts-mode
     ) . eglot-ensure)
   :config
   (setq eglot-ignored-server-capabilities '(:inlayHintProvider :colorProvider))
+  (add-to-list 'eglot-server-programs
+               '((python-mode python-ts-mode)
+		 "basedpyright-langserver" "--stdio"))
   (eglot-inlay-hints-mode -1))
 
-;; (use-package eglot-booster
-;;   :vc (:url "https://github.com/jdtsmith/eglot-booster")
-;;   :after eglot
-;;   :config (eglot-booster-mode))
-;; (straight-use-package `(eglot-booster :type git :host github :repo "jdtsmith/eglot-booster"))
-;; (use-package eglot-booster :after eglot :config (eglot-booster-mode))
-;; (straight-use-package
-;;  `(lspce :type git :host github :repo "zbelial/lspce"
-;;          :files (:defaults ,(pcase system-type
-;;                               ('gnu/linux "lspce-module.so")
-;;                               ('darwin "lspce-module.dylib")))
-;;          :pre-build ,(pcase system-type
-;;                        ('gnu/linux '(("~/.cargo/bin/cargo" "build" "--release") ("cp" "./target/release/liblspce_module.so" "./lspce-module.so")))
-;;                        ('darwin '(("~/.cargo/bin/cargo" "build" "--release") ("cp" "./target/release/liblspce_module.dylib" "./lspce-module.dylib"))))))
+(use-package eglot-booster
+  :vc (:url "https://github.com/jdtsmith/eglot-booster")
+  :after eglot
+  :config (eglot-booster-mode))
 
 (use-package treesit-auto
   :straight t
