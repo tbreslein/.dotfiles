@@ -15,8 +15,6 @@ local localbin = home .. "/.local/bin"
 local symlinks = {
   { source = myconfig .. "/syke", target = userconfig .. "/syke" },
   { source = myconfig .. "/nvim", target = userconfig .. "/nvim" },
-  { source = myconfig .. "/emacs/init.el", target = home .. "/.emacs.d/init.el" },
-  { source = myconfig .. "/emacs/early-init.el", target = home .. "/.emacs.d/early-init.el" },
   { source = myconfig .. "/alacritty/alacritty.toml", target = userconfig .. "/alacritty/alacritty.toml" },
   { source = myconfig .. "/alacritty/gruvbox-material.toml", target = userconfig .. "/alacritty/colors.toml" },
   { source = myconfig .. "/editorconfig", target = home .. "/.editorconfig" },
