@@ -90,10 +90,12 @@ later(function()
   local snacks = require("snacks")
   snacks.setup({
     indent = { enabled = true },
-    rename = { enabled = true },
+    lazygit = { enabled = true },
     notifier = { enabled = true },
+    rename = { enabled = true },
     zen = { enabled = true },
   })
+  Map("n", "<leader>gg", snacks.lazygit.open)
   Map("n", "<leader>zz", snacks.zen.zen)
   Map("n", "<leader>nh", snacks.notifier.show_history)
 
