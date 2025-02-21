@@ -1,19 +1,14 @@
 ;;; config -- Summary
 ;;; Commentary:
 ;; TODO:
-;; - try to get lspce to work
-;;   - otherwise try eglot with lsp-booster to work again
 ;; - projectile with some sort session management
-;; - autoformatting
-;; - linting
-;; - doom modeline
-;; - treesit
 ;; - dap
 ;; - vc vs magit
-;; - vterm or eat
 ;; - org mode
 ;; - try out meow
 ;; - eww
+;; - mu4e for emails
+;; - elfeed for rss
 ;;
 ;; links:
 ;;   https://github.com/MiniApollo/kickstart.emacs
@@ -39,8 +34,7 @@
 (straight-use-package 'use-package)
 (setq package-archives '(("melpa" . "https://melpa.org/packages/") ;; Sets default package repositories
                          ("org" . "https://orgmode.org/elpa/")
-                         ("elpa" . "https://elpa.gnu.org/packages/")
-                         ("nongnu" . "https://elpa.nongnu.org/nongnu/"))) ;; For Eat Terminal
+                         ("elpa" . "https://elpa.gnu.org/packages/")))
 
 ;; EMACS SETTINGS
 (setq custom-file "~/.emacs.d/custom.el")
@@ -127,18 +121,19 @@
   :config
   (setq compilation-scroll-output t))
 
-(use-package eat
-  :straight t
-  :hook ('eshell-load-hook #'eat-eshell-mode))
-
 (use-package magit
   :straight t
-  :commands magit-status)
+  :commands magit-status
+  :config (evil-global-set-key 'normal (kbd "<leader>gg") 'magit))
 
 ;; EXEC-PATH / ENVRC / NIX
-(use-package exec-path-from-shell :straight t :demand t)
-(when (memq window-system '(mac ns x))
-  (exec-path-from-shell-initialize))
+(use-package exec-path-from-shell
+  :straight t
+  :config
+  (dolist (var '("LC_CTYPE" "NIX_PROFILES" "NIX_SSL_CERT_FILE"))
+    (add-to-list 'exec-path-from-shell-variables var))
+  (when (memq window-system '(mac ns x))
+    (exec-path-from-shell-initialize)))
 
 (use-package envrc
   :straight t
@@ -157,7 +152,6 @@
   (setq evil-want-keybinding nil)
   (setq evil-undo-system 'undo-fu)
   :config
-  (evil-set-initial-state 'eat-mode 'insert) ;; Set initial state in eat terminal to insert mode
   (setq evil-want-C-d-scroll t)
   (setq evil-want-C-u-scroll t)
   (setq evil-split-window-below t)
@@ -216,28 +210,31 @@ From https://github.com/emacs-evil/evil/issues/606"
   (evil-global-set-key 'normal (kbd "J") '+evil-join-a)
   (evil-commentary-mode))
 
-(use-package gruber-darker-theme
-  :straight t
-  :config
-  (load-theme 'gruber-darker nil))
+;; (use-package gruber-darker-theme
+;;   :straight t
+;;   :config
+;;   (load-theme 'gruber-darker t))
 
-(use-package doom-modeline
+(use-package doom-themes
   :straight t
-  :defer t
-  :init
-  (doom-modeline-mode 1)
-  (setq find-file-visit-truename t)
   :config
-  (setq doom-modeline-enable-word-count nil)
-  (setq doom-modeline-height 15)
-  (setq doom-modeline-lsp t)
-  (setq doom-modeline-lsp-icon t)
-  (setq doom-modeline-env-version t)
-  (setq doom-modeline-vcs-max-length 50)
-  (setq doom-modeline-env-version nil)
-  (setq doom-modeline-buffer-encoding nil)
-  (setq doom-modeline-buffer-file-name-style 'relative-from-project))
-;; (use-package mood-line :straight t :config (mood-line-mode))
+  ;; Global settings (defaults)
+  (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
+        doom-themes-enable-italic t) ; if nil, italics is universally disabled
+  (load-theme 'doom-nord t)
+  ;; (load-theme 'doom-nord-aurora t)
+  ;; (load-theme 'doom-gruvbox t)
+  ;; (load-theme 'doom-tomorrow-night t)
+  ;; (load-theme 'doom-sourcerer t)
+  ;; Corrects (and improves) org-mode's native fontification.
+  (doom-themes-org-config))
+
+(use-package vterm
+  :straight t
+  :custom
+  (vterm-max-scrollback 20000)
+  :config
+  (evil-global-set-key 'normal (kbd "<leader>tt") 'vterm))
 
 ;; NAVIGATION
 (use-package projectile
@@ -314,12 +311,15 @@ From https://github.com/emacs-evil/evil/issues/606"
   (apheleia-global-mode +1))
 
 (use-package markdown-mode :straight t)
+(use-package nix-mode :straight t :mode "\\.nix\\'")
+(use-package go-mode :straight t :mode "\\.go\\'")
+(use-package haskell-mode :straight t :mode "\\.hs\\'")
+(use-package zig-mode :straight t :mode "\\.zig\\'")
+(use-package rust-mode :straight t :mode "\\.rs\\'" :custom (rust-mode-treesitter-derive t))
+;; (use-package bash-mode :straight t :mode "\\.rs\\'" :custom (rust-mode-treesitter-derive t))
+(use-package cargo :straight t :hook (rust-ts-mode . cargo-minor-mode)
+  :config (evil-define-key 'normal 'cargo-mode-map (kbd "C-c") 'cargo-minor-mode-command-map))
 (use-package yasnippet :straight t :config (yas-global-mode 1))
-(use-package rust-mode
-  :straight t
-  :mode "\\.rs\\'"
-  :custom
-  (rust-mode-treesitter-derive t))
 
 ;; EGLOT SOMEHOW NEEDS THIS TO CORRECTLY DETERMINE THE PROJECT ROOT
 ;; This SHOULD take care of the problem that project-root-override tries to solve,
@@ -360,7 +360,11 @@ https://blog.jmthornton.net/p/emacs-project-override"
   :custom
   (corfu-cycle t)
   (corfu-auto t)
-  (corfu-auto-prefix 2)
+  ;; (setq corfu-auto        t
+  ;; 	corfu-auto-delay  0  ;; TOO SMALL - NOT RECOMMENDED
+  ;; 	corfu-auto-prefix 0) ;; TOO SMALL - NOT RECOMMENDED
+  ;; (corfu-auto-delay 2)
+  (corfu-auto-prefix 1)
   (corfu-echo-delay 0.1)
   (corfu-popupinfo-delay 0.1)
   (corfu-preview-current nil)
@@ -377,9 +381,6 @@ https://blog.jmthornton.net/p/emacs-project-override"
   (orderless-define-completion-style orderless-fast
     (orderless-style-dispatchers '(orderless-fast-dispatch))
     (orderless-matching-styles '(orderless-literal orderless-regexp)))
-  (setq corfu-auto        t
-	corfu-auto-delay  0  ;; TOO SMALL - NOT RECOMMENDED
-	corfu-auto-prefix 0) ;; TOO SMALL - NOT RECOMMENDED
   (add-hook 'corfu-mode-hook
             (lambda ()
               (setq-local completion-styles '(orderless-fast basic)
@@ -392,6 +393,15 @@ https://blog.jmthornton.net/p/emacs-project-override"
   :after corfu
   :init
   (add-to-list 'completion-at-point-functions #'cape-file))
+
+(straight-use-package
+ `(lspce :type git :host github :repo "zbelial/lspce"
+         :files (:defaults ,(pcase system-type
+                              ('gnu/linux "lspce-module.so")
+                              ('darwin "lspce-module.dylib")))
+         :pre-build ,(pcase system-type
+                       ('gnu/linux '(("cargo" "build" "--release") ("cp" "./target/release/liblspce_module.so" "./lspce-module.so")))
+                       ('darwin '(("cargo" "build" "--release") ("cp" "./target/release/liblspce_module.dylib" "./lspce-module.dylib"))))))
 
 (use-package eglot
   :ensure nil
@@ -427,5 +437,23 @@ https://blog.jmthornton.net/p/emacs-project-override"
   :config
   (treesit-auto-add-to-auto-mode-alist 'all)
   (global-treesit-auto-mode))
+
+(use-package doom-modeline
+  :straight t
+  :defer t
+  :init
+  (doom-modeline-mode 1)
+  (setq find-file-visit-truename t)
+  :config
+  (setq doom-modeline-enable-word-count nil)
+  (setq doom-modeline-height 15)
+  (setq doom-modeline-lsp t)
+  (setq doom-modeline-lsp-icon t)
+  (setq doom-modeline-env-version t)
+  (setq doom-modeline-vcs-max-length 50)
+  (setq doom-modeline-env-version nil)
+  (setq doom-modeline-buffer-encoding nil)
+  (setq doom-modeline-buffer-file-name-style 'relative-from-project))
+;; (use-package mood-line :straight t :config (mood-line-mode))
 
 ;;; init.el ends here
