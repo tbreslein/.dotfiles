@@ -1,9 +1,7 @@
 ;;; config -- Summary
 ;;; Commentary:
 ;; TODO:
-;; - projectile with some sort session management
 ;; - dap
-;; - vc vs magit
 ;; - org mode
 ;; - try out meow
 ;; - eww
@@ -12,7 +10,6 @@
 ;;
 ;; links:
 ;;   https://github.com/MiniApollo/kickstart.emacs
-;;
 
 ;;; Code:
 ;; PACKAGE MANAGEMENT
@@ -141,6 +138,9 @@
   (envrc-show-summary-in-minibuffer nil)
   :hook (after-init . envrc-global-mode))
 
+(use-package volatile-highlights :straight t :config (volatile-highlights-mode t))
+(use-package avy :straight t)
+
 ;; EVIL MODE
 (use-package undo-fu :straight t)
 (use-package drag-stuff :straight t)
@@ -176,6 +176,7 @@
   (evil-global-set-key 'normal (kbd "<leader>sj") 'evil-window-new)
   (evil-global-set-key 'normal (kbd "<leader>sl") 'evil-window-vnew)
   (evil-global-set-key 'normal (kbd "<leader>st") (lambda () (interactive) (evil-window-new 20 "") (vterm)))
+  (evil-global-set-key 'normal (kbd "s") 'avy-goto-char-2)
   (evil-mode))
 
 (use-package evil-collection
@@ -221,8 +222,8 @@ From https://github.com/emacs-evil/evil/issues/606"
   ;; Global settings (defaults)
   (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
         doom-themes-enable-italic t) ; if nil, italics is universally disabled
-  (load-theme 'doom-nord t)
-  ;; (load-theme 'doom-nord-aurora t)
+  ;; (load-theme 'doom-nord t)
+  (load-theme 'doom-nord-aurora t)
   ;; (load-theme 'doom-gruvbox t)
   ;; (load-theme 'doom-tomorrow-night t)
   ;; (load-theme 'doom-sourcerer t)
@@ -237,6 +238,17 @@ From https://github.com/emacs-evil/evil/issues/606"
   (evil-global-set-key 'normal (kbd "<leader>tt") 'vterm))
 
 ;; NAVIGATION
+(use-package perspective
+  :straight t
+  :bind
+  ("C-x C-b" . persp-list-buffers)         ; or use a nicer switcher, see below
+  :custom
+  (persp-mode-prefix-key (kbd "C-c M-p"))  ; pick your own prefix key here
+  :init
+  (persp-mode))
+
+(use-package persp-projectile :straight t)
+
 (use-package projectile
   :straight t
   :custom
@@ -259,6 +271,7 @@ From https://github.com/emacs-evil/evil/issues/606"
     :group 'projectile
     :type '(repeat function))
   (evil-global-set-key 'normal (kbd "<leader>f") 'projectile-command-map)
+  (evil-global-set-key 'normal (kbd "<leader>pp") 'projectile-persp-switch-project)
   (projectile-mode +1))
 
 ;; LSP / COMPLETION
@@ -437,6 +450,12 @@ https://blog.jmthornton.net/p/emacs-project-override"
   :config
   (treesit-auto-add-to-auto-mode-alist 'all)
   (global-treesit-auto-mode))
+
+(use-package nerd-icons
+  :straight t
+  :custom
+  (nerd-icons-font-family "Hack Nerd Font")
+  (nerd-icons-scale-factor 1.2))
 
 (use-package doom-modeline
   :straight t
