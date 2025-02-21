@@ -1,4 +1,3 @@
-tap "d12frosted/emacs-plus"
 tap "nikitabobko/tap"
 tap "homebrew/services"
 
@@ -27,7 +26,6 @@ brew "zoxide"
 brew "tealdeer"
 brew "luarocks"
 brew "go"
-brew "emacs-plus@30"
 
 #cask "font-hack-nerd-font"
 cask "anki"
