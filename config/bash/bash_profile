@@ -6,6 +6,7 @@
 [[ -f "/opt/homebrew/etc/profile.d/bash_completion.sh" ]] && source "/opt/homebrew/etc/profile.d/bash_completion.sh"
 
 export PATH=~/.cargo/bin/:$PATH
+export PATH=~/.local/share/bob/nvim-bin/:$PATH
 export PATH=~/.local/bin/:$PATH
 export PATH=~/bin/:$PATH
 export EDITOR="nvim"

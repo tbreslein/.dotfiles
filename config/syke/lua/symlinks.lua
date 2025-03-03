@@ -15,8 +15,9 @@ local localbin = home .. "/.local/bin"
 local symlinks = {
   { source = myconfig .. "/syke", target = userconfig .. "/syke" },
   { source = myconfig .. "/nvim", target = userconfig .. "/nvim" },
-  { source = myconfig .. "/alacritty/alacritty.toml", target = userconfig .. "/alacritty/alacritty.toml" },
-  { source = myconfig .. "/alacritty/gruvbox-material.toml", target = userconfig .. "/alacritty/colors.toml" },
+  -- { source = myconfig .. "/alacritty/alacritty.toml", target = userconfig .. "/alacritty/alacritty.toml" },
+  -- { source = myconfig .. "/alacritty/gruvbox-material.toml", target = userconfig .. "/alacritty/colors.toml" },
+  { source = myconfig .. "/ghostty/config", target = userconfig .. "/ghostty/config" },
   { source = myconfig .. "/editorconfig", target = home .. "/.editorconfig" },
   { source = myconfig .. "/nix.conf", target = userconfig .. "/nix/nix.conf" },
   { source = myconfig .. "/tmux.conf", target = userconfig .. "/tmux/tmux.conf" },
@@ -37,6 +38,7 @@ local host_symlinks = {}
 if hostname == "kain" then
   host_symlinks = {
     { source = myconfig .. "/alacritty/" .. hostname .. ".toml", target = userconfig .. "/alacritty/host.toml" },
+    { source = myconfig .. "/ghostty/" .. hostname .. ".toml", target = userconfig .. "/ghostty/host" },
     { source = myconfig .. "/electron", target = userconfig .. "/electron" },
     { source = myconfig .. "/electron13", target = userconfig .. "/electron13" },
     { source = myconfig .. "/electron-flags.conf", target = userconfig .. "/electron-flags.conf" },
@@ -45,6 +47,7 @@ if hostname == "kain" then
 elseif uname == "Darwin" then
   host_symlinks = {
     { source = myconfig .. "/alacritty/darwin.toml", target = userconfig .. "/alacritty/host.toml" },
+    { source = myconfig .. "/ghostty/darwin" .. hostname .. ".toml", target = userconfig .. "/ghostty/host" },
   }
 end
 
