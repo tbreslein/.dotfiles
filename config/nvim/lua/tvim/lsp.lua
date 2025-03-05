@@ -9,7 +9,7 @@ later(function()
   add({
     source = "Saghen/blink.cmp",
     depends = { "rafamadriz/friendly-snippets" },
-    checkout = "v0.12.4",
+    checkout = "v0.13.1",
   })
 
   local lspconfig = require("lspconfig")
@@ -74,9 +74,7 @@ later(function()
 
   mason_lspconfig.setup({
     ensure_installed = {
-      "asm_lsp",
       "bashls",
-      "neocmake",
       "dockerls",
       "lua_ls",
       "marksman",
@@ -84,7 +82,6 @@ later(function()
       "ruff",
       "ts_ls",
       "astro",
-      "gopls",
     },
   })
   lspconfig.clangd.setup({ capabilities = lsp_capabilities })

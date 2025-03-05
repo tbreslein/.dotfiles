@@ -29,8 +29,4 @@ later(function()
   Map("n", "<A-e>", "<cmd>Grapple select index=2<cr>")
   Map("n", "<A-w>", "<cmd>Grapple select index=3<cr>")
   Map("n", "<A-q>", "<cmd>Grapple select index=4<cr>")
-
-  add("folke/flash.nvim")
-  require("flash").setup()
-  Map("n", "s", require("flash").jump)
 end)

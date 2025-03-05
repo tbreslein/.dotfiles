@@ -5,9 +5,11 @@ now(function()
   vim.g.gruvbox_material_better_performance = 1
   vim.g.gruvbox_material_ui_contrast = "high"
   vim.g.gruvbox_material_diagnostic_virtual_text = "highlighted"
-  vim.g.gruvbox_material_transparent_background = 2
   vim.g.gruvbox_material_dim_inactive_windows = 1
   vim.g.gruvbox_material_float_style = "dim"
+  vim.g.gruvbox_material_transparent_background = 2
+  -- vim.o.background = "light"
+  -- vim.g.gruvbox_material_background = "soft"
   vim.cmd.colorscheme("gruvbox-material")
 
   package.preload["nvim-web-devicons"] = function()

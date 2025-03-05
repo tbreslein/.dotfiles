@@ -1,13 +1,10 @@
 font-family = Hack Nerd Font
-# font-feature = -calt, -liga, -dlig
 
-theme = gruvbox-material
 cursor-style = block
 cursor-style-blink = false
 mouse-hide-while-typing = true
 background-opacity = 0.95
 background-blur = 20
-window-decoration = none
 
 config-file = ?./host
-font-size = 15
+config-file = ?./colors

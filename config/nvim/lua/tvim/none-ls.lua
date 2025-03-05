@@ -11,12 +11,7 @@ later(function()
 
   require("mason-null-ls").setup({
     ensure_installed = {
-      "asmfmt",
-      "cmake_lint",
-      "cmake_format",
       "clang_format",
-      "golangci-lint",
-      "gofumpt",
       "hadolint",
       "shellcheck",
       "shellharden",
@@ -24,7 +19,6 @@ later(function()
       "stylua",
       "yamllint",
       "nixpkgs_fmt",
-      "ormolu",
     },
     handlers = {},
   })
