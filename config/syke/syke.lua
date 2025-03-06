@@ -3,16 +3,20 @@ return {
   symlinks = require("symlinks"),
   repos = {
     {
-      remote = "git@github.com:tbreslein/aoc_2024.git",
-      path = home .. "/code/aoc_2024",
-    },
-    {
       remote = "git@github.com:tbreslein/syke.git",
       path = home .. "/code/syke",
     },
     {
-      remote = "git@github.com:tbreslein/fibis.git",
-      path = home .. "/code/fibis",
+      remote = "git@github.com:tbreslein/clg.git",
+      path = home .. "/code/clg",
+    },
+    {
+      remote = "git@github.com:tbreslein/frankenrepo.git",
+      path = home .. "/code/frankenrepo",
+    },
+    {
+      remote = "git@github.com:tbreslein/shyr.git",
+      path = home .. "/code/shyr",
     },
   },
   shell = {
