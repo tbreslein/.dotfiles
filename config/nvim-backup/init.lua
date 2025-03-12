@@ -40,12 +40,11 @@ function Map(mode, keys, action, opts)
   vim.keymap.set(mode, keys, action, vim.tbl_extend("keep", opts or {}, { noremap = true, silent = true, desc = desc }))
 end
 
-Add, Now, Later = MiniDeps.add, MiniDeps.now, MiniDeps.later
+add, now, later = MiniDeps.add, MiniDeps.now, MiniDeps.later
 
 require("tvim.vimsettings")
 require("tvim.ui")
-require("tvim.statusline")
 require("tvim.navigation")
 require("tvim.lsp")
-require("tvim.tools")
+require("tvim.none-ls")
 require("tvim.dap")

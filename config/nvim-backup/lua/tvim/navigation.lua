@@ -1,8 +1,8 @@
-Later(function()
-  Add("aserowy/tmux.nvim")
+later(function()
+  add("aserowy/tmux.nvim")
   require("tmux").setup()
 
-  Add("ibhagwan/fzf-lua")
+  add("ibhagwan/fzf-lua")
   local fzflua = require("fzf-lua")
   fzflua.setup({
     winopts = {
@@ -21,7 +21,7 @@ Later(function()
     MiniFiles.open(vim.api.nvim_buf_get_name(0))
   end)
 
-  Add("cbochs/grapple.nvim")
+  add("cbochs/grapple.nvim")
   require("grapple").setup()
   Map("n", "<leader>a", "<cmd>Grapple tag<cr>")
   Map("n", "<leader>e", "<cmd>Grapple toggle_tags<cr>")
@@ -30,7 +30,7 @@ Later(function()
   Map("n", "<A-w>", "<cmd>Grapple select index=3<cr>")
   Map("n", "<A-q>", "<cmd>Grapple select index=4<cr>")
 
-  Add("folke/flash.nvim")
+  add("folke/flash.nvim")
   require("flash").setup()
   Map("n", "<leader>s", require("flash").jump)
 end)

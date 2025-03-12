@@ -1,4 +1,4 @@
-Now(function()
+now(function()
   vim.opt.guicursor = ""
   vim.opt.number = true
   vim.opt.relativenumber = true
@@ -6,6 +6,7 @@ Now(function()
   vim.opt.signcolumn = "yes"
   vim.opt.cursorline = true
   vim.opt.cursorlineopt = "number"
+  vim.opt.termguicolors = true
   vim.opt.swapfile = false
   vim.opt.backup = false
   vim.opt.undodir = os.getenv("HOME") .. "/.local/share/vim/undodir"
@@ -68,7 +69,7 @@ Now(function()
   Map("n", "[c", ":cprev<cr>")
 end)
 
-Later(function()
+later(function()
   vim.opt.confirm = false
   vim.opt.equalalways = false
   vim.opt.splitbelow = true
