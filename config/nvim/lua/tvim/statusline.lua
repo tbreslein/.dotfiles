@@ -1,15 +1,15 @@
 Now(function()
   Add("linrongbin16/lsp-progress.nvim")
-  local lsp_progress = require('lsp-progress')
+  local lsp_progress = require("lsp-progress")
   lsp_progress.setup()
 
   Statusline = {}
   local filepath = function()
-    local fpath = vim.fn.fnamemodify(vim.fn.expand "%", ":.")
+    local fpath = vim.fn.fnamemodify(vim.fn.expand("%"), ":.")
     if fpath == "" or fpath == "." then
-        return " "
+      return " "
     end
-    return string.format(" %%<%s", fpath) .. " | "
+    return string.format(" %%<%s", fpath) .. "%m | "
   end
 
   local lsp = function()
@@ -39,28 +39,32 @@ Now(function()
       err_string = err_string .. "%#Normal#" .. " | "
     end
     return err_string .. lsp_progress.progress()
-
   end
 
   Statusline.active = function()
     return table.concat({
       filepath(),
       lsp(),
-      "%=%P %l:%c "
+      "%=%P %l:%c ",
     })
   end
 
-  vim.api.nvim_exec2([[
+  vim.api.nvim_exec2(
+    [[
     augroup Statusline
     au!
     au WinEnter,BufEnter * setlocal statusline=%!v:lua.Statusline.active()
     augroup END
-  ]], {})
+  ]],
+    {}
+  )
 
   vim.api.nvim_create_augroup("lualine_augroup", { clear = true })
   vim.api.nvim_create_autocmd("User", {
     group = "lualine_augroup",
     pattern = "LspProgressStatusUpdated",
-    callback = function() vim.cmd('redrawstatus') end,
+    callback = function()
+      vim.cmd("redrawstatus")
+    end,
   })
 end)
