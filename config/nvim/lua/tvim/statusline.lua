@@ -13,43 +13,34 @@ Now(function()
   end
 
   local lsp = function()
-    return lsp_progress.progress()
-    -- local count = {}
-    -- local levels = {
-    --   errors = "Error",
-    --   warnings = "Warn",
-    --   info = "Info",
-    --   hints = "Hint",
-    -- }
-    --
-    -- for k, level in pairs(levels) do
-    --   count[k] = vim.tbl_count(vim.diagnostic.get(0, { severity = level }))
-    -- end
-    --
-    -- local errors = ""
-    -- local warnings = ""
-    -- local hints = ""
-    -- local info = ""
-    --
-    -- if count["errors"] ~= 0 then
-    --   errors = " %#LspDiagnosticsSignError# " .. count["errors"]
-    -- end
-    -- if count["warnings"] ~= 0 then
-    --   warnings = " %#LspDiagnosticsSignWarning# " .. count["warnings"]
-    -- end
-    -- if count["hints"] ~= 0 then
-    --   hints = " %#LspDiagnosticsSignHint# " .. count["hints"]
-    -- end
-    -- if count["info"] ~= 0 then
-    --   info = " %#LspDiagnosticsSignInformation# " .. count["info"]
-    -- end
-    --
-    -- return errors .. warnings .. hints .. info .. "%#Normal#"
-  end
+    local count = {}
 
-  -- local lineinfo = function()
-  --   return "%P %l:%c"
-  -- end
+    count["errors"] = #vim.diagnostic.get(0, { severity = vim.diagnostic.severity.ERROR })
+    count["warnings"] = #vim.diagnostic.get(0, { severity = vim.diagnostic.severity.WARN })
+    count["hints"] = #vim.diagnostic.get(0, { severity = vim.diagnostic.severity.HINT })
+    count["info"] = #vim.diagnostic.get(0, { severity = vim.diagnostic.severity.INFO })
+
+    local err_string = ""
+
+    if count["errors"] ~= 0 then
+      err_string = err_string .. " %#LspDiagnosticsSignError#" .. vim.g.diag_symbol_error .. " " .. count["errors"]
+    end
+    if count["warnings"] ~= 0 then
+      err_string = err_string .. " %#LspDiagnosticsSignWarning#" .. vim.g.diag_symbol_warn .. " " .. count["warnings"]
+    end
+    if count["hints"] ~= 0 then
+      err_string = err_string .. " %#LspDiagnosticsSignHint#" .. vim.g.diag_symbol_hint .. " " .. count["hints"]
+    end
+    if count["info"] ~= 0 then
+      err_string = err_string .. " %#LspDiagnosticsSignInformation#" .. vim.g.diag_symbol_info .. " " .. count["info"]
+    end
+
+    if #err_string > 0 then
+      err_string = err_string .. "%#Normal#" .. " | "
+    end
+    return err_string .. lsp_progress.progress()
+
+  end
 
   Statusline.active = function()
     return table.concat({
@@ -59,12 +50,12 @@ Now(function()
     })
   end
 
-  vim.api.nvim_exec([[
+  vim.api.nvim_exec2([[
     augroup Statusline
     au!
     au WinEnter,BufEnter * setlocal statusline=%!v:lua.Statusline.active()
     augroup END
-  ]], false)
+  ]], {})
 
   vim.api.nvim_create_augroup("lualine_augroup", { clear = true })
   vim.api.nvim_create_autocmd("User", {

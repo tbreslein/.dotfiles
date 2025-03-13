@@ -15,9 +15,14 @@ Now(function()
   vim.opt.completeopt = { "menuone", "noselect", "noinsert" }
   vim.opt.fileencoding = "utf-8"
   vim.g.winblend = 0
-  vim.g.borderstyle = "single"
   vim.opt.laststatus = 3
   vim.opt.cmdheight = 1
+
+  vim.g.borderstyle = "single"
+  vim.g.diag_symbol_hint = "󱐮"
+  vim.g.diag_symbol_error = "✘"
+  vim.g.diag_symbol_info = "◉"
+  vim.g.diag_symbol_warn = ""
 
   local shada = vim.o.shada
   vim.o.shada = ""

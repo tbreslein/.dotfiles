@@ -40,13 +40,7 @@ Later(function()
       },
     },
     signature = { enabled = true },
-    sources = {
-      default = { "lsp", "path", "snippets", "buffer" },
-      -- default = { "lsp", "path", "snippets", "buffer", "markdown" },
-      -- providers = {
-      --   markdown = { name = "RenderMarkdown", module = "render-markdown.integ.blink" },
-      -- },
-    },
+    sources = { default = { "lsp", "path", "snippets", "buffer" } },
   })
 
   local lsp_capabilities = blink.get_lsp_capabilities()
@@ -72,10 +66,9 @@ Later(function()
   lspconfig.bashls.setup({ capabilities = lsp_capabilities })
   lspconfig.clangd.setup({ capabilities = lsp_capabilities })
   lspconfig.dockerls.setup({ capabilities = lsp_capabilities })
-  lspconfig.lua_ls.setup { capabilities = lsp_capabilities }
-  lspconfig.marksman.setup({ capabilities = lsp_capabilities })
+  lspconfig.lua_ls.setup({ capabilities = lsp_capabilities })
   lspconfig.nixd.setup({ capabilities = lsp_capabilities })
-  lspconfig.ruff.setup({ capabilities = lsp_capabilities })
+  -- lspconfig.ruff.setup({ capabilities = lsp_capabilities })
   lspconfig.ts_ls.setup({ capabilities = lsp_capabilities })
   lspconfig.zls.setup({ capabilities = lsp_capabilities })
 
@@ -89,27 +82,30 @@ Later(function()
     end,
   })
 
+  Add("rachartier/tiny-inline-diagnostic.nvim")
+  require("tiny-inline-diagnostic").setup({
+    preset = "minimal",
+  })
   vim.diagnostic.config({
-    virtual_text = {
-      prefix = "",
-      suffix = "",
-      format = function(diagnostic)
-        return " " .. diagnostic.message .. " "
-      end,
-    },
+    virtual_text = false,
     underline = { severity = { min = vim.diagnostic.severity.WARN } },
     signs = {
       text = {
-        [vim.diagnostic.severity.HINT] = "󱐮",
-        [vim.diagnostic.severity.ERROR] = "✘",
-        [vim.diagnostic.severity.INFO] = "◉",
-        [vim.diagnostic.severity.WARN] = "",
+        [vim.diagnostic.severity.HINT] = vim.g.diag_symbol_hint,
+        [vim.diagnostic.severity.ERROR] = vim.g.diag_symbol_error,
+        [vim.diagnostic.severity.INFO] = vim.g.diag_symbol_info,
+        [vim.diagnostic.severity.WARN] = vim.g.diag_symbol_warn,
       },
     },
   })
+
   Map("n", "gl", vim.diagnostic.open_float)
-  Map("n", "]d", function() vim.diagnostic.jump({ count = 1, float = true }) end)
-  Map("n", "[d", function() vim.diagnostic.jump({ count = -1, float = true }) end)
+  Map("n", "]d", function()
+    vim.diagnostic.jump({ count = 1 })
+  end)
+  Map("n", "[d", function()
+    vim.diagnostic.jump({ count = -1 })
+  end)
   vim.api.nvim_create_autocmd("LspAttach", {
     desc = "LSP actions",
     callback = function(e)
@@ -143,4 +139,3 @@ Later(function()
     end,
   })
 end)
-
