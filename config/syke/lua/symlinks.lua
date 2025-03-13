@@ -24,6 +24,7 @@ local symlinks = {
   { source = myconfig .. "/ghostty/config", target = userconfig .. "/ghostty/config" },
   { source = myconfig .. "/ghostty/" .. hostname, target = userconfig .. "/ghostty/host" },
   { source = myconfig .. "/ghostty/gruvbox-material", target = userconfig .. "/ghostty/colors" },
+  -- { source = myconfig .. "/ghostty/zen", target = userconfig .. "/ghostty/colors" },
   { source = myconfig .. "/editorconfig", target = home .. "/.editorconfig" },
   { source = myconfig .. "/nix.conf", target = userconfig .. "/nix/nix.conf" },
   { source = myconfig .. "/tmux.conf", target = userconfig .. "/tmux/tmux.conf" },

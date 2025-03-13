@@ -1,23 +1,16 @@
 Now(function()
-  Add({source = "zenbones-theme/zenbones.nvim", depends = {"rktjmp/lush.nvim"}})
-  vim.opt.termguicolors = true
-  vim.o.background = "dark"
-  vim.g.zenbones_darken_comments = 45
-  vim.cmd.colorscheme("zenwritten")
-  -- vim.cmd.colorscheme("neobones")
-
-  -- Add("sainnhe/gruvbox-material")
-  -- vim.g.gruvbox_material_enable_italic = 1
-  -- vim.g.gruvbox_material_enable_bold = 1
-  -- vim.g.gruvbox_material_better_performance = 1
-  -- vim.g.gruvbox_material_ui_contrast = "high"
-  -- vim.g.gruvbox_material_diagnostic_virtual_text = "highlighted"
-  -- vim.g.gruvbox_material_dim_inactive_windows = 1
-  -- vim.g.gruvbox_material_float_style = "dim"
-  -- vim.g.gruvbox_material_transparent_background = 2
-  -- -- vim.o.background = "light"
-  -- -- vim.g.gruvbox_material_background = "soft"
-  -- vim.cmd.colorscheme("gruvbox-material")
+  Add("sainnhe/gruvbox-material")
+  vim.g.gruvbox_material_enable_italic = 1
+  vim.g.gruvbox_material_enable_bold = 1
+  vim.g.gruvbox_material_better_performance = 1
+  vim.g.gruvbox_material_ui_contrast = "high"
+  vim.g.gruvbox_material_diagnostic_virtual_text = "highlighted"
+  vim.g.gruvbox_material_dim_inactive_windows = 1
+  vim.g.gruvbox_material_float_style = "dim"
+  vim.g.gruvbox_material_transparent_background = 2
+  -- vim.o.background = "light"
+  -- vim.g.gruvbox_material_background = "soft"
+  vim.cmd.colorscheme("gruvbox-material")
 
   package.preload["nvim-web-devicons"] = function()
     package.loaded["nvim-web-devicons"] = {}

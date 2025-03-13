@@ -9,7 +9,7 @@ Now(function()
     if fpath == "" or fpath == "." then
         return " "
     end
-    return string.format(" %%<%s", fpath)
+    return string.format(" %%<%s", fpath) .. " | "
   end
 
   local lsp = function()

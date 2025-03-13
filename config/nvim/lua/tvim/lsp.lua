@@ -1,0 +1,146 @@
+Later(function()
+  Add("neovim/nvim-lspconfig")
+  Add({ source = "mrcjkb/rustaceanvim", depends = { "mfussenegger/nvim-dap" } })
+  vim.g.rustaceanvim = { server = { default_settings = { ["rust-analyzer"] = { check = { command = "check" } } } } }
+  Add("mrcjkb/haskell-tools.nvim")
+
+  Add({
+    source = "Saghen/blink.cmp",
+    depends = { "rafamadriz/friendly-snippets" },
+    checkout = "v0.13.1",
+  })
+
+  local lspconfig = require("lspconfig")
+  local blink = require("blink.cmp")
+
+  blink.setup({
+    keymap = {
+      preset = "default",
+      ["<c-j>"] = { "select_next" },
+      ["<c-k>"] = { "select_prev" },
+      ["<c-l>"] = { "accept" },
+      ["<c-n>"] = { "scroll_documentation_up" },
+      ["<c-f>"] = { "scroll_documentation_down" },
+      ["<Tab>"] = { "snippet_forward", "fallback" },
+      ["<S-Tab>"] = { "snippet_backward", "fallback" },
+    },
+    completion = {
+      accept = { auto_brackets = { enabled = false } },
+      list = { max_items = 200, selection = { auto_insert = false } },
+      menu = { border = vim.g.border_style },
+      documentation = {
+        auto_show = true,
+        auto_show_delay_ms = 500,
+        window = {
+          min_width = 10,
+          max_width = 60,
+          max_height = 20,
+          border = vim.g.border_style,
+        },
+      },
+    },
+    signature = { enabled = true },
+    sources = {
+      default = { "lsp", "path", "snippets", "buffer" },
+      -- default = { "lsp", "path", "snippets", "buffer", "markdown" },
+      -- providers = {
+      --   markdown = { name = "RenderMarkdown", module = "render-markdown.integ.blink" },
+      -- },
+    },
+  })
+
+  local lsp_capabilities = blink.get_lsp_capabilities()
+  lsp_capabilities.textDocument.completion.completionItem = {
+    documentationFormat = { "markdown", "plaintext" },
+    snippetSupport = true,
+    preselectSupport = true,
+    insertReplaceSupport = true,
+    labelDetailsSupport = true,
+    deprecatedSupport = true,
+    commitCharactersSupport = true,
+    tagSupport = { valueSet = { 1 } },
+    resolveSupport = {
+      properties = {
+        "documentation",
+        "detail",
+        "additionalTextEdits",
+      },
+    },
+  }
+
+  lspconfig.astro.setup({ capabilities = lsp_capabilities })
+  lspconfig.bashls.setup({ capabilities = lsp_capabilities })
+  lspconfig.clangd.setup({ capabilities = lsp_capabilities })
+  lspconfig.dockerls.setup({ capabilities = lsp_capabilities })
+  lspconfig.lua_ls.setup { capabilities = lsp_capabilities }
+  lspconfig.marksman.setup({ capabilities = lsp_capabilities })
+  lspconfig.nixd.setup({ capabilities = lsp_capabilities })
+  lspconfig.ruff.setup({ capabilities = lsp_capabilities })
+  lspconfig.ts_ls.setup({ capabilities = lsp_capabilities })
+  lspconfig.zls.setup({ capabilities = lsp_capabilities })
+
+  lspconfig.pyright.setup({
+    capabilities = lsp_capabilities,
+    on_new_config = function(config, root_dir)
+      local env = vim.trim(vim.fn.system('cd "' .. (root_dir or ".") .. '"; poetry env info --executable 2>/dev/null'))
+      if string.len(env) > 0 then
+        config.settings.python.pythonPath = env
+      end
+    end,
+  })
+
+  vim.diagnostic.config({
+    virtual_text = {
+      prefix = "",
+      suffix = "",
+      format = function(diagnostic)
+        return " " .. diagnostic.message .. " "
+      end,
+    },
+    underline = { severity = { min = vim.diagnostic.severity.WARN } },
+    signs = {
+      text = {
+        [vim.diagnostic.severity.HINT] = "󱐮",
+        [vim.diagnostic.severity.ERROR] = "✘",
+        [vim.diagnostic.severity.INFO] = "◉",
+        [vim.diagnostic.severity.WARN] = "",
+      },
+    },
+  })
+  Map("n", "gl", vim.diagnostic.open_float)
+  Map("n", "]d", function() vim.diagnostic.jump({ count = 1, float = true }) end)
+  Map("n", "[d", function() vim.diagnostic.jump({ count = -1, float = true }) end)
+  vim.api.nvim_create_autocmd("LspAttach", {
+    desc = "LSP actions",
+    callback = function(e)
+      vim.bo[e.buf].omnifunc = "v:lua.vim.lsp.omnifunc"
+      Map("n", "gq", vim.diagnostic.setqflist)
+      Map("n", "gQ", vim.diagnostic.setloclist)
+      Map("n", "gD", vim.lsp.buf.declaration)
+      Map("n", "gt", vim.lsp.buf.type_definition)
+      Map("n", "gi", vim.lsp.buf.implementation)
+      Map("n", "grr", vim.lsp.buf.references)
+      Map("n", "grn", vim.lsp.buf.rename)
+      Map("n", "gra", vim.lsp.buf.code_action)
+      Map("n", "<leader>hi", function()
+        vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
+      end)
+      Map({ "i", "s" }, "<c-s>", vim.lsp.buf.signature_help)
+
+      -- default keymaps I should use:
+      -- ^]: goto definition
+      -- grr: references to qflist
+      -- gra: code actions to qflist
+      -- grn: lsp rename
+      -- c-s: signature_help
+    end,
+  })
+
+  vim.api.nvim_create_autocmd("BufWritePre", {
+    pattern = { "*.rs" },
+    callback = function()
+      vim.lsp.buf.format({ async = false })
+    end,
+  })
+end)
+
