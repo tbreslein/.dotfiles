@@ -45,7 +45,7 @@ Now(function()
     return table.concat({
       filepath(),
       lsp(),
-      "%=%P %l:%c ",
+      "%=%P | %l:%c ",
     })
   end
 
