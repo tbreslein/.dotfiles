@@ -20,8 +20,19 @@ alias mv='mv -i'
 alias rm='rm -i'
 alias mkdir='mkdir -p'
 alias m='make'
-alias rip_nvim="rm -fr $HOME/.local/share/nvim $HOME/.local/state/nvim $HOME/.cache/nvim"
+alias rip_nvim="rm -fr \$HOME/.local/share/nvim \$HOME/.local/state/nvim \$HOME/.cache/nvim"
 alias grep='grep --color=auto'
+
+tm() {
+    if [ "$TMUX" != "" ]; then
+        if ! tmux has-session -t home; then
+            tmux new-session -ds "home" -c "$HOME"
+        fi
+    else
+        tmux new-session -ds "home" -c "$HOME"
+        tmux a -t "home"
+    fi
+}
 
 toggle_moco() {
     if ! tmux has-session -t "moco" 2>/dev/null; then
