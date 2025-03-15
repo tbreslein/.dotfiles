@@ -33,4 +33,7 @@ Later(function()
   Add("folke/flash.nvim")
   require("flash").setup()
   Map("n", "<leader>s", require("flash").jump)
+
+  Add("MagicDuck/grug-far.nvim")
+  require("grug-far").setup()
 end)

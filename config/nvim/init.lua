@@ -1,6 +1,6 @@
 vim.loader.enable()
 vim.g.mapleader = " "
-vim.g.maplocalleader = " "
+vim.g.maplocalleader = ","
 
 vim.g.loaded_zip = 1
 vim.g.loaded_gzip = 1
@@ -36,7 +36,7 @@ if not vim.loop.fs_stat(mini_path) then
 end
 require("mini.deps").setup({ path = { package = path_package } })
 
-function Map(mode, keys, action, opts)
+function Map(mode, keys, action, opts, desc)
   vim.keymap.set(mode, keys, action, vim.tbl_extend("keep", opts or {}, { noremap = true, silent = true, desc = desc }))
 end
 
