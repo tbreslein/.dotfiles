@@ -10,3 +10,7 @@ cmake
 meson
 ninja
 npm
+bash-language-server
+prettier
+shellharden
+yamllint
