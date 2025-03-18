@@ -15,8 +15,8 @@ Later(function()
     },
     formatters_by_ft = {
       lua = { "stylua" },
-      haskell = { "fourmolu" },
       roc = { "roc" },
+      ocaml = { "ocaml" },
       go = { "gofmt" },
       rust = { "rustfmt", lsp_format = "fallback" },
       zig = { "zigfmt" },
@@ -51,7 +51,6 @@ Later(function()
   Add("mfussenegger/nvim-lint")
   require("lint").linters_by_ft = {
     lua = { "luacheck" },
-    haskell = { "hlint" },
     -- roc = { "roc" },
     go = { "golangcilint" },
     c = { "cppcheck" },

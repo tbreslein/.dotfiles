@@ -2,7 +2,7 @@ Later(function()
   Add("neovim/nvim-lspconfig")
   Add({ source = "mrcjkb/rustaceanvim", depends = { "mfussenegger/nvim-dap" } })
   vim.g.rustaceanvim = { server = { default_settings = { ["rust-analyzer"] = { check = { command = "check" } } } } }
-  Add("mrcjkb/haskell-tools.nvim")
+  -- Add("mrcjkb/haskell-tools.nvim")
 
   Add({
     source = "Saghen/blink.cmp",
@@ -68,6 +68,7 @@ Later(function()
   lspconfig.dockerls.setup({ capabilities = lsp_capabilities })
   lspconfig.lua_ls.setup({ capabilities = lsp_capabilities })
   lspconfig.nixd.setup({ capabilities = lsp_capabilities })
+  lspconfig.ocamllsp.setup({ capabilities = lsp_capabilities })
   -- lspconfig.ruff.setup({ capabilities = lsp_capabilities })
   lspconfig.ts_ls.setup({ capabilities = lsp_capabilities })
   lspconfig.zls.setup({ capabilities = lsp_capabilities })
