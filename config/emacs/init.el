@@ -326,7 +326,6 @@ From https://github.com/emacs-evil/evil/issues/606"
 (use-package markdown-mode :straight t)
 (use-package nix-mode :straight t :mode "\\.nix\\'")
 (use-package go-mode :straight t :mode "\\.go\\'")
-(use-package haskell-mode :straight t :mode "\\.hs\\'")
 (use-package zig-mode :straight t :mode "\\.zig\\'")
 (use-package rust-mode :straight t :mode "\\.rs\\'" :custom (rust-mode-treesitter-derive t))
 ;; (use-package bash-mode :straight t :mode "\\.rs\\'" :custom (rust-mode-treesitter-derive t))
@@ -334,30 +333,30 @@ From https://github.com/emacs-evil/evil/issues/606"
   :config (evil-define-key 'normal 'cargo-mode-map (kbd "C-c") 'cargo-minor-mode-command-map))
 (use-package yasnippet :straight t :config (yas-global-mode 1))
 
-;; EGLOT SOMEHOW NEEDS THIS TO CORRECTLY DETERMINE THE PROJECT ROOT
-;; This SHOULD take care of the problem that project-root-override tries to solve,
-;; but for some reason it does not work. I have no idea why, but I don't seem to
-;; be the only one.
+;; ;; EGLOT SOMEHOW NEEDS THIS TO CORRECTLY DETERMINE THE PROJECT ROOT
+;; ;; This SHOULD take care of the problem that project-root-override tries to solve,
+;; ;; but for some reason it does not work. I have no idea why, but I don't seem to
+;; ;; be the only one.
 ;; (setq project-vc-extra-root-markers
 ;;       '("Cargo.toml" "pyproject.toml"))
 
 (defun project-root-override (dir)
   "Find DIR's project root by searching for a '.project.el' file.
-
-If this file exists, it marks the project root. For convenient compatibility
-with Projectile, '.projectile' is also considered a project root marker.
-
-https://blog.jmthornton.net/p/emacs-project-override"
+					
+  If this file exists, it marks the project root.  For convenient compatibility
+  with Projectile, '.projectile' is also considered a project root marker.
+					
+  https://blog.jmthornton.net/p/emacs-project-override"
   (let ((root (or (locate-dominating-file dir ".project.el")
-                  (locate-dominating-file dir ".projectile")
-                  (locate-dominating-file dir "Cargo.toml")
-                  (locate-dominating-file dir "setup.py")
-                  (locate-dominating-file dir "requirements.txt")
-                  (locate-dominating-file dir "pyproject.toml")))
-        (backend (ignore-errors (vc-responsible-backend dir))))
+		  (locate-dominating-file dir ".projectile")
+		  (locate-dominating-file dir "Cargo.toml")
+		  (locate-dominating-file dir "setup.py")
+		  (locate-dominating-file dir "requirements.txt")
+		  (locate-dominating-file dir "pyproject.toml")))
+	(backend (ignore-errors (vc-responsible-backend dir))))
     (when root (if (version<= emacs-version "28")
-                   (cons 'vc root)
-                 (list 'vc backend root)))))
+		   (cons 'vc root)
+		 (list 'vc backend root)))))
 
 ;; Note that we cannot use :hook here because `project-find-functions' doesn't
 ;; end in "-hook", and we can't use this in :init because it won't be defined
@@ -379,8 +378,10 @@ https://blog.jmthornton.net/p/emacs-project-override"
   ;; (corfu-auto-delay 2)
   (corfu-auto-prefix 1)
   (corfu-echo-delay 0.1)
-  (corfu-popupinfo-delay 0.1)
+					; (corfu-popupinfo-delay 0.1)
   (corfu-preview-current nil)
+  (corfu-auto-delay 0)
+  (corfu-popupinfo-delay '(0.1 . 0.1))
   :bind (:map corfu-map ("RET" . nil))
   :config
   (evil-define-key 'insert 'corfu-map (kbd "C-j") 'corfu-next)
@@ -416,11 +417,22 @@ https://blog.jmthornton.net/p/emacs-project-override"
                        ('gnu/linux '(("cargo" "build" "--release") ("cp" "./target/release/liblspce_module.so" "./lspce-module.so")))
                        ('darwin '(("cargo" "build" "--release") ("cp" "./target/release/liblspce_module.dylib" "./lspce-module.dylib"))))))
 
+;; (straight-use-package
+;;  `(lsp-proxy :type git :host github :repo "jadestrong/lsp-proxy"
+;;              :files ("lsp-proxy.el" "lsp-proxy")
+;; 	     :pre-build (("cargo" "build" "--release") ("cp" "./target/release/lsp-proxy" "./"))))
+
+;; (use-package lsp-proxy
+;;   ;; :load-path "/path/to/lsp-proxy"
+;;   :config
+;;   (setq lsp-proxy-diagnostics-provider :flymake)
+;;   (add-hook 'rust-ts-mode-hook #'lsp-proxy-mode)
+;;   (add-hook 'typescript-ts-mode-hook #'lsp-proxy-mode))
+
 (use-package eglot
   :ensure nil
   :hook
   ;; ((go-ts-mode
-  ;;   haskell-ts-mode
   ;;   python-ts-mode
   ;;   rust-ts-mode
   ;;   zig-ts-mode
@@ -428,14 +440,13 @@ https://blog.jmthornton.net/p/emacs-project-override"
   ((python-ts-mode
     rust-ts-mode
     zig-ts-mode
-    haskell-ts-mode
     go-ts-mode
     ) . eglot-ensure)
   :config
   (setq eglot-ignored-server-capabilities '(:inlayHintProvider :colorProvider))
-  (add-to-list 'eglot-server-programs
-               '((python-mode python-ts-mode)
-		 "basedpyright-langserver" "--stdio"))
+  ;; (add-to-list 'eglot-server-programs
+  ;;              '((python-mode python-ts-mode)
+  ;; 		 "basedpyright-langserver" "--stdio"))
   (eglot-inlay-hints-mode -1))
 
 (use-package eglot-booster

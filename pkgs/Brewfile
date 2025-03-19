@@ -1,5 +1,6 @@
 tap "nikitabobko/tap"
 tap "homebrew/services"
+tap "d12frosted/emacs-plus"
 
 brew "bash"
 brew "bash-completion@2"
@@ -9,6 +10,7 @@ brew "direnv"
 brew "coreutils"
 #brew "neovim"
 brew "bob"
+brew "emacs-plus"
 brew "syncthing", restart_service: true
 brew "tmux"
 brew "make"
