@@ -222,11 +222,9 @@ From https://github.com/emacs-evil/evil/issues/606"
   ;; Global settings (defaults)
   (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
         doom-themes-enable-italic t) ; if nil, italics is universally disabled
-  ;; (load-theme 'doom-nord t)
-  (load-theme 'doom-nord-aurora t)
+  ;; (load-theme 'doom-nord-aurora t)
   ;; (load-theme 'doom-gruvbox t)
-  ;; (load-theme 'doom-tomorrow-night t)
-  ;; (load-theme 'doom-sourcerer t)
+  (load-theme 'doom-tomorrow-night t)
   ;; Corrects (and improves) org-mode's native fontification.
   (doom-themes-org-config))
 
@@ -312,6 +310,11 @@ From https://github.com/emacs-evil/evil/issues/606"
   (evil-define-key 'normal 'flymake-mode-map (kbd "gd") 'flymake-show-project-diagnostics)
   (flymake-mode 1))
 
+(use-package flymake-diagnostic-at-point
+  :straight t
+  :after flymake
+  :config (add-hook 'flymake-mode-hook #'flymake-diagnostic-at-point-mode))
+
 (use-package apheleia
   :straight t
   :config
@@ -327,8 +330,8 @@ From https://github.com/emacs-evil/evil/issues/606"
 (use-package nix-mode :straight t :mode "\\.nix\\'")
 (use-package go-mode :straight t :mode "\\.go\\'")
 (use-package zig-mode :straight t :mode "\\.zig\\'")
+(use-package tuareg :straight t)
 (use-package rust-mode :straight t :mode "\\.rs\\'" :custom (rust-mode-treesitter-derive t))
-;; (use-package bash-mode :straight t :mode "\\.rs\\'" :custom (rust-mode-treesitter-derive t))
 (use-package cargo :straight t :hook (rust-ts-mode . cargo-minor-mode)
   :config (evil-define-key 'normal 'cargo-mode-map (kbd "C-c") 'cargo-minor-mode-command-map))
 (use-package yasnippet :straight t :config (yas-global-mode 1))
@@ -342,10 +345,10 @@ From https://github.com/emacs-evil/evil/issues/606"
 
 (defun project-root-override (dir)
   "Find DIR's project root by searching for a '.project.el' file.
-					
+
   If this file exists, it marks the project root.  For convenient compatibility
   with Projectile, '.projectile' is also considered a project root marker.
-					
+
   https://blog.jmthornton.net/p/emacs-project-override"
   (let ((root (or (locate-dominating-file dir ".project.el")
 		  (locate-dominating-file dir ".projectile")
@@ -408,15 +411,6 @@ From https://github.com/emacs-evil/evil/issues/606"
   :init
   (add-to-list 'completion-at-point-functions #'cape-file))
 
-(straight-use-package
- `(lspce :type git :host github :repo "zbelial/lspce"
-         :files (:defaults ,(pcase system-type
-                              ('gnu/linux "lspce-module.so")
-                              ('darwin "lspce-module.dylib")))
-         :pre-build ,(pcase system-type
-                       ('gnu/linux '(("cargo" "build" "--release") ("cp" "./target/release/liblspce_module.so" "./lspce-module.so")))
-                       ('darwin '(("cargo" "build" "--release") ("cp" "./target/release/liblspce_module.dylib" "./lspce-module.dylib"))))))
-
 ;; (straight-use-package
 ;;  `(lsp-proxy :type git :host github :repo "jadestrong/lsp-proxy"
 ;;              :files ("lsp-proxy.el" "lsp-proxy")
@@ -441,6 +435,7 @@ From https://github.com/emacs-evil/evil/issues/606"
     rust-ts-mode
     zig-ts-mode
     go-ts-mode
+    tuareg-mode
     ) . eglot-ensure)
   :config
   (setq eglot-ignored-server-capabilities '(:inlayHintProvider :colorProvider))
@@ -454,11 +449,31 @@ From https://github.com/emacs-evil/evil/issues/606"
   :after eglot
   :config (eglot-booster-mode))
 
+(setq treesit-language-source-alist
+      '((ocaml "https://github.com/tree-sitter/tree-sitter-ocaml" "master" "grammars/ocaml/src")
+	;; (ocaml "https://github.com/tree-sitter/tree-sitter-ocaml" "master" "grammars/interface/src")
+	;; (ocaml "https://github.com/tree-sitter/tree-sitter-ocaml" "master" "grammars/type/src")
+	;; (cmake "https://github.com/uyha/tree-sitter-cmake")
+	;; (css "https://github.com/tree-sitter/tree-sitter-css")
+	;; (elisp "https://github.com/Wilfred/tree-sitter-elisp")
+	;; (go "https://github.com/tree-sitter/tree-sitter-go")
+	;; (html "https://github.com/tree-sitter/tree-sitter-html")
+	;; (javascript "https://github.com/tree-sitter/tree-sitter-javascript" "master" "src")
+	;; (json "https://github.com/tree-sitter/tree-sitter-json")
+	;; (make "https://github.com/alemuller/tree-sitter-make")
+	;; (markdown "https://github.com/ikatyang/tree-sitter-markdown")
+	;; (python "https://github.com/tree-sitter/tree-sitter-python")
+	;; (toml "https://github.com/tree-sitter/tree-sitter-toml")
+	;; (tsx "https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src")
+	;; (typescript "https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src")
+	(yaml "https://github.com/ikatyang/tree-sitter-yaml")))
+
 (use-package treesit-auto
   :straight t
   :custom
   (treesit-auto-install 'prompt)
   :config
+  (add-to-list 'treesit-auto-langs 'ocaml)
   (treesit-auto-add-to-auto-mode-alist 'all)
   (global-treesit-auto-mode))
 
