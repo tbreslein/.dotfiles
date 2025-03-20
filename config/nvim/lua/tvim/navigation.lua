@@ -1,7 +1,4 @@
 Later(function()
-  Add("aserowy/tmux.nvim")
-  require("tmux").setup()
-
   Add("ibhagwan/fzf-lua")
   local fzflua = require("fzf-lua")
   fzflua.setup({
@@ -29,10 +26,6 @@ Later(function()
   Map("n", "<A-e>", "<cmd>Grapple select index=2<cr>")
   Map("n", "<A-w>", "<cmd>Grapple select index=3<cr>")
   Map("n", "<A-q>", "<cmd>Grapple select index=4<cr>")
-
-  Add("folke/flash.nvim")
-  require("flash").setup()
-  Map("n", "<leader>s", require("flash").jump)
 
   Add("MagicDuck/grug-far.nvim")
   require("grug-far").setup()

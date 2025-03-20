@@ -1,4 +1,24 @@
 Now(function()
+  Add("linrongbin16/lsp-progress.nvim")
+  local lsp_progress = require("lsp-progress")
+  lsp_progress.setup({
+    -- max_size = 20,
+    client_format = function(client_name, spinner, series_messages)
+      return #series_messages > 0 and ("[" .. client_name .. "] " .. spinner) or nil
+    end,
+    format = function(client_messages)
+      -- icon: nf-fa-gear \uf013
+      local sign = " "
+      if #client_messages > 0 then
+        return sign .. " " .. table.concat(client_messages, " ")
+      end
+      if #require("lsp-progress.api").lsp_clients() > 0 then
+        return sign
+      end
+      return ""
+    end,
+  })
+
   Statusline = {}
   local filepath = function()
     local fpath = vim.fn.fnamemodify(vim.fn.expand("%"), ":.")
@@ -30,7 +50,11 @@ Now(function()
     if count["info"] ~= 0 then
       err_string = err_string .. " %#LspDiagnosticsSignInformation#" .. vim.g.diag_symbol_info .. " " .. count["info"]
     end
-    return err_string .. "%#Normal#"
+
+    if #err_string > 0 then
+      err_string = err_string .. "%#Normal#" .. " | "
+    end
+    return err_string .. lsp_progress.progress()
   end
 
   Statusline.active = function()

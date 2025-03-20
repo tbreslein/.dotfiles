@@ -55,9 +55,11 @@ Later(function()
   require("treesitter-context").setup({ multiline_threshold = 2 })
   vim.cmd([[hi TreesitterContextBottom gui=underline]])
 
-  -- Add("MeanderingProgrammer/render-markdown.nvim")
-  -- require("render-markdown").setup({ latex = { enabled = false } })
-  Add("OXY2DEV/markview.nvim")
+  Add("MeanderingProgrammer/render-markdown.nvim")
+  require("render-markdown").setup({
+    -- latex = { enabled = false },
+    completions = { lsp = { enabled = true }, blink = { enabled = true } },
+  })
 
   local hipatterns = require("mini.hipatterns")
   hipatterns.setup({
@@ -75,30 +77,6 @@ Later(function()
   require("mini.indentscope").setup()
 
   Add({
-    source = "folke/noice.nvim",
-    depends = {
-      "MunifTanjim/nui.nvim",
-      "rcarriga/nvim-notify",
-    },
-  })
-  require("noice").setup({
-    lsp = {
-      -- override markdown rendering so that **cmp** and other plugins use **Treesitter**
-      override = {
-        ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
-        ["vim.lsp.util.stylize_markdown"] = true,
-        ["cmp.entry.get_documentation"] = true, -- requires hrsh7th/nvim-cmp
-      },
-      signature = { enabled = false },
-    },
-    presets = {
-      bottom_search = true, -- use a classic bottom cmdline for search
-      command_palette = true, -- position the cmdline and popupmenu together
-      long_message_to_split = true, -- long messages will be sent to a split
-    },
-  })
-
-  Add({
     source = "NeogitOrg/neogit",
     depends = {
       "nvim-lua/plenary.nvim",
@@ -107,4 +85,37 @@ Later(function()
   })
   require("neogit").setup()
   Map("n", "<leader>gg", "<cmd>Neogit<cr>")
+
+  Add("akinsho/toggleterm.nvim")
+  require("toggleterm").setup({
+    size = function(term)
+      if term.direction == "horizontal" then
+        return 35
+      elseif term.direction == "vertical" then
+        return vim.o.columns * 0.25
+      end
+    end,
+  })
+  Map("n", "<leader>tt", ":ToggleTerm direction=vertical<cr>")
+  Map("n", "<leader>tf", ":ToggleTerm direction=float<cr>")
+  Map("n", "<leader>ts", ":ToggleTerm direction=horizontal<cr>")
+  Map("t", "<esc><esc>", [[<C-\><C-n>]])
+  Map({ "n", "t" }, "<c-h>", "<cmd>wincmd h<cr>")
+  Map({ "n", "t" }, "<c-j>", "<cmd>wincmd j<cr>")
+  Map({ "n", "t" }, "<c-k>", "<cmd>wincmd k<cr>")
+  Map({ "n", "t" }, "<c-l>", "<cmd>wincmd l<cr>")
+
+  -- Add("shortcuts/no-neck-pain.nvim")
+  -- require("no-neck-pain").setup({
+  --   -- width = 140,
+  --   buffers = {
+  --     right = { enabled = false },
+  --     scratchPad = {
+  --       enabled = true,
+  --       location = "~/Documents/",
+  --     },
+  --     bo = { filetype = "md" },
+  --   },
+  -- })
+  -- Map("n", "<leader>zz", "<cmd>NoNeckPain<cr>")
 end)
