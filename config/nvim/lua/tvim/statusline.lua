@@ -1,8 +1,4 @@
 Now(function()
-  Add("linrongbin16/lsp-progress.nvim")
-  local lsp_progress = require("lsp-progress")
-  lsp_progress.setup()
-
   Statusline = {}
   local filepath = function()
     local fpath = vim.fn.fnamemodify(vim.fn.expand("%"), ":.")
@@ -34,11 +30,7 @@ Now(function()
     if count["info"] ~= 0 then
       err_string = err_string .. " %#LspDiagnosticsSignInformation#" .. vim.g.diag_symbol_info .. " " .. count["info"]
     end
-
-    if #err_string > 0 then
-      err_string = err_string .. "%#Normal#" .. " | "
-    end
-    return err_string .. lsp_progress.progress()
+    return err_string .. "%#Normal#"
   end
 
   Statusline.active = function()
