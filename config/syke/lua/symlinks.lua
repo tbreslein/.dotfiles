@@ -29,6 +29,7 @@ local symlinks = {
   { source = myconfig .. "/zsh", target = userconfig .. "/zsh" },
   { source = myconfig .. "/git", target = userconfig .. "/git" },
   { source = myconfig .. "/nvim", target = userconfig .. "/nvim" },
+  { source = myconfig .. "/emacs/emacs.org", target = home .. "/.emacs.d/emacs.org" },
   { source = myconfig .. "/emacs/init.el", target = home .. "/.emacs.d/init.el" },
   { source = myconfig .. "/emacs/early-init.el", target = home .. "/.emacs.d/early-init.el" },
   { source = myconfig .. "/luacheckrc", target = home .. "/.luacheckrc" },
