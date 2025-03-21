@@ -121,10 +121,7 @@
   :config
   (setq compilation-scroll-output t))
 
-(use-package magit
-  :straight t)
-;; :commands magit-status
-;; :config (evil-global-set-key 'normal (kbd "<leader>gg") 'magit))
+(use-package magit :straight t)
 
 ;; EXEC-PATH / ENVRC / NIX
 (use-package exec-path-from-shell
@@ -225,9 +222,8 @@ From https://github.com/emacs-evil/evil/issues/606"
   (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
         doom-themes-enable-italic t) ; if nil, italics is universally disabled
   ;; (load-theme 'doom-nord-aurora t)
-  ;; (load-theme 'doom-gruvbox t)
-  (load-theme 'doom-tomorrow-night t)
-  ;; Corrects (and improves) org-mode's native fontification.
+  (load-theme 'doom-gruvbox t)
+  ;; (load-theme 'doom-tomorrow-night t)
   (doom-themes-org-config))
 
 (use-package vterm
@@ -247,6 +243,37 @@ From https://github.com/emacs-evil/evil/issues/606"
   (persp-mode-prefix-key (kbd "C-c M-p"))  ; pick your own prefix key here
   :init
   (persp-mode))
+
+;; ;; EGLOT SOMEHOW NEEDS THIS TO CORRECTLY DETERMINE THE PROJECT ROOT
+;; ;; This SHOULD take care of the problem that project-root-override tries to solve,
+;; ;; but for some reason it does not work. I have no idea why, but I don't seem to
+;; ;; be the only one.
+;; (setq project-vc-extra-root-markers
+;;       '("Cargo.toml" "pyproject.toml"))
+
+(defun project-root-override (dir)
+  "Find DIR's project root by searching for a '.project.el' file.
+
+  If this file exists, it marks the project root.  For convenient compatibility
+  with Projectile, '.projectile' is also considered a project root marker.
+
+  https://blog.jmthornton.net/p/emacs-project-override"
+  (let ((root (or (locate-dominating-file dir ".project.el")
+		  (locate-dominating-file dir ".projectile")
+		  (locate-dominating-file dir "Cargo.toml")
+		  (locate-dominating-file dir "setup.py")
+		  (locate-dominating-file dir "requirements.txt")
+		  (locate-dominating-file dir "pyproject.toml")))
+	(backend (ignore-errors (vc-responsible-backend dir))))
+    (when root (list 'vc backend root))))
+
+;; Note that we cannot use :hook here because `project-find-functions' doesn't
+;; end in "-hook", and we can't use this in :init because it won't be defined
+;; yet.
+(use-package project
+  :straight t
+  :config
+  (add-hook 'project-find-functions #'project-root-override))
 
 (use-package persp-projectile :straight t)
 
@@ -343,37 +370,6 @@ From https://github.com/emacs-evil/evil/issues/606"
   :config (evil-define-key 'normal 'cargo-mode-map (kbd "C-c") 'cargo-minor-mode-command-map))
 (use-package yasnippet :straight t :config (yas-global-mode 1))
 
-;; ;; EGLOT SOMEHOW NEEDS THIS TO CORRECTLY DETERMINE THE PROJECT ROOT
-;; ;; This SHOULD take care of the problem that project-root-override tries to solve,
-;; ;; but for some reason it does not work. I have no idea why, but I don't seem to
-;; ;; be the only one.
-;; (setq project-vc-extra-root-markers
-;;       '("Cargo.toml" "pyproject.toml"))
-
-(defun project-root-override (dir)
-  "Find DIR's project root by searching for a '.project.el' file.
-
-  If this file exists, it marks the project root.  For convenient compatibility
-  with Projectile, '.projectile' is also considered a project root marker.
-
-  https://blog.jmthornton.net/p/emacs-project-override"
-  (let ((root (or (locate-dominating-file dir ".project.el")
-		  (locate-dominating-file dir ".projectile")
-		  (locate-dominating-file dir "Cargo.toml")
-		  (locate-dominating-file dir "setup.py")
-		  (locate-dominating-file dir "requirements.txt")
-		  (locate-dominating-file dir "pyproject.toml")))
-	(backend (ignore-errors (vc-responsible-backend dir))))
-    (when root (list 'vc backend root))))
-
-;; Note that we cannot use :hook here because `project-find-functions' doesn't
-;; end in "-hook", and we can't use this in :init because it won't be defined
-;; yet.
-(use-package project
-  :ensure nil
-  :config
-  (add-hook 'project-find-functions #'project-root-override))
-
 (use-package corfu
   :straight t
   :custom
@@ -426,8 +422,11 @@ From https://github.com/emacs-evil/evil/issues/606"
   ;; 		 "basedpyright-langserver" "--stdio"))
   (eglot-inlay-hints-mode -1))
 
+(straight-use-package
+ '(eglot-booster :type git :host github :repo "jdtsmith/eglot-booster"))
+
 (use-package eglot-booster
-  :vc (:url "https://github.com/jdtsmith/eglot-booster")
+  ;; :vc (:url "https://github.com/jdtsmith/eglot-booster")
   :after eglot
   :config (eglot-booster-mode))
 
