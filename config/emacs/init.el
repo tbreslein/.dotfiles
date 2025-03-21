@@ -84,6 +84,9 @@
   (setq ring-bell-function #'ignore)
   (setq inhibit-startup-screen t)
   (setq display-line-numbers-type 'visual)
+  ;; (setq display-line-numbers-type nil)
+  (setq display-line-numbers-width-start t)
+  (add-to-list 'default-frame-alist '(inhibit-double-buffering . t))
   (setq make-backup-files nil)
   (setq backup-directory-alist '(("." . "~/.local/emacs/backups")))
   (setq auto-save-list-file-prefix "~/.emacs.d/autosave/")
@@ -119,9 +122,9 @@
   (setq compilation-scroll-output t))
 
 (use-package magit
-  :straight t
-  :commands magit-status
-  :config (evil-global-set-key 'normal (kbd "<leader>gg") 'magit))
+  :straight t)
+;; :commands magit-status
+;; :config (evil-global-set-key 'normal (kbd "<leader>gg") 'magit))
 
 ;; EXEC-PATH / ENVRC / NIX
 (use-package exec-path-from-shell
@@ -139,7 +142,6 @@
   :hook (after-init . envrc-global-mode))
 
 (use-package volatile-highlights :straight t :config (volatile-highlights-mode t))
-(use-package avy :straight t)
 
 ;; EVIL MODE
 (use-package undo-fu :straight t)
@@ -168,15 +170,16 @@
   (evil-global-set-key 'visual (kbd "K") (lambda () (interactive) (drag-stuff-up 1) (evil-indent)))
   (evil-global-set-key 'motion (kbd "j") 'evil-next-visual-line)
   (evil-global-set-key 'motion (kbd "k") 'evil-previous-visual-line)
-  (evil-global-set-key 'normal (kbd "C-m") 'compile)
+  (evil-global-set-key 'normal (kbd "M-m") 'compile)
   (evil-global-set-key 'normal (kbd "C-h") 'evil-window-left)
   (evil-global-set-key 'normal (kbd "C-j") 'evil-window-down)
   (evil-global-set-key 'normal (kbd "C-k") 'evil-window-up)
   (evil-global-set-key 'normal (kbd "C-l") 'evil-window-right)
+  (evil-global-set-key 'normal (kbd "<leader>gg") 'magit)
   (evil-global-set-key 'normal (kbd "<leader>sj") 'evil-window-new)
   (evil-global-set-key 'normal (kbd "<leader>sl") 'evil-window-vnew)
-  (evil-global-set-key 'normal (kbd "<leader>st") (lambda () (interactive) (evil-window-new 20 "") (vterm)))
-  (evil-global-set-key 'normal (kbd "s") 'avy-goto-char-2)
+  (evil-global-set-key 'normal (kbd "<leader>tj") (lambda () (interactive) (evil-window-new 20 "") (vterm)))
+  (evil-global-set-key 'normal (kbd "<leader>tl") (lambda () (interactive) (evil-window-vnew nil "") (vterm)))
   (evil-mode))
 
 (use-package evil-collection
@@ -219,7 +222,6 @@ From https://github.com/emacs-evil/evil/issues/606"
 (use-package doom-themes
   :straight t
   :config
-  ;; Global settings (defaults)
   (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
         doom-themes-enable-italic t) ; if nil, italics is universally disabled
   ;; (load-theme 'doom-nord-aurora t)
@@ -232,6 +234,7 @@ From https://github.com/emacs-evil/evil/issues/606"
   :straight t
   :custom
   (vterm-max-scrollback 20000)
+  (vterm-timer-delay 0.01)
   :config
   (evil-global-set-key 'normal (kbd "<leader>tt") 'vterm))
 
@@ -246,6 +249,8 @@ From https://github.com/emacs-evil/evil/issues/606"
   (persp-mode))
 
 (use-package persp-projectile :straight t)
+
+(use-package rg :straight t)
 
 (use-package projectile
   :straight t
@@ -269,7 +274,6 @@ From https://github.com/emacs-evil/evil/issues/606"
     :group 'projectile
     :type '(repeat function))
   (evil-global-set-key 'normal (kbd "<leader>f") 'projectile-command-map)
-  (evil-global-set-key 'normal (kbd "<leader>pp") 'projectile-persp-switch-project)
   (projectile-mode +1))
 
 ;; LSP / COMPLETION
@@ -307,23 +311,26 @@ From https://github.com/emacs-evil/evil/issues/606"
   (add-hook 'emacs-lisp-mode-hook 'flymake-mode)
   (evil-define-key 'normal 'flymake-mode-map (kbd "]d") 'flymake-goto-next-error)
   (evil-define-key 'normal 'flymake-mode-map (kbd "[d") 'flymake-goto-prev-error)
-  (evil-define-key 'normal 'flymake-mode-map (kbd "gd") 'flymake-show-project-diagnostics)
+  (evil-define-key 'normal 'flymake-mode-map (kbd "gq") 'flymake-show-project-diagnostics)
   (flymake-mode 1))
 
 (use-package flymake-diagnostic-at-point
   :straight t
   :after flymake
-  :config (add-hook 'flymake-mode-hook #'flymake-diagnostic-at-point-mode))
+  :config
+  (add-hook 'flymake-mode-hook #'flymake-diagnostic-at-point-mode))
 
 (use-package apheleia
   :straight t
   :config
   (setf (alist-get 'black apheleia-formatters)
         '("poetry" "run" "black" "-"))
-  (setf (alist-get 'alejandra apheleia-formatters)
-        '("alejandra"))
+
+  (setf (alist-get 'nixpkgs-fmt apheleia-formatters)
+        '("nixpkgs-fmt"))
   (setf (alist-get 'nix-mode apheleia-mode-alist)
-        '(alejandra))
+        '(nixpkgs-fmt))
+
   (apheleia-global-mode +1))
 
 (use-package markdown-mode :straight t)
@@ -357,9 +364,7 @@ From https://github.com/emacs-evil/evil/issues/606"
 		  (locate-dominating-file dir "requirements.txt")
 		  (locate-dominating-file dir "pyproject.toml")))
 	(backend (ignore-errors (vc-responsible-backend dir))))
-    (when root (if (version<= emacs-version "28")
-		   (cons 'vc root)
-		 (list 'vc backend root)))))
+    (when root (list 'vc backend root))))
 
 ;; Note that we cannot use :hook here because `project-find-functions' doesn't
 ;; end in "-hook", and we can't use this in :init because it won't be defined
@@ -371,17 +376,11 @@ From https://github.com/emacs-evil/evil/issues/606"
 
 (use-package corfu
   :straight t
-  ;; :after vertico
   :custom
   (corfu-cycle t)
   (corfu-auto t)
-  ;; (setq corfu-auto        t
-  ;; 	corfu-auto-delay  0  ;; TOO SMALL - NOT RECOMMENDED
-  ;; 	corfu-auto-prefix 0) ;; TOO SMALL - NOT RECOMMENDED
-  ;; (corfu-auto-delay 2)
   (corfu-auto-prefix 1)
   (corfu-echo-delay 0.1)
-					; (corfu-popupinfo-delay 0.1)
   (corfu-preview-current nil)
   (corfu-auto-delay 0)
   (corfu-popupinfo-delay '(0.1 . 0.1))
@@ -411,26 +410,9 @@ From https://github.com/emacs-evil/evil/issues/606"
   :init
   (add-to-list 'completion-at-point-functions #'cape-file))
 
-;; (straight-use-package
-;;  `(lsp-proxy :type git :host github :repo "jadestrong/lsp-proxy"
-;;              :files ("lsp-proxy.el" "lsp-proxy")
-;; 	     :pre-build (("cargo" "build" "--release") ("cp" "./target/release/lsp-proxy" "./"))))
-
-;; (use-package lsp-proxy
-;;   ;; :load-path "/path/to/lsp-proxy"
-;;   :config
-;;   (setq lsp-proxy-diagnostics-provider :flymake)
-;;   (add-hook 'rust-ts-mode-hook #'lsp-proxy-mode)
-;;   (add-hook 'typescript-ts-mode-hook #'lsp-proxy-mode))
-
 (use-package eglot
   :ensure nil
   :hook
-  ;; ((go-ts-mode
-  ;;   python-ts-mode
-  ;;   rust-ts-mode
-  ;;   zig-ts-mode
-  ;;   ) . eglot-ensure)
   ((python-ts-mode
     rust-ts-mode
     zig-ts-mode
@@ -453,19 +435,6 @@ From https://github.com/emacs-evil/evil/issues/606"
       '((ocaml "https://github.com/tree-sitter/tree-sitter-ocaml" "master" "grammars/ocaml/src")
 	;; (ocaml "https://github.com/tree-sitter/tree-sitter-ocaml" "master" "grammars/interface/src")
 	;; (ocaml "https://github.com/tree-sitter/tree-sitter-ocaml" "master" "grammars/type/src")
-	;; (cmake "https://github.com/uyha/tree-sitter-cmake")
-	;; (css "https://github.com/tree-sitter/tree-sitter-css")
-	;; (elisp "https://github.com/Wilfred/tree-sitter-elisp")
-	;; (go "https://github.com/tree-sitter/tree-sitter-go")
-	;; (html "https://github.com/tree-sitter/tree-sitter-html")
-	;; (javascript "https://github.com/tree-sitter/tree-sitter-javascript" "master" "src")
-	;; (json "https://github.com/tree-sitter/tree-sitter-json")
-	;; (make "https://github.com/alemuller/tree-sitter-make")
-	;; (markdown "https://github.com/ikatyang/tree-sitter-markdown")
-	;; (python "https://github.com/tree-sitter/tree-sitter-python")
-	;; (toml "https://github.com/tree-sitter/tree-sitter-toml")
-	;; (tsx "https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src")
-	;; (typescript "https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src")
 	(yaml "https://github.com/ikatyang/tree-sitter-yaml")))
 
 (use-package treesit-auto
@@ -480,7 +449,7 @@ From https://github.com/emacs-evil/evil/issues/606"
 (use-package nerd-icons
   :straight t
   :custom
-  (nerd-icons-font-family "Hack Nerd Font")
+  (nerd-icons-font-family "Fira Code Nerd Font")
   (nerd-icons-scale-factor 1.2))
 
 (use-package doom-modeline
