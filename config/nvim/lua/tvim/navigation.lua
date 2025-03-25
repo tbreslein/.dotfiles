@@ -11,12 +11,27 @@ Later(function()
   Map("n", "<leader>ff", fzflua.files)
   Map("n", "<leader>fs", fzflua.live_grep)
 
-  require("mini.move").setup()
+  require("mini.move").setup({
+    mappings = {
+      left = "<M-h>",
+      right = "<M-l>",
+      down = "<M-j>",
+      up = "<M-k>",
+
+      line_left = nil,
+      line_right = nil,
+      line_down = nil,
+      line_up = nil,
+    },
+  })
 
   require("mini.files").setup()
   Map("n", "<leader>fp", function()
     MiniFiles.open(vim.api.nvim_buf_get_name(0))
   end)
+
+  Add("aserowy/tmux.nvim")
+  require("tmux").setup()
 
   Add("cbochs/grapple.nvim")
   require("grapple").setup()

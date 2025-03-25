@@ -51,8 +51,8 @@ everything I need
     (compile-angel-verbose nil)
     :config
     (compile-angel-on-load-mode)
-    (add-hook 'emacs-lisp-mode-hook
-              #'compile-angel-on-save-local-mode))
+    (add-hook 'emacs-lisp-mode-hook 
+              #'compile-angel-on-save-local-mode)) 
 #+END_SRC
 
 ** org mode
@@ -148,107 +148,11 @@ don't like it
     (setq doom-themes-enable-bold t
           doom-themes-enable-italic t)
     ;; (load-theme 'doom-nord-aurora t)
-    ;; (load-theme 'doom-gruvbox t)
+    ;; (load-theme 'doom-gruvbox t)		
     (load-theme 'doom-gruvbox-light t)
     (doom-themes-org-config))
 #+END_SRC
 
-** evil mode
-
-#+BEGIN_SRC emacs-lisp
-  (use-package undo-fu :ensure t)
-  (use-package drag-stuff :ensure t)
-  (use-package general :ensure t)
-
-  (use-package evil
-    :ensure t
-    :demand t
-    :after (undo-fu drag-stuff general)
-    :init
-    (setq evil-want-keybinding nil)
-    (setq evil-undo-system 'undo-fu)
-    :config
-    (setq evil-want-C-d-scroll t)
-    (setq evil-want-C-u-scroll t)
-    (setq evil-split-window-below t)
-    (setq evil-vsplit-window-right t)
-    (setq evil-insert-state-cursor 'box)
-    (setq evil-want-Y-yank-to-eol t)
-    (evil-set-leader nil (kbd "SPC"))
-    (general-def 'normal
-      "C-d" (lambda () (interactive) (evil-scroll-down 0) (recenter))
-      "C-u" (lambda () (interactive) (evil-scroll-up 0) (recenter))
-      "n" (lambda () (interactive) (evil-search-next) (recenter))
-      "N" (lambda () (interactive) (evil-search-previous) (recenter))
-      "M-m" 'compile
-      "<leader>h" 'evil-window-left
-      "<leader>j" 'evil-window-down
-      "<leader>k" 'evil-window-up
-      "<leader>l" 'evil-window-right
-      "<leader>sj" 'evil-window-new
-      "<leader>sl" 'evil-window-vnew
-      "<leader>gg" 'magit
-      )
-    (general-def 'motion
-      "j" 'evil-next-visual-line
-      "k" 'evil-previous-visual-line
-      )
-    (general-def 'visual
-      "C-d" (lambda () (interactive) (evil-scroll-down 0) (recenter))
-      "C-u" (lambda () (interactive) (evil-scroll-up 0) (recenter))
-      "J" (lambda () (interactive) (drag-stuff-down 1) (evil-indent))
-      "K" (lambda () (interactive) (drag-stuff-up 1) (evil-indent))
-      )
-    ;(evil-global-set-key 'normal (kbd "<leader>tj") (lambda () (interactive) (evil-window-new 20 "") (vterm)))
-    ;(evil-global-set-key 'normal (kbd "<leader>tl") (lambda () (interactive) (evil-window-vnew nil "") (vterm)))
-    (evil-mode))
-
-  (use-package evil-collection
-    :ensure t
-    :after evil
-    :config
-    (evil-collection-init))
-
-  (use-package evil-commentary
-    :ensure t
-    :after evil
-    :config
-    (evil-define-operator +evil-join-a (beg end)
-      "Join the selected lines.
-  This advice improves on `evil-join' by removing comment delimiters when joining
-  commented lines, by using `fill-region-as-paragraph'.
-  From https://github.com/emacs-evil/evil/issues/606"
-      :motion evil-line
-      (let* ((count (count-lines beg end))
-  	   (count (if (> count 1) (1- count) count))
-  	   (fixup-mark (make-marker)))
-        (dotimes (var count)
-  	(if (and (bolp) (eolp))
-  	    (join-line 1)
-  	  (let* ((end (line-beginning-position 3))
-  		 (fill-column (1+ (- end beg))))
-  	    (set-marker fixup-mark (line-end-position))
-  	    (fill-region-as-paragraph beg end nil t)
-  	    (goto-char fixup-mark)
-  	    (fixup-whitespace))))
-        (set-marker fixup-mark nil)))
-    (evil-global-set-key 'normal (kbd "J") '+evil-join-a)
-    (evil-commentary-mode))
-
-  (use-package evil-numbers
-    :ensure t
-    :after evil
-    :config
-    (general-def 'normal
-      "C-a" 'evil-numbers/inc-at-pt
-      "C-x" 'evil-numbers/dec-at-pt))
-
-  (use-package avy
-    :ensure t
-    :after evil
-    :config
-    (evil-global-set-key 'normal (kbd "s") 'avy-goto-char-2))
-#+END_SRC
 
 ** completion
 
@@ -298,13 +202,13 @@ don't like it
     (corfu-preview-current nil)
     (corfu-auto-delay 0)
     (corfu-popupinfo-delay '(0.1 . 0.1))
-    :config
-    (general-def 'insert
-      "C-j" 'corfu-next
-      "C-k" 'corfu-previous
-      "C-l" 'corfu-insert
-      "C-h" 'corfu-insert-separator)
-    (define-key corfu-map (kbd "RET") nil)
+
+    ;:config
+    ;(evil-define-key 'insert 'corfu-map (kbd "C-j") 'corfu-next)
+    ;(evil-define-key 'insert 'corfu-map (kbd "C-k") 'corfu-previous)
+    ;(evil-define-key 'insert 'corfu-map (kbd "C-l") 'corfu-insert)
+    ;(evil-define-key 'insert 'corfu-map (kbd "C-h") 'corfu-insert-separator)
+
     :init
     (global-corfu-mode))
 
@@ -345,6 +249,21 @@ don't like it
   (setq comment-auto-fill-only-comments 1)
 #+END_SRC
 
+*** undo-fu
+
+#+BEGIN_SRC emacs-lisp
+  (use-package undo-fu :ensure t)
+#+END_SRC
+
+*** avy
+
+since meow lacks larger movement motions, this package not only gives me
+something akin to flash.nvim, i can even use it for jumping to specific lines
+
+#+BEGIN_SRC emacs-lisp
+  (use-package avy :ensure t)
+#+END_SRC
+
 *** projectile + perspective
 
 #+BEGIN_SRC emacs-lisp
@@ -352,8 +271,6 @@ don't like it
     :ensure t
     :bind
     ("C-x C-b" . persp-list-buffers)
-    :custom
-    (persp-mode-prefix-key (kbd "C-C M-p"))
     :init
     (persp-mode))
 
@@ -380,7 +297,7 @@ don't like it
       "A list of functions for finding project roots."
       :group 'projectile
       :type '(repeat function))
-    (evil-global-set-key 'normal (kbd "<leader>f") 'projectile-command-map)
+    (global-set-key (kbd "C-c f") 'projectile-command-map)
     (projectile-mode 1))
 
   (use-package persp-projectile :ensure t)
@@ -512,5 +429,102 @@ emacs cannot natively scoll by half pages, so these functions implement this
     ("C-c w j" . windmove-down)
     ("C-c w k" . windmove-up)
     ("C-c w l" . windmove-right))
+#+END_SRC
+
+** meow
+
+#+BEGIN_SRC emacs-lisp
+  (use-package meow
+    :ensure t
+    :custom
+    (meow-use-clipboard t)
+    :config
+    (defun meow-setup ()
+     (setq meow-cheatsheet-layout meow-cheatsheet-layout-qwerty)
+     (meow-motion-define-key
+      '("j" . meow-next)
+      '("k" . meow-prev)
+      '("<escape>" . ignore))
+     (meow-leader-define-key
+      ;; Use SPC (0-9) for digit arguments.
+      '("1" . meow-digit-argument)
+      '("2" . meow-digit-argument)
+      '("3" . meow-digit-argument)
+      '("4" . meow-digit-argument)
+      '("5" . meow-digit-argument)
+      '("6" . meow-digit-argument)
+      '("7" . meow-digit-argument)
+      '("8" . meow-digit-argument)
+      '("9" . meow-digit-argument)
+      '("0" . meow-digit-argument)
+      '("/" . meow-keypad-describe-key)
+      '("?" . meow-cheatsheet))
+     (meow-normal-define-key
+      '("0" . meow-expand-0)
+      '("9" . meow-expand-9)
+      '("8" . meow-expand-8)
+      '("7" . meow-expand-7)
+      '("6" . meow-expand-6)
+      '("5" . meow-expand-5)
+      '("4" . meow-expand-4)
+      '("3" . meow-expand-3)
+      '("2" . meow-expand-2)
+      '("1" . meow-expand-1)
+      '("-" . negative-argument)
+      '(";" . meow-reverse)
+      '("," . meow-inner-of-thing)
+      '("." . meow-bounds-of-thing)
+      '("[" . meow-beginning-of-thing)
+      '("]" . meow-end-of-thing)
+      '("a" . meow-append)
+      '("A" . meow-open-below)
+      '("b" . meow-back-word)
+      '("B" . meow-back-symbol)
+      '("c" . meow-change)
+      '("d" . meow-delete)
+      '("D" . meow-backward-delete)
+      '("e" . meow-next-word)
+      '("E" . meow-next-symbol)
+      '("f" . meow-find)
+      '("t" . meow-till)
+      '("g" . meow-cancel-selection)
+      '("G" . meow-grab)
+      '("h" . meow-left)
+      '("H" . meow-left-expand)
+      '("i" . meow-insert)
+      '("I" . meow-open-above)
+      '("j" . meow-next)
+      '("J" . meow-next-expand)
+      '("k" . meow-prev)
+      '("K" . meow-prev-expand)
+      '("l" . meow-right)
+      '("L" . meow-right-expand)
+      '("m" . meow-join)
+      '("n" . meow-search)
+      '("o" . meow-block)
+      '("O" . meow-to-block)
+      '("p" . meow-yank)
+      '("q" . meow-quit)
+      '("Q" . meow-goto-line)
+      '("r" . meow-replace)
+      '("P" . meow-swap-grab)
+      '("s" . meow-kill)
+      '("S" . avy-goto-char-2)
+      ;;'("u" . meow-undo)
+      '("u" . undo-fu-only-undo)
+      '("R" . undo-fu-only-redo)
+      '("U" . meow-undo-in-selection)
+      '("/" . meow-visit)
+      '("w" . meow-mark-word)
+      '("W" . meow-mark-symbol)
+      '("x" . meow-line)
+      '("X" . meow-goto-line)
+      '("y" . meow-save)
+      '("Y" . meow-sync-grab)
+      '("z" . meow-pop-selection)
+      '("'" . repeat)
+      '("<escape>" . ignore)))
+  (meow-setup)
+  (meow-global-mode 1))
 #+END_SRC
 

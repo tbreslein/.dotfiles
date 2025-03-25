@@ -13,4 +13,5 @@ alias rm='rm -i'
 alias mkdir='mkdir -p'
 alias m='make'
 alias rip_nvim="rm -fr \$HOME/.local/share/nvim \$HOME/.local/state/nvim \$HOME/.cache/nvim"
+alias rip_emacs="rm -fr \$HOME/.emacs.d && syke ln"
 alias grep='grep --color=auto'

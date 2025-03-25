@@ -32,6 +32,7 @@ local symlinks = {
   { source = myconfig .. "/emacs/emacs.org", target = home .. "/.emacs.d/emacs.org" },
   { source = myconfig .. "/emacs/init.el", target = home .. "/.emacs.d/init.el" },
   { source = myconfig .. "/emacs/early-init.el", target = home .. "/.emacs.d/early-init.el" },
+  { source = myconfig .. "/zed/settings.json", target = userconfig .. "/zed/settings.json" },
   { source = myconfig .. "/luacheckrc", target = home .. "/.luacheckrc" },
   { source = myscripts .. "/tmux_sessionizer", target = localbin .. "/tmux_sessionizer" },
   { source = myscripts .. "/git_status", target = localbin .. "/git_status" },

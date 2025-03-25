@@ -7,9 +7,10 @@ Now(function()
   vim.g.gruvbox_material_diagnostic_virtual_text = "highlighted"
   vim.g.gruvbox_material_dim_inactive_windows = 1
   vim.g.gruvbox_material_float_style = "dim"
-  vim.g.gruvbox_material_transparent_background = 2
+  -- vim.g.gruvbox_material_transparent_background = 2
   -- vim.o.background = "light"
-  -- vim.g.gruvbox_material_background = "soft"
+  vim.g.gruvbox_material_foreground = "original"
+  vim.g.gruvbox_material_background = "soft"
   vim.cmd.colorscheme("gruvbox-material")
 
   package.preload["nvim-web-devicons"] = function()
@@ -85,25 +86,6 @@ Later(function()
   })
   require("neogit").setup()
   Map("n", "<leader>gg", "<cmd>Neogit<cr>")
-
-  Add("akinsho/toggleterm.nvim")
-  require("toggleterm").setup({
-    size = function(term)
-      if term.direction == "horizontal" then
-        return 35
-      elseif term.direction == "vertical" then
-        return vim.o.columns * 0.25
-      end
-    end,
-  })
-  Map("n", "<leader>tt", ":ToggleTerm direction=vertical<cr>")
-  Map("n", "<leader>tf", ":ToggleTerm direction=float<cr>")
-  Map("n", "<leader>ts", ":ToggleTerm direction=horizontal<cr>")
-  Map("t", "<esc><esc>", [[<C-\><C-n>]])
-  Map({ "n", "t" }, "<c-h>", "<cmd>wincmd h<cr>")
-  Map({ "n", "t" }, "<c-j>", "<cmd>wincmd j<cr>")
-  Map({ "n", "t" }, "<c-k>", "<cmd>wincmd k<cr>")
-  Map({ "n", "t" }, "<c-l>", "<cmd>wincmd l<cr>")
 
   -- Add("shortcuts/no-neck-pain.nvim")
   -- require("no-neck-pain").setup({
