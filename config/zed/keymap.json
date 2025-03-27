@@ -1,6 +1,6 @@
 [
   {
-    "context": "Workspace",
+    "context": "Workspace && vim_mode == normal",
     "bindings": {
       "ctrl-\\": "terminal_panel::ToggleFocus",
       "space f o": "project_panel::ToggleFocus",
@@ -109,7 +109,7 @@
     }
   },
   {
-    "context": "Dock",
+    "context": "Dock || Editor",
     "bindings": {
       "ctrl-h": "workspace::ActivatePaneLeft",
       "ctrl-l": "workspace::ActivatePaneRight",
