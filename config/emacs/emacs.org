@@ -4,13 +4,6 @@
 
 - org mode
 - more config for compilation mode
-- magit config
-- rg, projectile, perspective and persp-projectile
-- vterm
-- fido
-- fussy
-- corfu
-- cape (for cape-file completions)
 - language modes
 - flymake, flymake-diagnostic-at-point
 - apheleia
@@ -125,7 +118,7 @@ don't like it
 
   (setq use-dialog-box nil)
   (setq use-file-dialog nil)
-  (set-face-attribute 'default nil :family "Hack Nerd Font" :height (if (eq system-type 'darwin) 200 110))
+  (set-face-attribute 'default nil :family "Hack Nerd Font" :height (if (eq system-type 'darwin) 180 110))
   (set-frame-parameter nil 'alpha 96)
   (defun skip-these-buffers (_window buffer _bury-or-kill)
     "Function for `switch-to-prev-buffer-skip'."
@@ -148,14 +141,15 @@ don't like it
     (setq doom-themes-enable-bold t
           doom-themes-enable-italic t)
     ;; (load-theme 'doom-nord-aurora t)
-    ;; (load-theme 'doom-gruvbox t)
-    (load-theme 'doom-gruvbox-light t)
-    (doom-themes-org-config))
+    (load-theme 'doom-gruvbox t)
+    ;; (load-theme 'doom-gruvbox-light t)
+   (doom-themes-org-config))
 #+END_SRC
 
 ** evil mode
 
 #+BEGIN_SRC emacs-lisp
+  (use-package which-key :ensure nil :config (which-key-mode))
   (use-package undo-fu :ensure t)
   (use-package drag-stuff :ensure t)
   (use-package general :ensure t)
@@ -181,26 +175,27 @@ don't like it
       "n" (lambda () (interactive) (evil-search-next) (recenter))
       "N" (lambda () (interactive) (evil-search-previous) (recenter))
       "M-m" 'compile
-      "<leader>h" 'evil-window-left
-      "<leader>j" 'evil-window-down
-      "<leader>k" 'evil-window-up
-      "<leader>l" 'evil-window-right
-      "<leader>sj" 'evil-window-new
-      "<leader>sl" 'evil-window-vnew
       "<leader>gg" 'magit
-      )
-    (general-def 'motion
-      "j" 'evil-next-visual-line
-      "k" 'evil-previous-visual-line
-      )
+      "]c" 'next-error
+      "[c" 'previous-error)
+    (general-def 'normal
+      "<escape>" 'keyboard-escape-quit
+      "C-=" 'text-scale-increase
+      "C--" 'text-scale-decrease
+      "C-h" 'evil-window-left
+      "C-j" 'evil-window-down
+      "C-k" 'evil-window-up
+      "C-l" 'evil-window-right)
+    (general-def 'normal
+      :prefix "<leader>s"
+      "j" 'evil-window-new
+      "l" 'evil-window-vnew)
     (general-def 'visual
       "C-d" (lambda () (interactive) (evil-scroll-down 0) (recenter))
       "C-u" (lambda () (interactive) (evil-scroll-up 0) (recenter))
       "J" (lambda () (interactive) (drag-stuff-down 1) (evil-indent))
-      "K" (lambda () (interactive) (drag-stuff-up 1) (evil-indent))
-      )
-    ;(evil-global-set-key 'normal (kbd "<leader>tj") (lambda () (interactive) (evil-window-new 20 "") (vterm)))
-    ;(evil-global-set-key 'normal (kbd "<leader>tl") (lambda () (interactive) (evil-window-vnew nil "") (vterm)))
+      "K" (lambda () (interactive) (drag-stuff-up 1) (evil-indent)))
+
     (evil-mode))
 
   (use-package evil-collection
@@ -250,69 +245,23 @@ don't like it
     (evil-global-set-key 'normal (kbd "s") 'avy-goto-char-2))
 #+END_SRC
 
-** completion
+** terminal
+
+I'm using vterm. Even if it's not the fastest, it's the one that does not produce
+weird graphical artifacts
 
 #+BEGIN_SRC emacs-lisp
-  ;; try replacing this with fido-mode or fido-vertical-mode
-  (use-package vertico
+  (use-package vterm
     :ensure t
     :custom
-    (vertico-count 10)
-    (vertico-resize nil)
-    (vertico-cycle t)
-    (completion-styles '(flex basic))
-    ;; Support opening new minibuffers from inside existing minibuffers.
-    (enable-recursive-minibuffers t)
-    ;; Hide commands in M-x which do not work in the current mode.  Vertico
-    ;; commands are hidden in normal buffers. This setting is useful beyond
-    ;; Vertico.
-    (read-extended-command-predicate #'command-completion-default-include-p)
-    ;; Do not allow the cursor in the minibuffer prompt
-    (minibuffer-prompt-properties
-     '(read-only t cursor-intangible t face minibuffer-prompt))
-    :init
-    (vertico-mode 1)
-    ;(evil-define-key 'normal 'vertico-map (kbd "M-h") 'vertico-next-group)
-    ;(evil-define-key 'normal 'vertico-map (kbd "M-j") 'vertico-next)
-    ;(evil-define-key 'normal 'vertico-map (kbd "M-k") 'vertico-previous)
-    ;(evil-define-key 'normal 'vertico-map (kbd "M-;") 'vertico-previous-group)
-    )
-
-  (use-package savehist
-    :init
-    (savehist-mode))
-
-  (use-package marginalia
-    :ensure t
-    :after vertico
+    (vterm-max-scrollback 20000)
+    (vterm-timer-delay 0.01)
     :config
-    (marginalia-mode 1))
-
-  (use-package corfu
-    :ensure t
-    :custom
-    (corfu-cycle t)
-    (corfu-auto t)
-    (corfu-auto-prefix 1)
-    (corfu-echo-delay 0.1)
-    (corfu-preview-current nil)
-    (corfu-auto-delay 0)
-    (corfu-popupinfo-delay '(0.1 . 0.1))
-    :config
-    (general-def 'insert
-      "C-j" 'corfu-next
-      "C-k" 'corfu-previous
-      "C-l" 'corfu-insert
-      "C-h" 'corfu-insert-separator)
-    (define-key corfu-map (kbd "RET") nil)
-    :init
-    (global-corfu-mode))
-
-  (use-package cape
-    :ensure t
-    :after corfu
-    :init
-    (add-to-list 'completion-at-point-functions #'cape-file))
+    (general-def 'normal
+      :prefix "<leader>t"
+      "t" 'vterm
+      "j" (lambda () (interactive) (evil-window-new 20 "") (vterm))
+      "l" (lambda () (interactive) (evil-window-vnew nil "") (vterm))))
 #+END_SRC
 
 ** editing and navigation
@@ -343,6 +292,86 @@ don't like it
   ;; comment-auto-fill-only-comments option makes that only work in comments
   (auto-fill-mode 1)
   (setq comment-auto-fill-only-comments 1)
+#+END_SRC
+
+*** completion
+
+#+BEGIN_SRC emacs-lisp
+  (use-package fussy
+    :ensure t
+    :config
+    (setq fussy-use-cache t)
+    (fussy-eglot-setup)
+    (fussy-setup))
+
+  (use-package vertico
+    :ensure t
+    :custom
+    (vertico-count 10)
+    (vertico-resize nil)
+    (vertico-cycle t)
+    (completion-styles '(flex basic))
+    ;; Support opening new minibuffers from inside existing minibuffers.
+    (enable-recursive-minibuffers t)
+    ;; Hide commands in M-x which do not work in the current mode.  Vertico
+    ;; commands are hidden in normal buffers. This setting is useful beyond
+    ;; Vertico.
+    (read-extended-command-predicate #'command-completion-default-include-p)
+    ;; Do not allow the cursor in the minibuffer prompt
+    (minibuffer-prompt-properties
+     '(read-only t cursor-intangible t face minibuffer-prompt))
+    :init
+    (vertico-mode 1)
+    ;(evil-define-key 'normal 'vertico-map (kbd "M-h") 'vertico-next-group)
+    ;(evil-define-key 'normal 'vertico-map (kbd "M-j") 'vertico-next)
+    ;(evil-define-key 'normal 'vertico-map (kbd "M-k") 'vertico-previous)
+    ;(evil-define-key 'normal 'vertico-map (kbd "M-;") 'vertico-previous-group)
+    )
+
+  (use-package savehist
+    :ensure t
+    :init
+    (savehist-mode))
+
+  (use-package marginalia
+    :ensure t
+    :after vertico
+    :config
+    (marginalia-mode 1))
+
+  (use-package corfu
+    :ensure t
+    :custom
+    (corfu-cycle t)
+    (corfu-auto t)
+    (corfu-auto-prefix 1)
+    (corfu-echo-delay 0.1)
+    (corfu-preview-current nil)
+    (corfu-auto-delay 0)
+    (corfu-popupinfo-delay '(0.1 . 0.1))
+    :config
+    (general-def 'insert
+      "C-j" 'corfu-next
+      "C-k" 'corfu-previous
+      "C-l" 'corfu-insert
+      "C-h" 'corfu-insert-separator)
+    (define-key corfu-map (kbd "RET") nil)
+    ;; For cache functionality.
+    (advice-add 'corfu--capf-wrapper :before 'fussy-wipe-cache)
+
+    (add-hook 'corfu-mode-hook
+  	    (lambda ()
+  		(setq-local fussy-max-candidate-limit 5000
+  			    fussy-default-regex-fn 'fussy-pattern-first-letter
+  			    fussy-prefer-prefix nil)))
+    :init
+    (global-corfu-mode))
+
+  (use-package cape
+    :ensure t
+    :after corfu
+    :init
+    (add-to-list 'completion-at-point-functions #'cape-file))
 #+END_SRC
 
 *** projectile + perspective
@@ -469,48 +498,147 @@ parsed and you can jump to errors / grep matches or whatever easily.
     (setq compilation-scroll-output t))
 #+END_SRC
 
-** keybinds
-
-*** misc
+** language modes
 
 #+BEGIN_SRC emacs-lisp
-  (use-package which-key :ensure nil :config (which-key-mode))
+  (use-package markdown-mode :ensure t)
+  (use-package nix-mode :ensure t :mode "\\.nix\\'")
+  (use-package go-mode :ensure :after eglot t :mode "\\.go\\'")
+  (use-package zig-mode :ensure t :mode "\\.zig\\'")
+  (use-package tuareg :ensure t)
+  (use-package rust-mode :ensure t :mode "\\.rs\\'" :custom (rust-mode-treesitter-derive t))
+  (use-package cargo :ensure t :hook (rust-ts-mode . cargo-minor-mode))
+#+END_SRC
 
-  (use-package my/keybinds/misc
+** formatting
+
+#+BEGIN_SRC emacs-lisp
+  (use-package apheleia
+    :ensure t
+    :config
+    (setf (alist-get 'black apheleia-formatters)
+          '("poetry" "run" "black" "-"))
+    (setf (alist-get 'nixpkgs-fmt apheleia-formatters)
+          '("nixpkgs-fmt"))
+    (setf (alist-get 'nix-mode apheleia-mode-alist)
+          '(nixpkgs-fmt))
+    (apheleia-global-mode +1))
+#+END_SRC
+
+** flymake
+
+#+BEGIN_SRC emacs-lisp
+  (use-package flymake
     :ensure nil
-    :bind
-    ("C-=" . text-scale-increase)
-    ("C--" . text-scale-decrease)
-    ("<escape>" . keyboard-escape-quit))
+    :after evil
+    :config
+    (add-hook 'emacs-lisp-mode-hook 'flymake-mode)
+    ;(evil-define-key 'normal 'flymake-mode-map (kbd "]d") 'flymake-goto-next-error)
+    ;(evil-define-key 'normal 'flymake-mode-map (kbd "[d") 'flymake-goto-prev-error)
+    ;(evil-define-key 'normal 'flymake-mode-map (kbd "gq") 'flymake-show-project-diagnostics)
+    (flymake-mode 1))
+
+  (use-package flymake-diagnostic-at-point
+    :ensure t
+    :after flymake
+    :config
+    (add-hook 'flymake-mode-hook #'flymake-diagnostic-at-point-mode))
 #+END_SRC
 
-*** navigation
-
-emacs cannot natively scoll by half pages, so these functions implement this
+** eglot
 
 #+BEGIN_SRC emacs-lisp
-  (defun scroll-half-page-down ()
-    "Scroll down half the page."
-    (interactive)
-    (scroll-up (/ (window-body-height) 2)))
-
-  (defun scroll-half-page-up ()
-    "Scroll up half the page."
-    (interactive)
-    (scroll-down (/ (window-body-height) 2)))
-#+END_SRC
-
-#+BEGIN_SRC emacs-lisp
-  (use-package my/keybinds/navigation
+  (use-package eglot
     :ensure nil
-    :bind
-    ("C-v" . scroll-half-page-down)
-    ("M-v" . scroll-half-page-up)
-    ("C-c w J" . split-window-below)
-    ("C-c w L" . split-window-right)
-    ("C-c w h" . windmove-left)
-    ("C-c w j" . windmove-down)
-    ("C-c w k" . windmove-up)
-    ("C-c w l" . windmove-right))
+    :hook
+    ((python-ts-mode
+      rust-ts-mode
+      zig-ts-mode
+      go-ts-mode
+      tuareg-mode
+      ) . eglot-ensure)
+    :config
+    (setq eglot-ignored-server-capabilities '(:inlayHintProvider :colorProvider))
+    ;; (add-to-list 'eglot-server-programs
+    ;;              '((python-mode python-ts-mode)
+    ;; 		 "basedpyright-langserver" "--stdio"))
+    (eglot-inlay-hints-mode -1))
+
+  (use-package yasnippet :ensure t :config (yas-global-mode 1))
+
+  ;; (straight-use-package
+  ;;  '(eglot-booster :type git :host github :repo "jdtsmith/eglot-booster"))
+
+  (use-package eglot-booster
+    :ensure t
+    :vc (:url "https://github.com/jdtsmith/eglot-booster")
+    :after eglot
+    :config (eglot-booster-mode))
 #+END_SRC
 
+** editorconfig
+
+#+BEGIN_SRC emacs-lisp
+  (use-package editorconfig
+    :ensure t
+    :config
+    (editorconfig-mode 1))
+#+END_SRC
+
+** treesitter
+
+#+BEGIN_SRC emacs-lisp
+  (setq treesit-language-source-alist
+    '((bash "https://github.com/tree-sitter/tree-sitter-bash")
+      (ocaml "https://github.com/tree-sitter/tree-sitter-ocaml" "master" "grammars/ocaml/src")
+      (cmake "https://github.com/uyha/tree-sitter-cmake")
+      (css "https://github.com/tree-sitter/tree-sitter-css")
+      (elisp "https://github.com/Wilfred/tree-sitter-elisp")
+      (go "https://github.com/tree-sitter/tree-sitter-go")
+      (html "https://github.com/tree-sitter/tree-sitter-html")
+      (javascript "https://github.com/tree-sitter/tree-sitter-javascript" "master" "src")
+      (json "https://github.com/tree-sitter/tree-sitter-json")
+      (make "https://github.com/alemuller/tree-sitter-make")
+      (markdown "https://github.com/ikatyang/tree-sitter-markdown")
+      (python "https://github.com/tree-sitter/tree-sitter-python")
+      (toml "https://github.com/tree-sitter/tree-sitter-toml")
+      (tsx "https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src")
+      (typescript "https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src")
+      (yaml "https://github.com/ikatyang/tree-sitter-yaml")))
+
+  (use-package treesit-auto
+    :ensure t
+    :custom
+    (treesit-auto-install 'prompt)
+    :config
+    (add-to-list 'treesit-auto-langs 'ocaml)
+    (treesit-auto-add-to-auto-mode-alist 'all)
+    (global-treesit-auto-mode))
+#+END_SRC
+
+** modeline
+
+#+BEGIN_SRC emacs-lisp
+  (use-package nerd-icons
+    :ensure t
+    :custom
+    (nerd-icons-font-family "Fira Code Nerd Font")
+    (nerd-icons-scale-factor 1.2))
+
+  (use-package doom-modeline
+    :ensure t
+    :defer t
+    :init
+    (doom-modeline-mode 1)
+    (setq find-file-visit-truename t)
+    :config
+    (setq doom-modeline-enable-word-count nil)
+    (setq doom-modeline-height 15)
+    (setq doom-modeline-lsp t)
+    (setq doom-modeline-lsp-icon t)
+    (setq doom-modeline-env-version t)
+    (setq doom-modeline-vcs-max-length 50)
+    (setq doom-modeline-env-version nil)
+    (setq doom-modeline-buffer-encoding nil)
+    (setq doom-modeline-buffer-file-name-style 'relative-from-project))
+#+END_SRC

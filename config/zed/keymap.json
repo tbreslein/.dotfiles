@@ -1,0 +1,149 @@
+[
+  {
+    "context": "Workspace",
+    "bindings": {
+      "ctrl-\\": "terminal_panel::ToggleFocus",
+      "space f o": "project_panel::ToggleFocus",
+      "space Q": "workspace::CloseAllDocks",
+      "space H": "workspace::ToggleLeftDock",
+      "space L": "workspace::ToggleRightDock",
+      "space J": "workspace::ToggleBottomDock"
+    }
+  },
+  {
+    "context": "EmptyPane || SharedScreen || (Editor && (vim_mode == normal || vim_mode == visual) && !VimWaiting && !menu)",
+    "bindings": {
+      "space f f": "file_finder::Toggle",
+      "space f p": "projects::OpenRecent"
+    }
+  },
+  {
+    "context": "Editor && (vim_mode == normal || vim_mode == visual) && !VimWaiting && !menu",
+    "bindings": {
+      // // git
+      "space g d": "editor::ToggleSelectedDiffHunks",
+      "space g g": "git_panel::ToggleFocus",
+
+      // finder
+      "space f s": "pane::DeploySearch",
+
+      // Open markdown preview
+      "space m p": "markdown::OpenPreview",
+      "space m P": "markdown::OpenPreviewToTheSide",
+
+      // Chat with AI
+      "space a c": "assistant::ToggleFocus",
+
+      // misc
+      // "j k": ["workspace::SendKeystrokes", "escape"]
+      "g f": "editor::OpenExcerpts",
+      "space z z": "workspace::ToggleCenteredLayout"
+    }
+  },
+
+  {
+    "context": "Editor && (showing_code_actions || showing_completions)",
+    "bindings": {
+      "ctrl-j": "editor::ContextMenuNext",
+      "ctrl-k": "editor::ContextMenuPrevious",
+      "enter": null
+    }
+  },
+  {
+    "context": "Editor && showing_completions",
+    "bindings": {
+      "ctrl-l": "editor::ConfirmCompletion"
+    }
+  },
+  {
+    "context": "Editor && showing_code_actions",
+    "bindings": {
+      "ctrl-l": "editor::ConfirmCodeAction"
+    }
+  },
+  {
+    "context": "Editor && vim_mode == normal && !VimWaiting && !menu",
+    "bindings": {
+      // lsp
+      "g t i": "editor::ToggleInlayHints",
+      // "g a": "editor::ToggleCodeActions",
+      // "g n": "editor::Rename",
+      // "g d": "editor::GoToDefinition",
+      // "g D": "editor::GoToDefinitionSplit",
+      // "g i": "editor::GoToImplementation",
+      // "g I": "editor::GoToImplementationSplit",
+      // "g t": "editor::GoToTypeDefinition",
+      // "g T": "editor::GoToTypeDefinitionSplit",
+      // "g r": "editor::FindAllReferences",
+      // "] d": "editor::GoToDiagnostic",
+      // "[ d": "editor::GoToPreviousDiagnostic",
+      // "g s s": "outline::Toggle",
+      // "g s S": "project_symbols::Toggle",
+      // "g x x": "diagnostics::Deploy",
+
+      // git
+      "] h": "editor::GoToHunk",
+      "[ h": "editor::GoToPreviousHunk",
+      "space g h": "editor::GoToPreviousHunk"
+    }
+  },
+  {
+    "context": "vim_mode == normal || vim_mode == visual",
+    "bindings": {
+      "s": ["vim::PushSneak", {}],
+      "S": ["vim::PushSneakBackward", {}]
+    }
+  },
+  // navigation
+  {
+    "context": "(Editor && vim_mode == normal && !VimWaiting && !menu) || GitPanel",
+    "bindings": {
+      // Switch between buffers
+      "shift-h": "pane::ActivatePreviousItem",
+      "shift-l": "pane::ActivateNextItem",
+      // Close active panel
+      "shift-q": "pane::CloseActiveItem",
+      "ctrl-q": "pane::CloseActiveItem",
+      "space b d": "pane::CloseActiveItem",
+      "space b o": "pane::CloseInactiveItems"
+    }
+  },
+  {
+    "context": "Dock",
+    "bindings": {
+      "ctrl-h": "workspace::ActivatePaneLeft",
+      "ctrl-l": "workspace::ActivatePaneRight",
+      "ctrl-k": "workspace::ActivatePaneUp",
+      "ctrl-j": "workspace::ActivatePaneDown"
+    }
+  },
+  {
+    "context": "GitPanel",
+    "bindings": {
+      "q": "git_panel::Close",
+      "space g g": "git_panel::ToggleFocus"
+      //TODO: git diff is not ready yet, refer https://github.com/zed-industries/zed/issues/8665#issuecomment-2194000497
+    }
+  },
+  // File panel (netrw)
+  {
+    "context": "ProjectPanel && not_editing",
+    "bindings": {
+      "a": "project_panel::NewFile",
+      "A": "project_panel::NewDirectory",
+      "r": "project_panel::Rename",
+      "d": "project_panel::Delete",
+      "x": "project_panel::Cut",
+      "c": "project_panel::Copy",
+      "p": "project_panel::Paste",
+      "q": "workspace::ToggleLeftDock"
+    }
+  },
+  // tasks
+  {
+    "context": "EmptyPane || SharedScreen || vim_mode == normal",
+    "bindings": {
+      "space r r": ["editor::SpawnNearestTask", { "reveal": "no_focus" }]
+    }
+  }
+]

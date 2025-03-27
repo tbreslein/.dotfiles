@@ -6,7 +6,7 @@ Later(function()
   Add({
     source = "Saghen/blink.cmp",
     depends = { "rafamadriz/friendly-snippets" },
-    checkout = "v0.13.1",
+    checkout = "v1.0.0",
   })
 
   local lspconfig = require("lspconfig")
@@ -39,7 +39,19 @@ Later(function()
       },
     },
     signature = { enabled = true },
-    sources = { default = { "lsp", "path", "snippets", "buffer" } },
+    sources = {
+      default = { "lsp", "path", "snippets", "buffer" },
+      per_filetype = {
+        org = { "orgmode" },
+      },
+      providers = {
+        orgmode = {
+          name = "Orgmode",
+          module = "orgmode.org.autocompletion.blink",
+          fallbacks = { "buffer" },
+        },
+      },
+    },
   })
 
   local lsp_capabilities = blink.get_lsp_capabilities()
@@ -99,7 +111,7 @@ Later(function()
     },
   })
 
-  Map("n", "gl", vim.diagnostic.open_float)
+  Map("n", "gh", vim.diagnostic.open_float)
   Map("n", "]d", function()
     vim.diagnostic.jump({ count = 1 })
   end)
@@ -112,23 +124,19 @@ Later(function()
       vim.bo[e.buf].omnifunc = "v:lua.vim.lsp.omnifunc"
       Map("n", "gq", vim.diagnostic.setqflist)
       Map("n", "gQ", vim.diagnostic.setloclist)
+      Map("n", "gd", vim.lsp.buf.definition)
       Map("n", "gD", vim.lsp.buf.declaration)
+      Map("n", "gwd", ":vsplit | lua vim.lsp.buf.definition()<cr>")
+      Map("n", "gwD", ":vsplit | lua vim.lsp.buf.declaration()<cr>")
       Map("n", "gt", vim.lsp.buf.type_definition)
       Map("n", "gi", vim.lsp.buf.implementation)
-      Map("n", "grr", vim.lsp.buf.references)
-      Map("n", "grn", vim.lsp.buf.rename)
-      Map("n", "gra", vim.lsp.buf.code_action)
+      Map("n", "gr", vim.lsp.buf.references)
+      Map("n", "gn", vim.lsp.buf.rename)
+      Map("n", "g.", vim.lsp.buf.code_action)
       Map("n", "<leader>hi", function()
         vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
       end)
       Map({ "i", "s" }, "<c-s>", vim.lsp.buf.signature_help)
-
-      -- default keymaps I should use:
-      -- ^]: goto definition
-      -- grr: references to qflist
-      -- gra: code actions to qflist
-      -- grn: lsp rename
-      -- c-s: signature_help
     end,
   })
 
