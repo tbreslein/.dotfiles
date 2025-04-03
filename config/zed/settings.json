@@ -155,6 +155,7 @@
     "scss": true,
     "svelte": true,
     "tmux": true,
+    "toml": true,
     "typst": true,
     "uiua": true,
     "zig": true,
@@ -183,6 +184,12 @@
   // {
   //   "W": "workspace::Save"
   // }
+  "languages": {
+    "Python": {
+      // "language_servers": ["pylsp", "!pyright", "..."],
+      "language_servers": ["pyright", "!pylsp", "..."]
+    }
+  },
   "command_aliases": {},
   "ssh_connections": [],
   "experimental.theme_overrides": {
