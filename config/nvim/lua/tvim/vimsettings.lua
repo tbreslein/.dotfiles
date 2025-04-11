@@ -71,6 +71,7 @@ Now(function()
   Map("n", "k", "v:count == 0 ? 'gk' : 'k'", { expr = true })
   Map("n", "]c", ":cnext<cr>")
   Map("n", "[c", ":cprev<cr>")
+  Map("n", "<leader>w", ":w<cr>")
 end)
 
 Later(function()
