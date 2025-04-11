@@ -17,7 +17,7 @@ Later(function()
       preset = "default",
       ["<c-n>"] = { "select_next" },
       ["<c-e>"] = { "select_prev" },
-      ["<c-i>"] = { "accept" },
+      ["<c-y>"] = { "accept" },
       ["<c-k>"] = { "scroll_documentation_up" },
       ["<c-m>"] = { "scroll_documentation_down" },
       ["<Tab>"] = { "snippet_forward", "fallback" },
