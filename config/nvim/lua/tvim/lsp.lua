@@ -6,7 +6,7 @@ Later(function()
   Add({
     source = "Saghen/blink.cmp",
     depends = { "rafamadriz/friendly-snippets" },
-    checkout = "v1.0.0",
+    checkout = "v1.1.0",
   })
 
   local lspconfig = require("lspconfig")
@@ -19,7 +19,7 @@ Later(function()
       ["<c-e>"] = { "select_prev" },
       ["<c-y>"] = { "accept" },
       ["<c-k>"] = { "scroll_documentation_up" },
-      ["<c-m>"] = { "scroll_documentation_down" },
+      ["<c-j>"] = { "scroll_documentation_down" },
       ["<Tab>"] = { "snippet_forward", "fallback" },
       ["<S-Tab>"] = { "snippet_backward", "fallback" },
     },
